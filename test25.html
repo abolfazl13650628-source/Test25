@@ -19,7 +19,6 @@ body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.7 Vazirmatn,Tahom
 #bismillah{background:linear-gradient(135deg,#2f6b3c 0%,#1d3b2a 55%,#152a1e 100%);padding:20px 16px 18px;display:flex;align-items:center;justify-content:center;position:relative;border-bottom:2px solid #d4c88a;box-shadow:0 2px 14px rgba(0,0,0,.18);overflow:hidden}
 #bismillah .bism{font-family:'Amiri',serif;font-size:26px;font-weight:700;color:#f4ebc8;text-shadow:0 2px 10px rgba(0,0,0,.55);line-height:1.7}
 
-/* Splash / Auth */
 #splash{position:fixed;inset:0;z-index:999;background:linear-gradient(135deg,#1d3b2a,#101a13);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;overflow-y:auto}
 .splash-title{text-align:center;color:#d4c88a;margin-bottom:20px;text-shadow:0 2px 4px rgba(0,0,0,0.5)}
 .splash-title h2{margin:0;font-size:20px;font-weight:700}
@@ -35,7 +34,7 @@ body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.7 Vazirmatn,Tahom
 button{font:inherit;background:var(--ac);color:var(--ac2);border:0;border-radius:10px;padding:10px 16px;cursor:pointer}
 button.o{background:none;color:var(--ac);border:1px solid var(--ac)}button.x{background:#b3402f;color:#fff;padding:2px 8px}
 
-#app{max-width:640px;margin:auto;padding:12px 12px 150px;display:none} /* مخفی تا زمان ورود */
+#app{max-width:640px;margin:auto;padding:12px 12px 150px;display:none}
 #topbar{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:2}
 #sheetbar{display:flex;gap:4px;overflow-x:auto;padding:4px 0 6px;align-items:center;scrollbar-width:none}
 #sheetbar::-webkit-scrollbar{display:none}
@@ -50,15 +49,14 @@ nav button{flex:1;background:var(--sf);color:var(--tx);border:1px solid var(--bd
 
 #gpsStrip{padding:4px 8px;font-size:12px;text-align:center;border-top:1px solid var(--bd);background:var(--sf);border-radius:8px;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:4px}
 
-/* Compass */
 #compassWrap{display:flex;align-items:center;justify-content:space-between;background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:6px 10px;margin-bottom:6px;font-size:12px}
 .compass{width:36px;height:36px;border-radius:50%;border:2px solid var(--bd);position:relative;display:flex;align-items:center;justify-content:center;background:var(--bg)}
 .compass-needle{position:absolute;width:2px;height:28px;background:linear-gradient(to bottom, #d33 50%, #333 50%);transition:transform 0.1s linear;transform-origin:center}
 .compass-n{position:absolute;top:-14px;font-size:10px;font-weight:bold;color:#d33}
 
-.c{background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:12px;margin:10px 0}
-label{display:block;font-size:13px;color:var(--mu);margin-top:8px}
-input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)}
+.c{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:9px;margin:8px 0}
+label{display:block;font-size:12px;color:var(--mu);margin-top:5px}
+input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:36px;border:1px solid var(--bd);border-radius:7px;background:var(--bg);color:var(--tx)}
 .r{display:flex;gap:8px}.r>*{flex:1}
 .big{font-size:22px;font-weight:700;color:var(--ac)}
 .tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}th,td{border-bottom:1px solid var(--bd);padding:6px;text-align:center}
@@ -96,7 +94,7 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
 #recentSp{display:flex;gap:4px;flex-wrap:wrap;margin:4px 0}
 #recentSp button{padding:6px 10px!important;font-size:12px!important;flex:0 0 auto!important}
 .chipbtn{padding:2px 8px!important;font-size:12px!important}
-#totSummary{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:8px 10px;margin-top:10px;font-size:13px}
+#totSummary{background:var(--sf);border:1px solid var(--bd);border-radius:9px;padding:7px 9px;margin-top:6px;font-size:12px}
 #totSummary b{color:var(--ac)}
 #svHint{font-size:12px;margin-bottom:6px;min-height:18px}
 #noCoordBanner{background:#fff3cd;color:#5c4400;border-radius:10px;padding:8px 10px;margin:8px 0;font-size:13px}
@@ -108,12 +106,10 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
 #aov input{width:100%;margin:4px 0 10px;direction:ltr;text-align:left}
 #aer{color:#b3261e;min-height:20px;font-size:13px}
 
-/* Manual Coords */
 #manualCoordArea{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:10px;margin-top:8px;display:flex;flex-direction:column;gap:6px}
 .mc-row{display:flex;gap:6px;align-items:center}
 .mc-row input{padding:6px;font-size:13px;text-align:center}
 
-/* GPS compact box + compass/qibla */
 #gpsBox{padding:8px 10px}
 #gpsBox .gtop{display:flex;align-items:center;gap:6px}
 #gb{padding:4px 8px;margin-top:6px;border-width:2px;border-radius:10px}
@@ -127,20 +123,20 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
 .compass-needle.qn{background:linear-gradient(to bottom,#2e9d4f 50%,#333 50%)}
 .compass-needle.qn::before{content:'🕋';position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:10px;line-height:1}
 
-/* v3 layout */
 #acct{max-width:640px;margin:auto}
 #gpsStrip{justify-content:space-between;gap:6px;padding:4px 6px}
 #gpsStripTxt{flex:1;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sbtn{padding:4px 10px!important;font-size:12px!important;flex:0 0 auto}
 #gb{margin-top:0;margin-bottom:6px}
 #compassWrap{margin-bottom:6px}
-#tools>summary{cursor:pointer;font-weight:700;color:var(--ac);list-style:none}
-#tools>summary::-webkit-details-marker{display:none}
-#tools>summary::after{content:'▾';float:left}
-#tools[open]>summary::after{content:'▴'}
-#tools .sec{margin-top:10px;padding-top:10px;border-top:1px dashed var(--bd)}
+#tools>summary,#mapDetails>summary,#cameraDetails>summary{cursor:pointer;font-weight:700;color:var(--ac);list-style:none}
+#tools>summary::-webkit-details-marker,#mapDetails>summary::-webkit-details-marker,#cameraDetails>summary::-webkit-details-marker{display:none}
+#tools>summary::after,#mapDetails>summary::after,#cameraDetails>summary::after{content:'▼';float:left;font-size:22px;font-weight:900;line-height:1.1}
+#tools[open]>summary::after,#mapDetails[open]>summary::after,#cameraDetails[open]>summary::after{content:'▲'}
+#tools .sec,#mapDetails .sec,#cameraDetails .sec{margin-top:8px;padding-top:8px;border-top:1px dashed var(--bd)}
+#mapDetails,#cameraDetails{margin:8px 0 10px;padding:9px 10px}#mapDetails>summary,#cameraDetails>summary{font-size:15px;padding:4px 0}
 #recentSp button.spchip{padding:7px 14px!important;font-size:13px!important}
-#saveBar{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--sf);border-top:1px solid var(--bd);box-shadow:0 -2px 10px rgba(0,0,0,.12);padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px))}
+#saveBar{position:static;width:100%;z-index:1;background:var(--sf);border:1px solid var(--bd);border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);padding:8px 10px;margin-top:8px}
 #saveBar .sbIn{max-width:640px;margin:auto}
 #saveBar #svHint,#saveBar #msg{font-size:12px;line-height:1.5}
 #saveBar #msg:empty{display:none}
@@ -151,12 +147,18 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
 #saveBar .vb b{font-size:14px;color:var(--ac)}
 #numCheck{background:#fff3cd;color:#5c4400;border-radius:10px;padding:8px 10px;margin:8px 0;font-size:13px}
 
-/* Saved snapshots */
 .sitem{display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid var(--bd)}
 .sitem .sinfo{flex:1;display:flex;flex-direction:column}
 .sitem .sinfo small{color:var(--mu)}
+
+.map-actions{display:flex;gap:4px;margin-top:6px}
+.map-actions button{padding:6px 8px!important;font-size:12px!important}
+.map-hint{font-size:10px;color:var(--mu);margin-top:2px;line-height:1.4}
+#walkBox{padding:6px 8px!important;border-width:2px!important;margin-top:6px!important}
+#walkBox .gx{gap:4px!important}
+#walkBox b{font-size:16px!important}
+#walkBox small{font-size:10px!important}
 </style>
-<!-- کتابخانه‌ها -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -172,7 +174,6 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
   <div class="bism">بسم الله الرحمن الرحیم</div>
 </div>
 
-<!-- صفحه ورود (Splash) -->
 <div id="splash">
   <div class="splash-title">
     <h2>نسخه آزمایشی برآورد چوب آلات و درختان جنگلی</h2>
@@ -187,7 +188,7 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
     <button id="splashSignup" class="o">ثبت‌نام</button>
     <div class="divider">یا</div>
     <button id="splashGuest" style="background:#5c6b5f">ورود مهمان (آفلاین)</button>
-    <div class="m" style="margin-top:10px">با ورود مهمان، داده‌ها فقط روی گوشی ذخیره می‌شوند. بعداً می‌توانید از بالای برنامه وارد حساب شوید.</div>
+    <div class="m" style="margin-top:10px">با ورود مهمان، داده‌ها فقط روی گوشی ذخیره می‌شوند.</div>
   </div>
 </div>
 
@@ -200,7 +201,7 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
   <span id="gpsStripTxt"><span style="color:var(--mu)">◌ مختصات خاموش</span></span>
   <button id="ga" class="o sbtn" type="button">📍 مختصات</button>
   <button id="gTog" class="o sbtn hid" type="button" title="مخفی کردن مختصات">▴</button>
-  <button id="cmpTog" class="o sbtn" type="button" title="قطب‌نما و قبله‌نما">🧭</button>
+  <button id="cmpTog" class="o sbtn" type="button" title="نمایش قطب‌نما و قبله‌نما">🧭 قطب‌نما</button>
 </div>
 </div>
 
@@ -219,15 +220,54 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
       <div class="compass"><div id="qiblaNeedle" class="compass-needle qn"></div></div>
       <div><div id="qiblaDeg">قبله: --°</div><div class="m" id="qiblaHint" style="font-size:10px"></div></div>
     </div>
-    <div class="m" style="font-size:10px;flex:0 0 100%;text-align:center">برای دقت، گوشی را به شکل ۸ حرکت دهید</div>
+    <div class="m" style="font-size:10px;flex:0 0 100%;text-align:center">برای دقت، گوشی را به شکل ۸ حرکت دهید • برای قبله، دایرهٔ قبله را لمس کنید</div>
   </div>
 </div>
 
-<section id="sec-m">
-<div class="c">
-<div class="r" style="margin-bottom:6px"><button id="mm">ورود دستی درخت</button><button id="mc" class="o">با دوربین</button></div>
+<details class="c" id="mapDetails">
+  <summary>🗺️ نقشه، محدوده و مرز</summary>
+  <div class="sec" id="mp">
+    <b>نقشهٔ محدوده</b> <span class="m">(KMZ، KML، DXF یا دستی)</span>
+    <div class="r" style="margin-top:6px">
+      <button id="mb" class="o">انتخاب فایل نقشه</button>
+      <button id="btnManualCoord" class="o">ورود دستی</button>
+    </div>
+    <input type="file" id="mf" accept=".kmz,.kml,.dxf,.dwg" class="hid">
+    <div id="manualCoordArea" class="hid">
+      <div id="manualCoordList"></div>
+      <div class="r">
+        <button id="addManualRow" class="o" style="flex:1">+ افزودن نقطه</button>
+        <button id="applyManualCoord" style="flex:1">رسم روی نقشه</button>
+      </div>
+    </div>
+    <div class="m" id="mi" style="margin-top:6px">نقشه‌ای بارگذاری نشده است.</div><div class="m" style="margin-top:4px;font-size:10px">نکته: DXF باید مختصات واقعی UTM یا طول/عرض جغرافیایی داشته باشد.</div>
+    <canvas id="mc2" width="640" height="400" class="hid"></canvas>
+    <div id="mapLegend" class="m hid" style="margin-top:4px;font-size:10px">● <span style="color:#1b7a34">صنعتی</span> ● <span style="color:#e08a00">هیزمی</span> ● <span style="color:#d33">خارج از محدوده</span> ● <span style="color:#2196f3">مسیر پیمایش</span></div>
+    <div id="ms" class="gbox hid"><b id="mst"></b><div class="ac" id="msd"></div></div>
+    <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="mal" checked style="width:auto"> هشدار صوتی هنگام خروج از محدوده</label>
+  </div>
 
-<div id="cm" class="hid">
+  <div class="map-actions">
+    <button type="button" class="o" id="openEarth" style="flex:2">🌍 خروجی KMZ</button>
+    <button type="button" class="o" id="resetWalk" style="flex:1">↺ ریست مسیر</button>
+  </div>
+  <div class="map-hint">برای مشاهده در Google Earth: فایل KMZ را در Google Earth → Projects → Import کنید.</div>
+
+  <div class="gbox" id="walkBox">
+    <div class="gx">
+      <div><small>مسافت</small><b id="walkDistance">۰ متر</b></div>
+      <div><small>قدم</small><b id="walkSteps">۰</b></div>
+      <div><small>نقاط مسیر</small><b id="walkPoints">۰</b></div>
+    </div>
+    <small>مسیر واقعی روی نقشه و در فایل KMZ نمایش داده می‌شود.</small>
+  </div>
+</details>
+
+<details class="c" id="cameraDetails">
+  <summary>📷 اندازه‌گیری تقریبی با دوربین</summary>
+  <div class="sec">
+    <p class="m" style="margin:0 0 8px;color:#b78500">⚠️ این روش فقط برآورد تصویری و تقریبی است.</p>
+    <div id="cm">
   <label class="m">روش اندازه‌گیری</label>
   <div class="seg">
     <button id="mref" class="on" type="button">📏 با شیء مرجع</button>
@@ -268,6 +308,12 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
     </div>
   </div>
 </div>
+  </div>
+</details>
+
+<section id="sec-m">
+<div class="c">
+<div class="m" style="margin:4px 2px 8px">برای ورود دستی، فیلدهای زیر را تکمیل کنید.</div>
 
 <div class="r">
   <div><label>قطر سینه (cm)</label><input id="d" type="text" inputmode="decimal"></div>
@@ -286,42 +332,6 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
 <div class="r"><div><label>نوع درخت</label><select id="ty"><option value="i">صنعتی</option><option value="h">هیزمی</option></select></div><div><label>شماره / پلاک</label><input id="no"></div></div>
 <div id="cw" class="hid"><label>تعداد درختان هیزمی (هم‌گونه)</label><input id="nn" type="text" inputmode="decimal" value="1"></div>
 <label>توضیحات</label><input id="ds" placeholder="مثلاً وضعیت تنه، شیب…">
-<div id="totSummary">—</div>
-</div>
-
-<details class="c" id="tools">
-  <summary>🛠 نقشه، مرز محدوده و ورود داده‌ها</summary>
-  <div class="sec" id="mp">
-    <b>نقشهٔ محدوده</b> <span class="m">(KMZ، KML، DXF یا دستی)</span>
-    <div class="r" style="margin-top:6px">
-      <button id="mb" class="o">انتخاب فایل نقشه</button>
-      <button id="btnManualCoord" class="o">ورود دستی</button>
-    </div>
-    <input type="file" id="mf" accept=".kmz,.kml,.dxf,.dwg" class="hid">
-    <div id="manualCoordArea" class="hid">
-      <div id="manualCoordList"></div>
-      <div class="r">
-        <button id="addManualRow" class="o" style="flex:1">+ افزودن نقطه</button>
-        <button id="applyManualCoord" style="flex:1">رسم روی نقشه</button>
-      </div>
-    </div>
-    <div class="m" id="mi" style="margin-top:6px">نقشه‌ای بارگذاری نشده است.</div>
-    <canvas id="mc2" width="640" height="400" class="hid"></canvas>
-    <div id="mapLegend" class="m hid" style="margin-top:4px">● <span style="color:#1b7a34">صنعتی</span> &nbsp; ● <span style="color:#e08a00">هیزمی</span> &nbsp; ● <span style="color:#d33">خارج از محدوده</span></div>
-    <div id="ms" class="gbox hid"><b id="mst"></b><div class="ac" id="msd"></div></div>
-    <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="mal" checked style="width:auto"> هشدار صوتی هنگام خروج از محدوده</label>
-  </div>
-  <div class="sec">
-    <b>📥 ورود داده‌ها</b>
-    <div class="m" style="margin-bottom: 8px;">فایل اکسل، ورد، PDF یا عکس را وارد کنید، یا داده‌ها را دستی و سریع تایپ کنید.</div>
-    <input type="file" id="smartImportFile" accept=".xlsx, .xls, .csv, .docx, .pdf, image/*" class="hid">
-    <button id="btnSmartImport" style="width:100%; padding: 12px; font-size: 15px; margin-bottom: 6px;">انتخاب فایل (اکسل، ورد، PDF، عکس)</button>
-    <button id="btnQuickEntry" class="o" style="width:100%; padding: 12px; font-size: 15px;">⌨️ ورود سریع دستی (تایپ)</button>
-    <div class="m" style="color: #b78500; font-size: 11px; margin-top: 6px;">⚠️ اعداد ناخوانا خالی می‌مانند. در ورود سریع، شماره‌ها خودکار مرتب می‌شوند.</div>
-  </div>
-</details>
-</section>
-
 <div id="saveBar">
   <div class="sbIn">
     <div id="svHint"></div>
@@ -334,6 +344,21 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
     </div>
   </div>
 </div>
+<div id="totSummary">—</div>
+</div>
+
+<section class="c" id="tools">
+  <b>📥 ورود داده‌ها</b>
+  <div class="sec">
+    <div class="m" style="margin-bottom: 8px;">فایل اکسل، ورد، PDF یا عکس را وارد کنید، یا داده‌ها را دستی و سریع تایپ کنید.</div>
+    <input type="file" id="smartImportFile" accept=".xlsx,.xls,.csv,.docx,.doc,.pdf,.jpg,.jpeg,.png,.webp,.gif,.bmp,.heic,.heif,.tif,.tiff" class="hid">
+    <button id="btnSmartImport" style="width:100%; padding: 12px; font-size: 15px; margin-bottom: 6px;">انتخاب فایل (اکسل، ورد، PDF، عکس)</button>
+    <button id="btnQuickEntry" class="o" style="width:100%; padding: 12px; font-size: 15px;">⌨️ ورود سریع دستی (تایپ)</button>
+    <div class="m" style="color: #b78500; font-size: 11px; margin-top: 6px;">⚠️ اعداد ناخوانا خالی می‌مانند. OCR عکس برای جدول چاپی بهتر عمل می‌کند؛ دست‌خط فارسی باید بازبینی شود.</div>
+  </div>
+</section>
+</section>
+
 
 <section id="sec-l" class="hid">
 <div id="noCoordBanner" class="hid"></div>
@@ -346,7 +371,7 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
 <select id="expType">
   <option value="x1">اکسل — این زمین</option>
   <option value="x3">اکسل — همهٔ زمین‌ها</option>
-  <option value="kmz">Google Earth (KMZ) — محدوده و درختان</option>
+  <option value="kmz">Google Earth (KMZ) — محدوده، مسیر و درختان</option>
   <option value="bk">پشتیبان کامل (JSON)</option>
 </select>
 <div class="r" style="margin-top:8px"><button id="expSave" class="o">💾 ذخیره روی گوشی</button><button id="expShare">📤 اشتراک‌گذاری</button></div>
@@ -396,7 +421,9 @@ const volSp=(sp,d,h)=>(sp=='راش'||sp=='بلوط')?vol(d,h,SP[sp][0]):tbl(d,h)
 let manualCoords = []; 
 let SHEETS=[];try{SHEETS=JSON.parse(localStorage.getItem('sheets')||'[]')}catch(e){}
 let activeId=null;try{activeId=+localStorage.getItem('activeSheet')||null}catch(e){}
-let T=[],MAPP=[],MAPZ=39,MAPNM='';
+let T=[],MAPP=[],MAPZ=39,MAPNM='',TRACK=[];
+let walkMeters=0,lastWalkFix=null;
+
 if(!SHEETS.length){
   let oldT=[],oldMap=null;
   try{oldT=JSON.parse(localStorage.getItem('trees')||'[]')}catch(e){}
@@ -406,15 +433,33 @@ if(!SHEETS.length){
   try{localStorage.setItem('sheets',JSON.stringify(SHEETS));localStorage.setItem('activeSheet','1')}catch(e){}
 }
 function getActiveSheet(){return SHEETS.find(s=>s.id===activeId)||SHEETS[0]}
-function loadActive(){const sh=getActiveSheet();if(!sh)return;activeId=sh.id;T=sh.trees||[];MAPP=(sh.map&&sh.map.p)||[];MAPZ=(sh.map&&sh.map.z)||39;MAPNM=(sh.map&&sh.map.nm)||'';try{localStorage.setItem('activeSheet',String(activeId))}catch(e){}}
-function saveActive(){const sh=getActiveSheet();if(!sh)return;sh.trees=T;if(MAPP.length)sh.map={p:MAPP,z:MAPZ,nm:MAPNM};else delete sh.map;try{localStorage.setItem('sheets',JSON.stringify(SHEETS));stWarn(false)}catch(e){stWarn(true)}}
+function loadActive(){
+  const sh=getActiveSheet();if(!sh)return;
+  activeId=sh.id;
+  T=sh.trees||[];
+  MAPP=(sh.map&&sh.map.p)||[];
+  MAPZ=(sh.map&&sh.map.z)||39;
+  MAPNM=(sh.map&&sh.map.nm)||'';
+  TRACK=sh.track||[];
+  walkMeters=0;
+  if(TRACK.length>1){
+    for(let i=1;i<TRACK.length;i++){
+      walkMeters+=gdist(TRACK[i-1].lat,TRACK[i-1].lng,TRACK[i].lat,TRACK[i].lng);
+    }
+  }
+  lastWalkFix=TRACK.length?{lat:TRACK[TRACK.length-1].lat,lng:TRACK[TRACK.length-1].lng}:null;
+  try{localStorage.setItem('activeSheet',String(activeId))}catch(e){}
+}
+function saveActive(){const sh=getActiveSheet();if(!sh)return;sh.trees=T;if(MAPP.length)sh.map={p:MAPP,z:MAPZ,nm:MAPNM};else delete sh.map;if(TRACK.length>0)sh.track=TRACK;else delete sh.track;try{localStorage.setItem('sheets',JSON.stringify(SHEETS));stWarn(false)}catch(e){stWarn(true)}}
 function stWarn(bad){const e=document.getElementById('sw');if(!e)return;e.classList.toggle('hid',!bad);e.textContent='⛔ ذخیره‌سازی انجام نشد (حافظه پر است). پشتیبان بگیرید.'}
 const norm=()=>T.forEach(t=>{if(t.sp=='زبان‌گنجشک')t.sp='ون';if(!t.g)t.g=(SP[t.sp]||[0,3])[1];if(!t.ty)t.ty=t.d<20?'h':'i';if(SP[t.sp]){t.v=volSp(t.sp,t.d,t.h);if(t.d2)t.v2=volSp(t.sp,t.d2,t.h2)}if(t.lat&&!t.ux){const u=utm(t.lat,t.lng);t.ux=u.E;t.uy=u.N;t.uz=u.z}});
 loadActive();norm();
 const store=()=>{saveActive();bnr();try{if(window.syncSoon)window.syncSoon()}catch(e){}};
 
+let trackSaveT=null;
+function trackAutoSave(){if(trackSaveT)clearTimeout(trackSaveT);trackSaveT=setTimeout(()=>{try{saveActive()}catch(e){}},2500)}
+
 let RECENT=[];try{RECENT=JSON.parse(localStorage.getItem('recentSp')||'[]')}catch(e){}
-/* اصلاح ۳: SNAPS باید قبل از اولین استفاده تعریف شود */
 let SNAPS=[];try{SNAPS=JSON.parse(localStorage.getItem('snaps')||'[]')}catch(e){}
 function addRecent(sp){
   if(!sp)return;
@@ -442,11 +487,11 @@ function setQ(la,lo){QLOC={lat:la,lng:lo};try{localStorage.setItem('qloc',JSON.s
 function updQibla(){
   const n=document.getElementById('qiblaNeedle'),t=document.getElementById('qiblaDeg'),h=document.getElementById('qiblaHint');
   if(!n||!t)return;
-  if(!QLOC){t.textContent='قبله: --°';if(h)h.textContent='برای تعیین، لمس کنید';n.style.visibility='hidden';return}
+  if(!QLOC){t.textContent='قبله: --°';if(h)h.textContent='برای تعیین، دایره را لمس کنید';n.style.visibility='hidden';return}
   n.style.visibility='visible';
   const b=qiblaBearing(QLOC.lat,QLOC.lng);
   t.textContent='قبله: '+toFa(Math.round(b))+'°';
-  if(h)h.textContent=HEAD==null?'قطب‌نمای گوشی فعال نیست':'';
+  if(h)h.textContent=HEAD==null?'قطب‌نما غیرفعال — دایره را لمس کنید':'برای به‌روزرسانی، لمس کنید';
   n.style.transform='rotate('+(b-(HEAD||0))+'deg)';
 }
 function initCompass(){
@@ -472,6 +517,13 @@ function handleOrientation(e){
 initCompass();updQibla();
 
 let cur=null,wid=null,gpsOn=false,gbHidden=false,GBUF=[];
+function updateWalkUI(){
+  const m=Math.round(walkMeters),steps=Math.round(walkMeters/0.75);
+  const d=$('#walkDistance'),st=$('#walkSteps'),p=$('#walkPoints');
+  if(d)d.textContent=m<1000?toFa(m)+' متر':toFa((walkMeters/1000).toFixed(2))+' کیلومتر';
+  if(st)st.textContent=toFa(steps);
+  if(p)p.textContent=toFa(TRACK.length);
+}
 function utm(lat,lon,zf){const a=6378137,f=1/298.257223563,k=.9996,e2=f*(2-f),ep=e2/(1-e2),z=zf||Math.floor((lon+180)/6)+1,l0=rad((z-1)*6-177),p=rad(lat),A=Math.cos(p)*(rad(lon)-l0),n=a/Math.sqrt(1-e2*Math.sin(p)**2),t=Math.tan(p)**2,c=ep*Math.cos(p)**2;
  const M=a*((1-e2/4-3*e2*e2/64-5*e2**3/256)*p-(3*e2/8+3*e2*e2/32+45*e2**3/1024)*Math.sin(2*p)+(15*e2*e2/256+45*e2**3/1024)*Math.sin(4*p)-(35*e2**3/3072)*Math.sin(6*p));
  return{z,E:Math.round(k*n*(A+(1-t+c)*A**3/6+(5-18*t+t*t+72*c-58*ep)*A**5/120)+5e5),N:Math.round(k*(M+n*Math.tan(p)*(A*A/2+(5-t+9*c+4*c*c)*A**4/24+(61-58*t+t*t+600*c-330*ep)*A**6/720)))}}
@@ -492,6 +544,7 @@ function gShow(){
 function gdist(a,b,c,d){const dy=(c-a)*110540,dx=(d-b)*111320*Math.cos(a*Math.PI/180);return Math.hypot(dx,dy)}
 function gpsFix(la,lo,acc){
   const now=Date.now();
+  if(acc<=20){if(lastWalkFix){const delta=gdist(lastWalkFix.lat,lastWalkFix.lng,la,lo);if(delta>=2&&delta<=40)walkMeters+=delta;}lastWalkFix={lat:la,lng:lo};updateWalkUI();}
   GBUF=GBUF.filter(g=>now-g.t<15000&&gdist(g.la,g.lo,la,lo)<=Math.max(8,acc*1.5));
   GBUF.push({la,lo,acc,t:now});
   if(GBUF.length>8)GBUF.shift();
@@ -499,6 +552,15 @@ function gpsFix(la,lo,acc){
   GBUF.forEach(g=>{const w=1/Math.max(g.acc,1)**2;sw+=w;sa+=w*g.la;so+=w*g.lo;best=Math.min(best,g.acc)});
   cur={lat:+(sa/sw).toFixed(6),lng:+(so/sw).toFixed(6),acc:best,n:GBUF.length};
   cur.u=utm(cur.lat,cur.lng);
+  if(acc<=15){
+    const last=TRACK[TRACK.length-1];
+    const moved=last?gdist(last.lat,last.lng,cur.lat,cur.lng):999;
+    if(moved>=4){
+      TRACK.push({lat:cur.lat,lng:cur.lng,t:now});
+      if(TRACK.length>3000)TRACK.shift();
+      updateWalkUI();trackAutoSave();
+    }
+  }
   setQ(cur.lat,cur.lng);gShow();mapCheck();
 }
 function startGPS(){
@@ -514,7 +576,6 @@ function startGPS(){
     {enableHighAccuracy:true,maximumAge:2000,timeout:30000}
   );
 }
-
 function stopGPS(){
   if(wid!==null){try{navigator.geolocation.clearWatch(wid)}catch(e){}wid=null}
   gpsOn=false;cur=null;
@@ -523,7 +584,6 @@ function stopGPS(){
   const b=$('#gb');if(b)b.classList.add('hid');gbHidden=false;GBUF=[];const tg=$('#gTog');if(tg){tg.classList.add('hid');tg.textContent='▴'}const gsE=$('#gs');if(gsE)gsE.classList.add('hid');
   updateGpsUI();
 }
-
 function updateGpsUI(){
   const strip=$('#gpsStripTxt');
   if(strip){
@@ -542,14 +602,7 @@ function updateGpsUI(){
     else if(!cur){hint.innerHTML='<span style="color:#b78500">◌ در حال یافتن…</span>'}
     else{hint.innerHTML='<span style="color:#2e9d4f">✓ آماده — دقت ±'+fa(cur.acc,0)+' متر</span>'}
   }
-  const sum=$('#gpsMapSum');
-  if(sum){
-    if(!gpsOn)sum.textContent='📍 مختصات — خاموش';
-    else if(!cur)sum.textContent='📍 مختصات — در حال یافتن…';
-    else{let t='📍 دقت ±'+fa(cur.acc,0)+'م';if(MAPP.length){const r=mtest(MAPP,cur.u.E,cur.u.N);t+=' • '+(r.in?'✓ داخل':'✗ خارج');}sum.textContent=t;}
-  }
 }
-
 $('#btnManualCoord').onclick = () => {
   const area = $('#manualCoordArea');
   area.classList.toggle('hid');
@@ -588,12 +641,23 @@ function mdraw(sel,u,pts){
   const ext=(a,b)=>{x0=Math.min(x0,a);x1=Math.max(x1,a);y0=Math.min(y0,b);y1=Math.max(y1,b)};
   sel.forEach(p=>p.o.forEach(q=>ext(q[0],q[1])));
   pts.forEach(p=>ext(p.E,p.N));
+  const ZT=(cur&&cur.u&&cur.u.z)||treeZone()||39;
+  const trackPts=TRACK.map(tp=>{const u2=utm(tp.lat,tp.lng,ZT);return{E:u2.E,N:u2.N}});
+  trackPts.forEach(p=>ext(p.E,p.N));
   if(u)ext(u.E,u.N);
   if(x0===1e18)return;
   if(x1-x0<30){const m=(x0+x1)/2;x0=m-15;x1=m+15}
   if(y1-y0<30){const m=(y0+y1)/2;y0=m-15;y1=m+15}
   const pad=20,sc=Math.min((W-2*pad)/(x1-x0),(H-2*pad)/(y1-y0)),ox=(W-(x1-x0)*sc)/2,oy=(H-(y1-y0)*sc)/2,X=e=>ox+(e-x0)*sc,Y=n=>H-(oy+(n-y0)*sc);
   x.lineWidth=2;sel.forEach(p=>{x.beginPath();[p.o,...p.i].forEach(r=>{r.forEach((q,k)=>k?x.lineTo(X(q[0]),Y(q[1])):x.moveTo(X(q[0]),Y(q[1])));x.closePath()});x.fillStyle='rgba(60,160,90,.25)';x.strokeStyle='#2e9d4f';x.fill('evenodd');x.stroke()});
+  if(trackPts.length>1){
+    x.beginPath();
+    trackPts.forEach((p,i)=>i?x.lineTo(X(p.E),Y(p.N)):x.moveTo(X(p.E),Y(p.N)));
+    x.strokeStyle='#2196f3';x.lineWidth=2.5;x.lineJoin='round';x.lineCap='round';x.stroke();
+    const s=trackPts[0],e=trackPts[trackPts.length-1];
+    x.beginPath();x.arc(X(s.E),Y(s.N),5,0,7);x.fillStyle='#2e9d4f';x.fill();x.strokeStyle='#fff';x.lineWidth=1.5;x.stroke();
+    if(trackPts.length>1){x.beginPath();x.arc(X(e.E),Y(e.N),5,0,7);x.fillStyle='#d33';x.fill();x.strokeStyle='#fff';x.lineWidth=1.5;x.stroke()}
+  }
   const lab=pts.length<=40,tc=getComputedStyle(document.body).color||'#000';
   pts.forEach(p=>{
     const hz=p.t.ty==='h';let col=hz?'#e08a00':'#1b7a34';
@@ -606,13 +670,19 @@ function mdraw(sel,u,pts){
 
 function mapCheck(quiet){
   const box=$('#ms'),cv=$('#mc2'),leg=$('#mapLegend'),pts=treePts();
-  if(!MAPP.length&&!pts.length){if(box)box.classList.add('hid');if(cv)cv.classList.add('hid');if(leg)leg.classList.add('hid');return}
-  cv.classList.remove('hid');box.classList.remove('hid');if(leg)leg.classList.toggle('hid',!pts.length);
+  if(!MAPP.length&&!pts.length&&!TRACK.length){if(box)box.classList.add('hid');if(cv)cv.classList.add('hid');if(leg)leg.classList.add('hid');return}
+  cv.classList.remove('hid');box.classList.remove('hid');if(leg)leg.classList.toggle('hid',!pts.length&&!TRACK.length);
   if(!MAPP.length){
     const u=cur?utm(cur.lat,cur.lng,treeZone()):null;if(u)u.in=true;
-    mdraw([],u,pts);box.className='gbox';$('#mst').textContent='نقشهٔ محدوده بارگذاری نشده';$('#msd').textContent=toFa(pts.length)+' درخت دارای مختصات';return;
+    mdraw([],u,pts);box.className='gbox';
+    $('#mst').textContent='نقشهٔ محدوده بارگذاری نشده';
+    const parts=[];
+    if(pts.length)parts.push(toFa(pts.length)+' درخت');
+    if(TRACK.length)parts.push('مسیر '+toFa(TRACK.length)+' نقطه');
+    $('#msd').textContent=parts.join(' • ')||'برای نمایش، مختصات را روشن کنید';
+    return;
   }
-  if(!cur){mdraw(MAPP,null,pts);box.className='gbox';$('#mst').textContent='نقشه بارگذاری شد';$('#msd').textContent=(pts.length?toFa(pts.length)+' درخت روی نقشه — ':'')+'برای موقعیت، «مختصات» را بزنید.';return}
+  if(!cur){mdraw(MAPP,null,pts);box.className='gbox';$('#mst').textContent='نقشه بارگذاری شد';$('#msd').textContent=(pts.length?toFa(pts.length)+' درخت روی نقشه — ':'')+(TRACK.length?'مسیر '+toFa(TRACK.length)+' نقطه — ':'')+'برای موقعیت، «مختصات» را بزنید.';return}
   const u=utm(cur.lat,cur.lng,MAPZ),r=mtest(MAPP,u.E,u.N);u.in=r.in;mdraw(MAPP,u,pts);
   box.className='gbox '+(r.in?'g1':'g3 al');
   $('#mst').textContent=r.in?'✅ داخل محدوده':'⛔ خارج از محدوده';
@@ -655,7 +725,7 @@ function renameSheet(id){
 function deleteSheet(id){
   if(SHEETS.length<=1){alert('حداقل یک سربرگ باید باقی بماند.');return}
   const sh=SHEETS.find(s=>s.id===id);if(!sh)return;
-  if(!confirm('سربرگ «'+sh.name+'» با تمام درختان و نقشه‌اش حذف شود؟'))return;
+  if(!confirm('سربرگ «'+sh.name+'» با تمام درختان، نقشه و مسیرش حذف شود؟'))return;
   if(activeId===id){SHEETS=SHEETS.filter(s=>s.id!==id);switchSheet(SHEETS[0].id,true);store();}
   else{SHEETS=SHEETS.filter(s=>s.id!==id);store();renderTabs();draw();}
 }
@@ -665,6 +735,7 @@ function switchSheet(id,skipSave){
   activeId=id; loadActive();norm();
   const oldSIM=SIM;SIM=false;clr();SIM=oldSIM;updSimBtn();
   cur=null; manualCoords = [];
+  updateWalkUI();
   renderTabs();updateMapInfo();draw();mapCheck();updateGpsUI();
 }
 
@@ -672,7 +743,7 @@ let BK={n:0,dt:''};try{BK=JSON.parse(localStorage.getItem('bk')||'{"n":0,"dt":""
 const tot=()=>SHEETS.reduce((a,s)=>a+((s.id===activeId?T:s.trees)||[]).length,0);
 function bnr(){const k=tot()-BK.n,b=$('#bn'),x=$('#bks'); if(b){b.classList.toggle('hid',!(k>=10));b.textContent='⚠ '+toFa(k)+' درخت از آخرین پشتیبان‌گیری ثبت شده؛ پشتیبان بگیرید.'} if(x)x.textContent=BK.dt?'آخرین پشتیبان: '+BK.dt:'هنوز پشتیبان‌گیری نشده است.'}
 
-function parseKML(t){const d=new DOMParser().parseFromString(t,'text/xml'),out=[];
+function parseKML(t){const d=new DOMParser().parseFromString(t,'text/xml'),out=[];if(d.querySelector('parsererror'))throw new Error('ساختار KML معتبر نیست.');
  const ring=e=>{const c=e&&e.querySelector('coordinates');return c?c.textContent.trim().split(/\s+/).map(v=>v.split(',').map(Number)).filter(a=>a.length>=2&&isFinite(a[0])&&isFinite(a[1])):[]};
  const nm=e=>{const p=e.closest('Placemark'),n=p&&p.querySelector('name');return(n&&n.textContent.trim())||'بدون‌نام'};
  d.querySelectorAll('Polygon').forEach(g=>{const o=ring(g.querySelector('outerBoundaryIs')),i=[...g.querySelectorAll('innerBoundaryIs')].map(ring).filter(r=>r.length>=3);if(o.length>=3)out.push({n:nm(g),o,i,ll:true})});
@@ -703,12 +774,12 @@ $('#mf').onchange=async e=>{const f=e.target.files[0];if(!f)return;const ext=f.n
  try{let po=[];
   if(ext=='dwg'){S('DWG مستقیم خوانده نمی‌شود؛ به DXF تبدیل کنید.');return}
   if(ext=='kmz'){if(!window.JSZip){S('JSZip بارگذاری نشد.');return}
-   const zip=await JSZip.loadAsync(await f.arrayBuffer()),k=Object.keys(zip.files).filter(n=>/\.kml$/i.test(n)).sort((a,b)=>/doc\.kml$/i.test(b)-/doc\.kml$/i.test(a))[0];if(!k)throw 0;po=parseKML(await zip.files[k].async('string'))}
+   const zip=await JSZip.loadAsync(await f.arrayBuffer()),ks=Object.keys(zip.files).filter(n=>/\.kml$/i.test(n)&&!zip.files[n].dir).sort((a,b)=>Number(/(^|\/)doc\.kml$/i.test(b))-Number(/(^|\/)doc\.kml$/i.test(a)));if(!ks.length)throw new Error('داخل KMZ فایل KML پیدا نشد.');for(const k of ks){po.push(...parseKML(await zip.files[k].async('string')))}}
   else if(ext=='kml')po=parseKML(await f.text());
   else if(ext=='dxf')po=parseDXF(await f.text());
   else{S('فرمت پشتیبانی‌نشده.');return}
-  if(!po.length){S('پلیگون بسته‌ای پیدا نشد.');return}
-  const f0=po[0].o[0],zn=po[0].ll?Math.floor((f0[0]+180)/6)+1:(cur?cur.u.z:39);
+  if(!po.length){S(ext==='dxf'?'در DXF مرز بسته پیدا نشد. پلی‌لاین باید بسته (Closed) و مختصات آن جغرافیایی یا UTM باشد.':'در فایل KML/KMZ هیچ Polygon یا مرز بسته‌ای پیدا نشد.');return}
+  const f0=po[0].o[0];let zn=po[0].ll?Math.floor((f0[0]+180)/6)+1:(cur?cur.u.z:39);if(ext==='dxf'&&!po[0].ll&&!cur){const z=prompt('زون مختصات UTM فایل DXF را وارد کنید (برای شمال ایران معمولاً ۳۹ یا ۴۰):',String(zn));if(z===null)return;zn=Number(z);if(!Number.isInteger(zn)||zn<1||zn>60){S('زون UTM نامعتبر است.');return}}
   const cv=(r,ll)=>r.map(q=>{if(ll){const u=utm(q[1],q[0],zn);return[u.E,u.N]}return[Math.round(q[0]*10)/10,Math.round(q[1]*10)/10]});
   setMap(po.map(q=>({n:q.n,o:cv(q.o,q.ll),i:q.i.map(r=>cv(r,q.ll))})),zn,f.name,true)}
  catch(x){S('خواندن فایل ممکن نشد.')}
@@ -778,7 +849,6 @@ $('#mref').onclick=()=>{if(camMode==='ref')return;camMode='ref';MK={1:{},2:{}};a
 $('#mdist').onclick=()=>{if(camMode==='dist')return;camMode='dist';MK={1:{},2:{}};act=null;updateModeUI();setStep(stp)};
 $('#refType').onchange=()=>{refType=$('#refType').value;try{localStorage.setItem('refType',refType)}catch(e){};$('#refSize').classList.toggle('hid',refType!=='custom');compute()};
 $('#refSize').addEventListener('input',()=>{compute()});
-
 function render(){
   const o=$('#ov'),m=MK[stp];
   o.innerHTML='';
@@ -904,8 +974,7 @@ $('#im').onload=()=>{render();compute();updateGuide()};
 $('#clrMarkers').onclick=()=>{MK[stp]={};const DEFS=getDef();act=DEFS[0][0];chips();render();updateGuide();compute()};
 $('#fl').addEventListener('input',()=>{compute()});
 $('#D1').addEventListener('input',()=>{compute()});
-$('#mc').onclick=()=>{$('#cm').classList.remove('hid');$('#mc').className='';$('#mm').className='o';updateModeUI();setStep(stp)};
-$('#mm').onclick=()=>{$('#cm').classList.add('hid');$('#mm').className='';$('#mc').className='o';$('#d').focus()};
+$('#cameraDetails').addEventListener('toggle',()=>{if($('#cameraDetails').open){updateModeUI();setStep(stp)}});
 
 function clr(){
   tyM=false;noM=false;
@@ -1023,17 +1092,17 @@ function updateTotSummary(){
 function draw(){
   bnr();updateNoCoord();updateNumCheck();updateTotSummary();
   $('#tb').innerHTML='<tr><th>شماره</th><th>گونه</th><th>دسته</th><th>نوع</th><th>قطر</th><th>ارتفاع</th><th>حجم</th><th>X</th><th>Y</th><th>زون</th><th>توضیحات</th><th></th></tr>'+
-    T.map(t=>`<tr><td>${t.ty==='h'?'—':toFa(t.no||'')}</td><td>${t.sp}</td><td>${G[t.g]}</td><td>${t.ty==='h'?'هیزمی ('+toFa(cnt(t))+')':'صنعتی'}</td><td>${fa(t.d,1)}</td><td>${fa(t.h,1)}</td><td>${fa(tv(t),3)}</td><td${t.ua>10?' style="color:#b78500" title="دقت ضعیف"':''}>${t.ux?toFa(t.ux):'<span style="color:#d33">⚠</span>'}</td><td>${t.uy?toFa(t.uy):'—'}</td><td>${t.uz?toFa(t.uz):'—'}</td><td>${t.ds||''}</td><td><button class="o chipbtn" onclick="ed(${t.id})">ویرایش</button> <button class="x" onclick="del(${t.id})">حذف</button></td></tr>`).join('');
+    T.map(t=>`<tr><td>${t.ty==='h'?'—':esc(toFa(t.no||''))}</td><td>${esc(t.sp)}</td><td>${G[t.g]}</td><td>${t.ty==='h'?'هیزمی ('+toFa(cnt(t))+')':'صنعتی'}</td><td>${fa(t.d,1)}</td><td>${fa(t.h,1)}</td><td>${fa(tv(t),3)}</td><td${t.ua>10?' style="color:#b78500" title="دقت ضعیف"':''}>${t.ux?toFa(t.ux):'<span style="color:#d33">⚠</span>'}</td><td>${t.uy?toFa(t.uy):'—'}</td><td>${t.uz?toFa(t.uz):'—'}</td><td>${esc(t.ds||'')}</td><td><button class="o chipbtn" onclick="ed(${t.id})">ویرایش</button> <button class="x" onclick="del(${t.id})">حذف</button></td></tr>`).join('');
   $('#tot').textContent=fa(sv(T),3);
   const x=sumX();
   $('#sm').innerHTML='<tr><th rowspan="2">ردیف</th><th rowspan="2">دسته‌بندی</th><th colspan="2">صنعتی</th><th colspan="2">هیزمی</th></tr><tr><th>تعداد</th><th>حجم</th><th>تعداد</th><th>حجم</th></tr>'+
-    x.r.map((a,i)=>`<tr><td>${fa(i+1)}</td><td>${a[0]}</td><td>${fa(a[1])}</td><td>${fa(a[2],2)}</td><td>${fa(a[3])}</td><td>${fa(a[4],2)}</td></tr>`).join('')+
+    x.r.map((a,i)=>`<tr><td>${fa(i+1)}</td><td>${esc(a[0])}</td><td>${fa(a[1])}</td><td>${fa(a[2],2)}</td><td>${fa(a[3])}</td><td>${fa(a[4],2)}</td></tr>`).join('')+
     `<tr style="font-weight:700"><td colspan="2">مجموع</td><td>${fa(x.t[1])}</td><td>${fa(x.t[2],2)}</td><td>${fa(x.t[3])}</td><td>${fa(x.t[4],2)}</td></tr>`;
   const cu=$('#hs2').value;
-  $('#hs2').innerHTML=T.map(t=>`<option value="${t.id}">${t.ty==='h'?'هیزمی':'شماره '+toFa(t.no||t.id)} - ${t.sp} - ${fa(t.d,0)}</option>`).join('');
+  $('#hs2').innerHTML=T.map(t=>`<option value="${t.id}">${t.ty==='h'?'هیزمی':'شماره '+esc(toFa(t.no||t.id))} - ${esc(t.sp)} - ${fa(t.d,0)}</option>`).join('');
   if(cu)$('#hs2').value=cu;
   $('#tb2').innerHTML='<tr><th>#</th><th>گونه</th><th>حجم اولیه</th><th>حجم تجدید</th><th>تغییر٪</th><th>استحصال</th><th>تاریخ</th></tr>'+
-    T.filter(t=>t.v2||t.hv).map(t=>`<tr><td>${t.ty==='h'?'هیزمی':toFa(t.no||t.id)}</td><td>${t.sp}</td><td>${fa(t.v,3)}</td><td>${fa(t.v2,3)}</td><td>${t.v2?fa((t.v2-t.v)/t.v*100,1):'—'}</td><td>${fa(t.hv,3)}</td><td>${t.hd||'—'}</td></tr>`).join('');
+    T.filter(t=>t.v2||t.hv).map(t=>`<tr><td>${t.ty==='h'?'هیزمی':esc(toFa(t.no||t.id))}</td><td>${esc(t.sp)}</td><td>${fa(t.v,3)}</td><td>${fa(t.v2,3)}</td><td>${t.v2?fa((t.v2-t.v)/t.v*100,1):'—'}</td><td>${fa(t.hv,3)}</td><td>${esc(t.hd||'—')}</td></tr>`).join('');
   try{mapCheck(true)}catch(e){}
 }
 window.del=id=>{T=T.filter(t=>t.id!==id);store();draw()};
@@ -1048,7 +1117,7 @@ $('#sh').onclick=()=>{
 function fillSp(q){
   q=nz(q||'');
   const a=q?NAMES.filter(n=>nz(n).startsWith(q)).concat(NAMES.filter(n=>!nz(n).startsWith(q)&&nz(n).includes(q))):NAMES;
-  $('#sp').innerHTML='<option value="">— گونه را انتخاب کنید —</option>'+a.map(k=>`<option>${k}</option>`).join('');
+  $('#sp').innerHTML='<option value="">— گونه را انتخاب کنید —</option>'+a.map(k=>`<option>${esc(k)}</option>`).join('');
   $('#sp').size=q?Math.min(7,a.length+1):1;
   const sug=$('#spSug');
   if(sug){
@@ -1068,6 +1137,13 @@ $('#simBtn').onclick=()=>{SIM=!SIM;try{localStorage.setItem('simSp',SIM?'1':'0')
 $('#gTog').onclick=()=>{gbHidden=!gbHidden;$('#gb').classList.toggle('hid',gbHidden);$('#gTog').textContent=gbHidden?'▾':'▴';$('#gTog').title=gbHidden?'نمایش مختصات':'مخفی کردن مختصات'};
 $('#cmpTog').onclick=()=>{const w=$('#compassWrap');w.classList.toggle('hid');const off=w.classList.contains('hid');$('#cmpTog').className=off?'o sbtn':'sbtn';try{localStorage.setItem('cmpOn',off?'0':'1')}catch(e){}};
 try{if(localStorage.getItem('cmpOn')==='1'){$('#compassWrap').classList.remove('hid');$('#cmpTog').className='sbtn'}}catch(e){}
+
+$('#openEarth').onclick=()=>runExport('kmz',false);
+$('#resetWalk').onclick=()=>{
+  if(TRACK.length>1&&!confirm('مسیر پیمایش‌شده هم پاک شود؟ ('+toFa(TRACK.length)+' نقطه)'))return;
+  walkMeters=0;lastWalkFix=cur?{lat:cur.lat,lng:cur.lng}:null;TRACK=[];updateWalkUI();saveActive();mapCheck();
+};
+updateWalkUI();
 $('#ga').onclick=e=>{if(e){e.preventDefault();e.stopPropagation()}if(gpsOn)stopGPS();else startGPS();};
 
 function calc(){autoTy();const v=($('#sp').value?volSp($('#sp').value,N('#d'),N('#h')):0)*($('#ty').value=='h'?Math.max(1,Math.round(N('#nn'))||1):1);{const t=v>0?fa(v,3):'—';const e=$('#vBar');if(e)e.textContent=t}}
@@ -1080,14 +1156,39 @@ const autoTy=()=>{if(!tyM)$('#ty').value=(N('#d')>0&&N('#d')<20)?'h':'i';autoNo(
 $('#no').addEventListener('input',()=>{noM=true});
 const ff=()=>(SP[$('#sp').value]||[.5])[0];
 
-// ورود داده‌ها
+function normalizeOcrText(t){
+  return String(t||'').replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))
+    .replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)))
+    .replace(/[٫،]/g,'.').replace(/[؛]/g,' ').replace(/[|]/g,'1');
+}
+async function prepareOcrImage(file){
+  let img;
+  if(window.createImageBitmap){img=await createImageBitmap(file)}
+  else{img=await new Promise((resolve,reject)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{URL.revokeObjectURL(u);resolve(im)};im.onerror=reject;im.src=u})}
+  const scale=Math.min(2.5,Math.max(1,2400/Math.max(img.width,img.height)));
+  const c=document.createElement('canvas');c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);
+  const x=c.getContext('2d',{willReadFrequently:true});x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);
+  x.drawImage(img,0,0,c.width,c.height);
+  const im=x.getImageData(0,0,c.width,c.height),d=im.data;
+  for(let i=0;i<d.length;i+=4){
+    let g=.299*d[i]+.587*d[i+1]+.114*d[i+2];
+    g=Math.max(0,Math.min(255,(g-128)*1.22+128));
+    d[i]=d[i+1]=d[i+2]=g;
+  }
+  x.putImageData(im,0,0);
+  const blob=await new Promise(resolve=>c.toBlob(resolve,'image/png'));
+  img.close&&img.close();return blob||file;
+}
+
 document.getElementById('btnSmartImport').onclick = () => document.getElementById('smartImportFile').click();
 document.getElementById('smartImportFile').onchange = async (e) => {
-  const file = e.target.files[0]; if (!file) return; e.target.value = ''; 
+  const file = e.target.files[0]; if (!file) return; e.target.value = '';
   const btn = document.getElementById('btnSmartImport'); const originalText = btn.innerHTML;
+  const fname = (file.name || '').toLowerCase();
+  const fext = fname.split('.').pop();
   try {
-    let extractedData = []; 
-    if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls') || file.name.endsWith('.csv')) {
+    let extractedData = [];
+    if (['xlsx','xls','csv'].includes(fext)) {
       btn.innerHTML = '⏳ در حال خواندن اکسل...';
       const data = await file.arrayBuffer(); const workbook = XLSX.read(data, { type: 'array' });
       const sheet = workbook.Sheets[workbook.SheetNames[0]]; const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
@@ -1113,12 +1214,14 @@ document.getElementById('smartImportFile').onchange = async (e) => {
           if (d > 0) { extractedData.push({ no: colNo !== -1 && r[colNo] ? String(r[colNo]).trim() : '', sp: colSp !== -1 && r[colSp] ? String(r[colSp]).trim() : '', d: d, h: h, ds: colDs !== -1 && r[colDs] ? String(r[colDs]).trim() : '' }); }
         }
       }
-    } else if (file.name.endsWith('.docx')) {
+    } else if (fext === 'docx') {
       btn.innerHTML = '⏳ در حال خواندن ورد...';
       const zip = await JSZip.loadAsync(await file.arrayBuffer()); const docXml = await zip.file('word/document.xml').async('string');
       const text = docXml.replace(/<[^>]+>/g, ' '); const matches = text.match(/\d+(\.\d+)?\s+\d+(\.\d+)?/g) || [];
       matches.forEach(m => { const nums = m.trim().split(/\s+/).map(Number); if (nums.length >= 2) extractedData.push({ no:'', sp: '', d: nums[0], h: nums[1], ds: '' }); });
-    } else if (file.name.endsWith('.pdf')) {
+    } else if (fext === 'doc') {
+      btn.innerHTML = originalText; alert('فرمت .doc قدیمی پشتیبانی نمی‌شود. لطفاً به .docx تبدیل کنید.'); return;
+    } else if (fext === 'pdf') {
       btn.innerHTML = '⏳ در حال خواندن PDF...';
       const arrayBuffer = await file.arrayBuffer(); const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
       let fullText = '';
@@ -1128,10 +1231,12 @@ document.getElementById('smartImportFile').onchange = async (e) => {
       }
       const lines = fullText.split('\n');
       lines.forEach(line => { const matches = line.match(/\d+(?:\.\d+)?/g); if (matches && matches.length >= 2) extractedData.push({ no:'', sp: '', d: parseFloat(matches[0]), h: parseFloat(matches[1]), ds: 'PDF' }); });
-    } else if (file.type.startsWith('image/')) {
+    } else if (file.type.startsWith('image/') || ['jpg','jpeg','png','webp','gif','bmp','heic','heif','tif','tiff'].includes(fext)) {
       btn.innerHTML = '⏳ در حال خواندن عکس...';
-      const result = await Tesseract.recognize(file, 'fas+eng');
-      const lines = result.data.text.split('\n');
+      const ocrImage = await prepareOcrImage(file);
+      const result = await Tesseract.recognize(ocrImage, 'fas+eng', { logger: m => { if(m.status==='recognizing text' && m.progress) btn.innerHTML='⏳ خواندن عکس '+Math.round(m.progress*100)+'٪'; } });
+      const ocrText = normalizeOcrText(result.data.text || '');
+      const lines = ocrText.split('\n');
       lines.forEach(line => {
         const matches = line.match(/\d+(?:\.\d+)?/g);
         if (matches && matches.length >= 2) {
@@ -1141,6 +1246,8 @@ document.getElementById('smartImportFile').onchange = async (e) => {
           if (d > 0) extractedData.push({ no: no, sp: '', d: d, h: h, ds: 'عکس' });
         }
       });
+    } else {
+      btn.innerHTML = originalText; alert('فرمت فایل پشتیبانی نمی‌شود: ' + fext); return;
     }
     btn.innerHTML = originalText;
     if (extractedData.length === 0) { alert('داده‌ای پیدا نشد.'); return; }
@@ -1154,7 +1261,7 @@ function showImportPreview(data) {
   ov.innerHTML = `
     <div style="background:var(--sf);border-radius:14px;padding:16px;flex:1;display:flex;flex-direction:column;max-height:95vh;">
       <h3 style="margin:0 0 10px 0;color:var(--ac)">بازبینی فایل</h3>
-      <p class="m" style="margin:0 0 10px 0;color:#d33;font-size:12px;">⚠️ اعداد خوانده شده‌اند. فیلدهای خالی را پر کنید.</p>
+      <p class="m" style="margin:0 0 10px 0;color:#d33;font-size:12px;">⚠️ تشخیص متن ممکن است اشتباه باشد؛ همه اعداد را با برگه اصلی تطبیق دهید و سپس ثبت کنید.</p>
       <div style="flex:1;overflow:auto;border:1px solid var(--bd);border-radius:8px;">
         <table style="width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap;">
           <thead style="position:sticky;top:0;background:var(--bg);z-index:2;">
@@ -1163,11 +1270,11 @@ function showImportPreview(data) {
           <tbody id="impTbBody">
             ${data.map((item, i) => `
               <tr style="border-bottom:1px solid var(--bd);">
-                <td style="padding:4px;"><input type="text" class="imp-no" value="${item.no || ''}" style="padding:4px;text-align:center;width:50px;"></td>
-                <td style="padding:4px;"><input type="text" class="imp-sp" value="${item.sp || ''}" style="padding:4px;text-align:center;width:70px;"></td>
+                <td style="padding:4px;"><input type="text" class="imp-no" value="${esc(item.no || '')}" style="padding:4px;text-align:center;width:50px;"></td>
+                <td style="padding:4px;"><input type="text" class="imp-sp" value="${esc(item.sp || '')}" style="padding:4px;text-align:center;width:70px;"></td>
                 <td style="padding:4px;"><input type="text" inputmode="decimal" class="imp-d" value="${item.d || ''}" style="padding:4px;text-align:center;width:60px;"></td>
                 <td style="padding:4px;"><input type="text" inputmode="decimal" class="imp-h" value="${item.h || ''}" style="padding:4px;text-align:center;width:60px;"></td>
-                <td style="padding:4px;"><input type="text" class="imp-ds" value="${item.ds || ''}" style="padding:4px;text-align:center;width:100px;"></td>
+                <td style="padding:4px;"><input type="text" class="imp-ds" value="${esc(item.ds || '')}" style="padding:4px;text-align:center;width:100px;"></td>
                 <td style="padding:4px;text-align:center;"><button class="x" onclick="this.closest('tr').remove()">×</button></td>
               </tr>
             `).join('')}
@@ -1186,7 +1293,7 @@ function showImportPreview(data) {
       const no = tr.querySelector('.imp-no').value.trim(); let sp = tr.querySelector('.imp-sp').value.trim();
       const d = parseFloat(toEn(tr.querySelector('.imp-d').value)); const h = parseFloat(toEn(tr.querySelector('.imp-h').value)) || 0; const ds = tr.querySelector('.imp-ds').value.trim();
       if (d > 0) {
-        if (!sp) sp = 'نامشخص'; 
+        if (!sp) sp = 'نامشخص';
         let finalNo = no;
         if(!finalNo) { currentMaxNo++; finalNo = currentMaxNo.toString(); } else { currentMaxNo = Math.max(currentMaxNo, parseInt(finalNo) || 0); }
         const newId = T.reduce((a, t) => Math.max(a, t.id), 0) + 1;
@@ -1238,10 +1345,9 @@ document.getElementById('btnQuickEntry').onclick = () => {
     if (added > 0) { store(); draw(); alert(`تعداد ${toFa(added)} درخت ثبت شد.`); } else { alert('سطر معتبری پیدا نشد.'); }
     ov.remove();
   };
-};  /* اصلاح ۱: قبلاً به‌اشتباه «});» بود */
+};
 function quickRowHtml() { return `<tr style="border-bottom:1px solid var(--bd);"><td style="padding:4px;"><input type="text" class="q-sp" style="padding:6px;text-align:center;width:80px;"></td><td style="padding:4px;"><input type="text" inputmode="decimal" class="q-d" style="padding:6px;text-align:center;width:60px;"></td><td style="padding:4px;"><input type="text" inputmode="decimal" class="q-h" style="padding:6px;text-align:center;width:60px;"></td><td style="padding:4px;"><input type="text" inputmode="decimal" class="q-count" value="1" style="padding:6px;text-align:center;width:50px;"></td><td style="padding:4px;text-align:center;"><button class="x" onclick="this.closest('tr').remove()">×</button></td></tr>`; }
 
-/* ذخیره‌های نام‌دار (SNAPS) */
 function saveSnaps(){try{localStorage.setItem('snaps',JSON.stringify(SNAPS));stWarn(false)}catch(e){stWarn(true)}}
 function renderSnaps(){const el=$('#savedList');if(!el)return;if(!SNAPS.length){el.innerHTML='<div class="m">هنوز موردی ذخیره نشده است.</div>';return}el.innerHTML=SNAPS.slice().reverse().map(s=>`<div class="sitem"><div class="sinfo"><b>${esc(s.name)}</b><small>${toFa((s.trees||[]).length)} درخت</small></div><button class="o" style="padding:4px 10px;font-size:12px" data-load="${s.id}">باز کردن</button><button class="x" data-del="${s.id}">×</button></div>`).join('');el.querySelectorAll('[data-load]').forEach(b=>b.onclick=()=>loadSnap(+b.dataset.load));el.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const id=+b.dataset.del;if(!confirm('حذف شود؟'))return;SNAPS=SNAPS.filter(s=>s.id!==id);saveSnaps();renderSnaps()});}
 $('#saveSnap').onclick=()=>{
@@ -1256,14 +1362,12 @@ $('#saveSnap').onclick=()=>{
 };
 function loadSnap(id){const s=SNAPS.find(x=>x.id===id);if(!s)return;const existingSheet=SHEETS.find(sh=>sh.name===s.name);if(existingSheet){if(!confirm('جایگزین شود؟'))return;saveActive();existingSheet.trees=JSON.parse(JSON.stringify(s.trees||[]));existingSheet.map=s.map?JSON.parse(JSON.stringify(s.map)):null;switchSheet(existingSheet.id,true);return;}if(!confirm('سربرگ جدید باز شود؟'))return;const nid=SHEETS.reduce((a,x)=>Math.max(a,x.id),0)+1;SHEETS.push({id:nid,name:s.name,trees:JSON.parse(JSON.stringify(s.trees||[])),map:s.map?JSON.parse(JSON.stringify(s.map)):null});switchSheet(nid);}
 
-/* راه‌اندازی اولیه (بعد از تعریف همهٔ توابع و متغیرها) */
 renderTabs();updateMapInfo();renderSnaps();updSimBtn();renderRecent();
 $('#refType').value=refType;
 if(refType==='custom')$('#refSize').classList.remove('hid');
 updateModeUI();act=getDef()[0][0];setStep(1);$('#sp').onchange();draw();mapCheck();updateGpsUI();updateTotSummary();
 $('#ga').textContent='📍 مختصات';$('#ga').classList.add('o');
 
-/* پشتیبان‌گیری */
 const DL={save:async({filename,data})=>{const u=URL.createObjectURL(data),a=document.createElement('a');a.href=u;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000)}};
 $('#rb').onclick=()=>$('#rf').click();
 $('#rf').onchange=async e=>{ const f=e.target.files[0];if(!f)return; try{ const j=JSON.parse(await f.text()); const sheetsArr=Array.isArray(j.sheets)?j.sheets:null; const treesArr=Array.isArray(j)?j:(Array.isArray(j.trees)?j.trees:null); if(sheetsArr){ if($('#rm').value==='r'){SHEETS=sheetsArr;activeId=SHEETS[0]?.id||1;}else{let m=SHEETS.reduce((a,s)=>Math.max(a,s.id),0);sheetsArr.forEach(s=>{m++;let nm=s.name,k=2;while(SHEETS.some(x=>x.name===nm))nm=s.name+' ('+(k++)+')';SHEETS.push(Object.assign({},s,{id:m,name:nm}))})} loadActive();norm();saveActive(); if(Array.isArray(j.snaps)){if($('#rm').value==='r')SNAPS=j.snaps;else{let m2=SNAPS.reduce((a,x)=>Math.max(a,x.id||0),0);j.snaps.forEach(x=>{m2++;SNAPS.push(Object.assign({},x,{id:m2}))})}saveSnaps();renderSnaps()} }else if(treesArr){ if($('#rm').value==='r'){T=treesArr}else{let m=T.reduce((x,t)=>Math.max(x,t.id),0);T=T.concat(treesArr.map(t=>Object.assign({},t,{id:++m})))} norm();saveActive(); }else throw 0; renderTabs();updateMapInfo();draw();mapCheck();alert('بازیابی شد.'); }catch(x){alert('فایل معتبر نیست.')} e.target.value=''; };
@@ -1292,7 +1396,7 @@ async function outBlob(fn,blob,share,why){
     const r=await shareBlob(fn,blob);
     if(r==='shared'){say('✓ ارسال شد');return true}
     if(r==='cancel'){say('');return false}
-    say('اشتراک مستقیم این نوع فایل در مرورگر ممکن نیست؛ فایل ذخیره شد. از مدیر فایل گوشی بفرستید.');return true;
+    say('اشتراک مستقیم این نوع فایل در مرورگر ممکن نیست؛ فایل ذخیره شد.');return true;
   }
   await DL.save({filename:fn,data:blob});
   say(why?'ذخیره شد، با قالب ساده ('+why+')':'✓ فایل ذخیره شد.',!!why);return true;
@@ -1312,8 +1416,16 @@ async function buildKMZ(){
   let k='<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>'+X(sh.name)+'</name>'
    +'<Style id="b"><LineStyle><color>ff4f9d2e</color><width>3</width></LineStyle><PolyStyle><color>334f9d2e</color></PolyStyle></Style>'
    +'<Style id="ti"><IconStyle><color>ff4f9d2e</color><scale>0.9</scale>'+ic+'</IconStyle><LabelStyle><scale>0.8</scale></LabelStyle></Style>'
-   +'<Style id="th"><IconStyle><color>ff008ae0</color><scale>0.7</scale>'+ic+'</IconStyle><LabelStyle><scale>0</scale></LabelStyle></Style>';
+   +'<Style id="th"><IconStyle><color>ff008ae0</color><scale>0.7</scale>'+ic+'</IconStyle><LabelStyle><scale>0</scale></LabelStyle></Style>'
+   +'<Style id="trk"><LineStyle><color>fff39621</color><width>4</width></LineStyle></Style>';
   if(MAPP.length){k+='<Folder><name>محدوده</name>';MAPP.forEach(p=>{k+='<Placemark><name>'+X(p.n||'محدوده')+'</name><styleUrl>#b</styleUrl><Polygon><tessellate>1</tessellate><outerBoundaryIs>'+ring(p.o)+'</outerBoundaryIs>'+(p.i||[]).map(r=>'<innerBoundaryIs>'+ring(r)+'</innerBoundaryIs>').join('')+'</Polygon></Placemark>'});k+='</Folder>'}
+  if(TRACK.length>1){
+    const dist=Math.round(walkMeters),steps=Math.round(walkMeters/0.75);
+    k+='<Folder><name>مسیر پیمایش GPS</name><Placemark><name>مسیر پیمایش‌شده</name><description><![CDATA[مسافت: '+fa(dist,0)+' متر • قدم تخمینی: '+fa(steps,0)+' • تعداد نقاط: '+fa(TRACK.length,0)+']]></description><styleUrl>#trk</styleUrl><LineString><tessellate>1</tessellate><coordinates>'+TRACK.map(tp=>cs(tp.lat,tp.lng)).join(' ')+'</coordinates></LineString></Placemark>';
+    if(TRACK[0])k+='<Placemark><name>شروع مسیر</name><Point><coordinates>'+cs(TRACK[0].lat,TRACK[0].lng)+'</coordinates></Point></Placemark>';
+    if(TRACK.length>1){const last=TRACK[TRACK.length-1];k+='<Placemark><name>پایان مسیر</name><Point><coordinates>'+cs(last.lat,last.lng)+'</coordinates></Point></Placemark>'}
+    k+='</Folder>';
+  }
   [['درختان صنعتی',t=>t.ty!='h','ti'],['درختان هیزمی',t=>t.ty==='h','th']].forEach(([title,f,st])=>{
     const L=T.filter(f).map(t=>[t,pt(t)]).filter(a=>a[1]);if(!L.length)return;
     k+='<Folder><name>'+title+'</name>';
@@ -1334,7 +1446,7 @@ async function runExport(kind,share){
     if(kind==='x1')return await exp(fnm(),buildE1(getActiveSheet().name),share);
     if(kind==='x3')return await exp('all-lands-'+today(),allSheets(),share);
     if(kind==='kmz'){
-      if(!MAPP.length&&!T.some(t=>t.lat)){say('نه محدوده‌ای بارگذاری شده و نه درختی با مختصات ثبت شده.',1);return}
+      if(!MAPP.length&&!T.some(t=>Number.isFinite(+t.lat)&&Number.isFinite(+t.lng)||t.ux&&t.uy&&t.uz)&&!TRACK.length){say('نه محدوده‌ای بارگذاری شده و نه درختی/مسیری با مختصات معتبر ثبت شده.',1);return}
       return await outBlob(fnm()+'.kmz',await buildKMZ(),share);
     }
     if(kind==='bk'){
@@ -1349,7 +1461,6 @@ $('#expShare').onclick=()=>runExport($('#expType').value,true);
 $('#e2').onclick=safe(()=>exp('harvest-'+fnm(),harvestSheets(),false));
 $('#e2s').onclick=safe(()=>exp('harvest-'+fnm(),harvestSheets(),true));
 
-/* ناوبری بین سه بخش اصلی */
 document.querySelectorAll('nav button').forEach(b=>{
   b.onclick=()=>{
     document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
@@ -1357,6 +1468,9 @@ document.querySelectorAll('nav button').forEach(b=>{
     const sb=document.getElementById('saveBar');if(sb)sb.classList.toggle('hid',b.dataset.t!=='m');
   };
 });
+
+document.addEventListener('visibilitychange',()=>{if(document.hidden){try{saveActive()}catch(e){}}});
+window.addEventListener('beforeunload',()=>{try{saveActive()}catch(e){}});
 </script>
 
 <!-- همگام‌سازی Supabase و مدیریت اسپلش -->
@@ -1451,7 +1565,7 @@ function ui(){
     A.innerHTML='<button id="aIn" class="o">☁️ ورود / ثبت‌نام</button>';
     A.querySelector('#aIn').onclick=login;return;
   }
-  A.innerHTML='<span>☁️ '+esc(S.name)+' · '+msg+'</span><button id="aSy" class="o">همگام‌سازی</button><button id="aOut" class="o">خروج</button>';
+  A.innerHTML='<span>☁️ '+esc(S.name)+' · '+esc(msg)+'</span><button id="aSy" class="o">همگام‌سازی</button><button id="aOut" class="o">خروج</button>';
   A.querySelector('#aSy').onclick=sync;
   A.querySelector('#aOut').onclick=logout;
 }
@@ -1491,7 +1605,6 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync()});
 setInterval(sync,90000);
 ui();
 
-// مدیریت صفحه Splash و دکمه‌ها
 window.splashGo = async (su) => {
   const u = document.getElementById('splashUser').value.trim().toLowerCase();
   const p = document.getElementById('splashPass').value;
@@ -1514,7 +1627,6 @@ window.splashGuest = () => {
   document.getElementById('app').style.display='block';
 };
 
-// باز کردن خودکار برنامه اگر از قبل لاگین بوده
 if(S) {
   document.getElementById('splash').style.display='none';
   document.getElementById('app').style.display='block';
@@ -1522,7 +1634,6 @@ if(S) {
 }
 })();
 
-// اتصال دکمه‌های HTML به توابع (مستقل از دیتابیس تا هرگز از کار نیفتد)
 document.getElementById('splashLogin').onclick = () => window.splashGo(false);
 document.getElementById('splashSignup').onclick = () => window.splashGo(true);
 document.getElementById('splashGuest').onclick = () => window.splashGuest();
