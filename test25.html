@@ -22,12 +22,12 @@ body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.7 Vazirmatn,Tahom
 /* Splash / Auth */
 #splash{position:fixed;inset:0;z-index:999;background:linear-gradient(135deg,#1d3b2a,#101a13);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;overflow-y:auto}
 .splash-title{text-align:center;color:#d4c88a;margin-bottom:20px;text-shadow:0 2px 4px rgba(0,0,0,0.5)}
-.splash-title h2{margin:0;font-size:18px;font-weight:700}
+.splash-title h2{margin:0;font-size:20px;font-weight:700}
 .splash-title p{margin:6px 0 0;font-size:14px;color:#f4ebc8}
 .auth-box{background:var(--sf);width:100%;max-width:360px;border-radius:16px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,.3);text-align:center}
 .auth-box h3{margin:0 0 16px;color:var(--ac);font-size:18px}
 .auth-box input{width:100%;padding:12px;margin-bottom:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);text-align:left;direction:ltr;font-family:sans-serif}
-.auth-box button{width:100%;padding:12px;margin-bottom:10px;font-size:15px;font-weight:700;cursor:pointer}
+.auth-box button{width:100%;padding:12px;margin-bottom:10px;font-size:15px;font-weight:700}
 .auth-box .err{color:#d33;font-size:13px;margin-bottom:10px;min-height:18px;text-align:right}
 .auth-box .divider{display:flex;align-items:center;margin:15px 0;color:var(--mu);font-size:12px}
 .auth-box .divider::before,.auth-box .divider::after{content:'';flex:1;height:1px;background:var(--bd);margin:0 10px}
@@ -35,7 +35,7 @@ body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.7 Vazirmatn,Tahom
 button{font:inherit;background:var(--ac);color:var(--ac2);border:0;border-radius:10px;padding:10px 16px;cursor:pointer}
 button.o{background:none;color:var(--ac);border:1px solid var(--ac)}button.x{background:#b3402f;color:#fff;padding:2px 8px}
 
-#app{max-width:640px;margin:auto;padding:12px 12px 80px;display:none}
+#app{max-width:640px;margin:auto;padding:12px 12px 150px;display:none} /* مخفی تا زمان ورود */
 #topbar{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:2}
 #sheetbar{display:flex;gap:4px;overflow-x:auto;padding:4px 0 6px;align-items:center;scrollbar-width:none}
 #sheetbar::-webkit-scrollbar{display:none}
@@ -101,30 +101,69 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
 #svHint{font-size:12px;margin-bottom:6px;min-height:18px}
 #noCoordBanner{background:#fff3cd;color:#5c4400;border-radius:10px;padding:8px 10px;margin:8px 0;font-size:13px}
 
-#acct{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:6px 10px;font-size:12px;color:var(--mu)}
+#acct{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:2px 6px;font-size:12px;color:var(--mu)}
 #acct button{padding:4px 10px!important;font-size:12px!important}
 #aov{position:fixed;inset:0;z-index:1000;background:#0009;display:flex;align-items:center;justify-content:center;padding:16px}
 #aov .bx{background:var(--sf);color:var(--tx);border-radius:14px;padding:16px;width:100%;max-width:340px;text-align:center}
 #aov input{width:100%;margin:4px 0 10px;direction:ltr;text-align:left}
 #aer{color:#b3261e;min-height:20px;font-size:13px}
 
+/* Manual Coords */
 #manualCoordArea{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:10px;margin-top:8px;display:flex;flex-direction:column;gap:6px}
 .mc-row{display:flex;gap:6px;align-items:center}
 .mc-row input{padding:6px;font-size:13px;text-align:center}
-</style>
 
-<!-- استفاده از defer برای اینکه لود شدن کتابخانه‌ها باعث قفل شدن دکمه‌های ورود نشود -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js" defer></script>
-<script defer>
-  window.addEventListener('DOMContentLoaded', () => {
-    if (typeof pdfjsLib !== 'undefined') {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-    }
-  });
+/* GPS compact box + compass/qibla */
+#gpsBox{padding:8px 10px}
+#gpsBox .gtop{display:flex;align-items:center;gap:6px}
+#gb{padding:4px 8px;margin-top:6px;border-width:2px;border-radius:10px}
+#gb .gx{gap:4px;flex-wrap:nowrap}
+#gb b{font-size:15px;line-height:1.2}
+#gb small{font-size:10px}
+#gb .ac{margin-top:2px;font-size:12px}
+#gTog{padding:2px 10px!important;font-size:14px!important;flex:0 0 auto}
+#compassWrap{flex-wrap:wrap;gap:6px 10px}
+.cblk{flex:1;display:flex;align-items:center;gap:8px;min-width:0}
+.compass-needle.qn{background:linear-gradient(to bottom,#2e9d4f 50%,#333 50%)}
+.compass-needle.qn::before{content:'🕋';position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:10px;line-height:1}
+
+/* v3 layout */
+#acct{max-width:640px;margin:auto}
+#gpsStrip{justify-content:space-between;gap:6px;padding:4px 6px}
+#gpsStripTxt{flex:1;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sbtn{padding:4px 10px!important;font-size:12px!important;flex:0 0 auto}
+#gb{margin-top:0;margin-bottom:6px}
+#compassWrap{margin-bottom:6px}
+#tools>summary{cursor:pointer;font-weight:700;color:var(--ac);list-style:none}
+#tools>summary::-webkit-details-marker{display:none}
+#tools>summary::after{content:'▾';float:left}
+#tools[open]>summary::after{content:'▴'}
+#tools .sec{margin-top:10px;padding-top:10px;border-top:1px dashed var(--bd)}
+#recentSp button.spchip{padding:7px 14px!important;font-size:13px!important}
+#saveBar{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--sf);border-top:1px solid var(--bd);box-shadow:0 -2px 10px rgba(0,0,0,.12);padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px))}
+#saveBar .sbIn{max-width:640px;margin:auto}
+#saveBar #svHint,#saveBar #msg{font-size:12px;line-height:1.5}
+#saveBar #msg:empty{display:none}
+#saveBar .sbRow{display:flex;gap:6px;align-items:stretch;margin-top:2px}
+#saveBar #newSaveBtns{flex:1}
+#saveBar button{padding:10px 8px;font-size:14px}
+#saveBar .vb{display:flex;flex-direction:column;justify-content:center;align-items:center;font-size:10px;color:var(--mu);min-width:64px;line-height:1.3}
+#saveBar .vb b{font-size:14px;color:var(--ac)}
+#numCheck{background:#fff3cd;color:#5c4400;border-radius:10px;padding:8px 10px;margin:8px 0;font-size:13px}
+
+/* Saved snapshots */
+.sitem{display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid var(--bd)}
+.sitem .sinfo{flex:1;display:flex;flex-direction:column}
+.sitem .sinfo small{color:var(--mu)}
+</style>
+<!-- کتابخانه‌ها -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script>
+  if (typeof pdfjsLib !== 'undefined') pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 </script>
 </head>
 <body>
@@ -140,85 +179,51 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
     <p>تنظیم هادی آقاجانی</p>
   </div>
   <div class="auth-box">
-    <h3>ورود به برنامه</h3>
+    <h3>ورود به حساب کاربری</h3>
     <input id="splashUser" placeholder="نام کاربری (انگلیسی)" autocomplete="username">
     <input id="splashPass" type="password" placeholder="رمز عبور" autocomplete="current-password">
     <div id="splashErr" class="err"></div>
-    
-    <!-- دکمه‌ها مستقیماً به توابع متصل شدند تا در هر شرایطی کار کنند -->
-    <button type="button" id="splashLogin" onclick="window.doSplashAuth(false)">ورود آنلاین</button>
-    <button type="button" id="splashSignup" class="o" onclick="window.doSplashAuth(true)">ثبت‌نام آنلاین</button>
-    
+    <button id="splashLogin">ورود</button>
+    <button id="splashSignup" class="o">ثبت‌نام</button>
     <div class="divider">یا</div>
-    
-    <button type="button" id="splashGuest" style="background:#5c6b5f" onclick="window.doGuestLogin()">ورود مهمان (آفلاین)</button>
-    <div class="m" style="margin-top:10px">با ورود مهمان، داده‌ها فقط روی گوشی ذخیره می‌شوند. بعداً می‌توانید از بالای برنامه وارد حساب آنلاین شوید.</div>
+    <button id="splashGuest" style="background:#5c6b5f">ورود مهمان (آفلاین)</button>
+    <div class="m" style="margin-top:10px">با ورود مهمان، داده‌ها فقط روی گوشی ذخیره می‌شوند. بعداً می‌توانید از بالای برنامه وارد حساب شوید.</div>
   </div>
 </div>
 
 <div id="app">
+<div id="acct"></div>
 <div id="topbar">
 <div id="sheetbar"></div>
 <nav><button data-t="m" class="on">نشانه‌گذاری</button><button data-t="l">دریافت سیاهه</button><button data-t="h">تجدید و استحصال</button></nav>
-
-<div id="compassWrap">
-  <div style="flex:1;display:flex;align-items:center;gap:10px">
-    <div class="compass">
-      <div class="compass-n">N</div>
-      <div id="compassNeedle" class="compass-needle"></div>
-    </div>
-    <div>
-      <div id="compassDeg">زاویه: --°</div>
-      <div class="m" style="font-size:10px">برای دقت، گوشی را به شکل ۸ حرکت دهید</div>
-    </div>
-  </div>
+<div id="gpsStrip">
+  <span id="gpsStripTxt"><span style="color:var(--mu)">◌ مختصات خاموش</span></span>
+  <button id="ga" class="o sbtn" type="button">📍 مختصات</button>
+  <button id="gTog" class="o sbtn hid" type="button" title="مخفی کردن مختصات">▴</button>
+  <button id="cmpTog" class="o sbtn" type="button" title="قطب‌نما و قبله‌نما">🧭</button>
 </div>
-<div id="gpsStrip"><span style="color:var(--mu)">◌ مختصات غیرفعال</span></div>
 </div>
 
 <div id="bn" class="hid"></div>
-<div id="acct"></div>
 <div id="sw" class="hid" style="background:#f8d7da;color:#58151c;border-radius:10px;padding:8px 10px;margin:8px 0"></div>
 
-<section id="sec-m">
-<details class="c" id="gpsDetails">
-  <summary>
-    <span style="display:flex;align-items:center;gap:6px;flex:1;min-width:0">
-      <button id="ga" class="o" type="button" style="padding:5px 10px;font-size:12px;flex:0 0 auto">نمایش مختصات</button>
-      <span id="gpsMapSum" class="m" style="font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">📍 مختصات</span>
-    </span>
-    <span class="arr">▾</span>
-  </summary>
-  <div style="margin-top:8px">
-    <div id="gb" class="gbox hid"><div class="gx"><div><small>X</small><b id="gX"></b></div><div><small>Y</small><b id="gY"></b></div><div><small>زون</small><b id="gZ"></b></div></div><div class="ac" id="gA"></div></div>
-    <div class="m" id="gs" style="margin-top:6px">مختصات غیرفعال است.</div>
-  </div>
-</details>
-
-<div class="c" id="mp">
-  <b>نقشهٔ محدوده</b> <span class="m">(KMZ، KML، DXF یا دستی)</span>
-  <div class="r" style="margin-top:6px">
-    <button id="mb" class="o">انتخاب فایل نقشه</button>
-    <button id="btnManualCoord" class="o">ورود دستی</button>
-  </div>
-  <input type="file" id="mf" accept=".kmz,.kml,.dxf,.dwg" class="hid">
-  
-  <div id="manualCoordArea" class="hid">
-    <div id="manualCoordList"></div>
-    <div class="r">
-      <button id="addManualRow" class="o" style="flex:1">+ افزودن نقطه</button>
-      <button id="applyManualCoord" style="flex:1">رسم روی نقشه</button>
+<div id="sensors">
+  <div id="gb" class="gbox hid"><div class="gx"><div><small>X</small><b id="gX"></b></div><div><small>Y</small><b id="gY"></b></div><div><small>زون</small><b id="gZ"></b></div></div><div class="ac" id="gA"></div></div>
+  <div class="m hid" id="gs" style="margin-top:4px"></div>
+  <div id="compassWrap" class="hid">
+    <div class="cblk">
+      <div class="compass"><div class="compass-n">N</div><div id="compassNeedle" class="compass-needle"></div></div>
+      <div><div id="compassDeg">زاویه: --°</div></div>
     </div>
+    <div class="cblk" id="qiblaBlk" title="برای به‌روزرسانی موقعیت لمس کنید">
+      <div class="compass"><div id="qiblaNeedle" class="compass-needle qn"></div></div>
+      <div><div id="qiblaDeg">قبله: --°</div><div class="m" id="qiblaHint" style="font-size:10px"></div></div>
+    </div>
+    <div class="m" style="font-size:10px;flex:0 0 100%;text-align:center">برای دقت، گوشی را به شکل ۸ حرکت دهید</div>
   </div>
-
-  <button id="gk" style="width:100%;margin-top:6px">ساخت فایل نقشه برای گوگل ارث</button>
-  <div class="m" id="gen">با دکمهٔ بالا فایلی از مرز نقشه و درخت‌ها ساخته می‌شود.</div>
-  <div class="m" id="mi" style="margin-top:6px">نقشه‌ای بارگذاری نشده است.</div>
-  <canvas id="mc2" width="640" height="400" class="hid"></canvas>
-  <div id="ms" class="gbox hid"><b id="mst"></b><div class="ac" id="msd"></div></div>
-  <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="mal" checked style="width:auto"> هشدار صوتی هنگام خروج از محدوده</label>
 </div>
 
+<section id="sec-m">
 <div class="c">
 <div class="r" style="margin-bottom:6px"><button id="mm">ورود دستی درخت</button><button id="mc" class="o">با دوربین</button></div>
 
@@ -236,11 +241,13 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
       <option value="person">قد یک شخص (۱۷۰ سانتی‌متر)</option>
       <option value="custom">اندازه دلخواه</option>
     </select>
-    <input id="refSize" type="number" placeholder="اندازه دلخواه (سانتی‌متر)" class="hid" style="margin-top:6px">
+    <input id="refSize" type="text" inputmode="decimal" placeholder="اندازه دلخواه (سانتی‌متر)" class="hid" style="margin-top:6px">
   </div>
   <div id="distBox" class="hid">
     <label id="distLabel">فاصله دوربین تا تنه (متر)</label>
-    <input id="D1" type="number" value="1">
+    <input id="D1" type="text" inputmode="decimal" value="1">
+    <label>فاصله کانونی معادل ۳۵mm (میلی‌متر)</label>
+    <input id="fl" type="text" inputmode="decimal" value="26">
   </div>
   <label class="m">هدف اندازه‌گیری</label>
   <div class="seg">
@@ -262,7 +269,11 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
   </div>
 </div>
 
-<div class="r"><div><label>قطر برابر سینه (سانتی‌متر)</label><input id="d" type="number" inputmode="decimal"></div><div><label>ارتفاع (متر)</label><input id="h" type="number" inputmode="decimal"></div></div>
+<div class="r">
+  <div><label>قطر سینه (cm)</label><input id="d" type="text" inputmode="decimal"></div>
+  <div><label>دور تنه (cm)</label><input id="gi" type="text" inputmode="decimal" placeholder="اختیاری"></div>
+  <div><label>ارتفاع (m)</label><input id="h" type="text" inputmode="decimal"></div>
+</div>
 <label>گونه</label>
 <div id="recentSp"></div>
 <div class="r" style="align-items:stretch">
@@ -273,31 +284,75 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
 <select id="sp" style="margin-top:6px"></select>
 <div class="r"><div><label>دسته (تشخیص خودکار)</label><select id="gd"><option value="1">دسته اول</option><option value="2">دسته دوم</option><option value="3">دسته سوم</option></select></div></div>
 <div class="r"><div><label>نوع درخت</label><select id="ty"><option value="i">صنعتی</option><option value="h">هیزمی</option></select></div><div><label>شماره / پلاک</label><input id="no"></div></div>
-<div id="cw" class="hid"><label>تعداد درختان هیزمی (هم‌گونه)</label><input id="nn" type="number" inputmode="decimal" value="1"></div>
+<div id="cw" class="hid"><label>تعداد درختان هیزمی (هم‌گونه)</label><input id="nn" type="text" inputmode="decimal" value="1"></div>
 <label>توضیحات</label><input id="ds" placeholder="مثلاً وضعیت تنه، شیب…">
-<p>حجم برآوردی: <span class="big" id="v">—</span> متر مکعب</p>
-<div id="svHint"></div>
-<div id="newSaveBtns" class="r"><button id="sv">📌 ذخیره با مختصات</button><button id="svNo" class="o">ذخیره بدون مختصات</button></div>
-<button id="svEdit" class="hid" style="width:100%">💾 ذخیرهٔ ویرایش</button>
-<div class="r" style="margin-top:6px"><button id="ce" class="o hid" style="width:100%">لغو ویرایش</button></div>
-<div class="m" id="msg"></div>
 <div id="totSummary">—</div>
 </div>
 
-<div class="c" style="border: 2px dashed var(--ac); background: var(--bg);">
-  <b>📥 ورود داده‌ها</b>
-  <div class="m" style="margin-bottom: 8px;">فایل اکسل، ورد، PDF یا عکس را وارد کنید، یا داده‌ها را دستی و سریع تایپ کنید.</div>
-  <input type="file" id="smartImportFile" accept=".xlsx, .xls, .csv, .docx, .pdf, image/*" class="hid">
-  <button id="btnSmartImport" style="width:100%; padding: 12px; font-size: 15px; margin-bottom: 6px;">انتخاب فایل (اکسل، ورد، PDF، عکس)</button>
-  <button id="btnQuickEntry" class="o" style="width:100%; padding: 12px; font-size: 15px;">⌨️ ورود سریع دستی (تایپ)</button>
-  <div class="m" style="color: #b78500; font-size: 11px; margin-top: 6px;">⚠️ اعداد ناخوانا خالی می‌مانند. در ورود سریع، شماره‌ها خودکار مرتب می‌شوند.</div>
-</div>
+<details class="c" id="tools">
+  <summary>🛠 نقشه، مرز محدوده و ورود داده‌ها</summary>
+  <div class="sec" id="mp">
+    <b>نقشهٔ محدوده</b> <span class="m">(KMZ، KML، DXF یا دستی)</span>
+    <div class="r" style="margin-top:6px">
+      <button id="mb" class="o">انتخاب فایل نقشه</button>
+      <button id="btnManualCoord" class="o">ورود دستی</button>
+    </div>
+    <input type="file" id="mf" accept=".kmz,.kml,.dxf,.dwg" class="hid">
+    <div id="manualCoordArea" class="hid">
+      <div id="manualCoordList"></div>
+      <div class="r">
+        <button id="addManualRow" class="o" style="flex:1">+ افزودن نقطه</button>
+        <button id="applyManualCoord" style="flex:1">رسم روی نقشه</button>
+      </div>
+    </div>
+    <div class="m" id="mi" style="margin-top:6px">نقشه‌ای بارگذاری نشده است.</div>
+    <canvas id="mc2" width="640" height="400" class="hid"></canvas>
+    <div id="mapLegend" class="m hid" style="margin-top:4px">● <span style="color:#1b7a34">صنعتی</span> &nbsp; ● <span style="color:#e08a00">هیزمی</span> &nbsp; ● <span style="color:#d33">خارج از محدوده</span></div>
+    <div id="ms" class="gbox hid"><b id="mst"></b><div class="ac" id="msd"></div></div>
+    <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="mal" checked style="width:auto"> هشدار صوتی هنگام خروج از محدوده</label>
+  </div>
+  <div class="sec">
+    <b>📥 ورود داده‌ها</b>
+    <div class="m" style="margin-bottom: 8px;">فایل اکسل، ورد، PDF یا عکس را وارد کنید، یا داده‌ها را دستی و سریع تایپ کنید.</div>
+    <input type="file" id="smartImportFile" accept=".xlsx, .xls, .csv, .docx, .pdf, image/*" class="hid">
+    <button id="btnSmartImport" style="width:100%; padding: 12px; font-size: 15px; margin-bottom: 6px;">انتخاب فایل (اکسل، ورد، PDF، عکس)</button>
+    <button id="btnQuickEntry" class="o" style="width:100%; padding: 12px; font-size: 15px;">⌨️ ورود سریع دستی (تایپ)</button>
+    <div class="m" style="color: #b78500; font-size: 11px; margin-top: 6px;">⚠️ اعداد ناخوانا خالی می‌مانند. در ورود سریع، شماره‌ها خودکار مرتب می‌شوند.</div>
+  </div>
+</details>
 </section>
+
+<div id="saveBar">
+  <div class="sbIn">
+    <div id="svHint"></div>
+    <div class="m" id="msg"></div>
+    <div class="sbRow">
+      <div id="newSaveBtns" class="r"><button id="sv">📌 ذخیره با مختصات</button><button id="svNo" class="o">بدون مختصات</button></div>
+      <button id="svEdit" class="hid" style="flex:1">💾 ذخیرهٔ ویرایش</button>
+      <button id="ce" class="o hid">لغو</button>
+      <div class="vb">حجم<b id="vBar">—</b></div>
+    </div>
+  </div>
+</div>
 
 <section id="sec-l" class="hid">
 <div id="noCoordBanner" class="hid"></div>
+<div id="numCheck" class="hid"></div>
 <div class="c"><div class="tw"><table id="tb"></table></div><p>جمع حجم: <b id="tot">۰</b> متر مکعب</p>
-<b>خلاصه وضعیت درختان</b><div class="tw"><table id="sm"></table></div><br><button id="e1">خروجی اکسل این زمین</button><button id="e3" class="o" style="margin-right:6px">اکسل همهٔ زمین‌ها</button><div class="m xs"></div></div>
+<b>خلاصه وضعیت درختان</b><div class="tw"><table id="sm"></table></div></div>
+<div class="c" id="expCard">
+<b>خروجی و اشتراک‌گذاری</b>
+<label>نوع فایل</label>
+<select id="expType">
+  <option value="x1">اکسل — این زمین</option>
+  <option value="x3">اکسل — همهٔ زمین‌ها</option>
+  <option value="kmz">Google Earth (KMZ) — محدوده و درختان</option>
+  <option value="bk">پشتیبان کامل (JSON)</option>
+</select>
+<div class="r" style="margin-top:8px"><button id="expSave" class="o">💾 ذخیره روی گوشی</button><button id="expShare">📤 اشتراک‌گذاری</button></div>
+<div class="m">اشتراک‌گذاری، لیست همهٔ پیام‌رسان‌ها و برنامه‌های نصب‌شده روی گوشی را باز می‌کند.</div>
+<div class="m xs"></div>
+</div>
 <div class="c">
 <b>موارد ذخیره شده</b><br>
 <button id="saveSnap" class="o" style="width:100%;margin-top:6px">💾 ذخیرهٔ سربرگ فعلی با نام</button>
@@ -305,21 +360,20 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
 <div id="savedList" style="margin-top:2px"></div>
 </div>
 <div class="c">
-<b>پشتیبان‌گیری و بازیابی</b><div class="m" id="bks"></div>
-<div class="r" style="margin-top:6px"><button id="bk" class="o">پشتیبان‌گیری</button><button id="rb" class="o">بازیابی</button></div>
+<b>بازیابی از پشتیبان</b><div class="m" id="bks"></div>
+<div style="margin-top:6px"><button id="rb" class="o" style="width:100%">بازیابی از فایل پشتیبان</button></div>
 <label>روش بازیابی</label><select id="rm"><option value="a">افزودن به داده‌های فعلی</option><option value="r">جایگزینی کامل</option></select>
 <input type="file" id="rf" accept=".json,application/json" class="hid"></div>
 </section>
 
 <section id="sec-h" class="hid"><div class="c">
 <label>درخت</label><select id="hs2"></select>
-<div class="r"><div><label>قطر جدید (cm)</label><input id="d2" type="number" inputmode="decimal"></div><div><label>ارتفاع جدید (m)</label><input id="h2" type="number" inputmode="decimal"></div></div>
-<div class="r"><div><label>حجم استحصال‌شده (m³)</label><input id="hv" type="number" inputmode="decimal"></div><div><label>تاریخ استحصال</label><input id="hd" type="date"></div></div>
+<div class="r"><div><label>قطر جدید (cm)</label><input id="d2" type="text" inputmode="decimal"></div><div><label>ارتفاع جدید (m)</label><input id="h2" type="text" inputmode="decimal"></div></div>
+<div class="r"><div><label>حجم استحصال‌شده (m³)</label><input id="hv" type="text" inputmode="decimal"></div><div><label>تاریخ استحصال</label><input id="hd" type="date"></div></div>
 <label>یادداشت</label><input id="hn"><br><button id="sh" style="width:100%">ذخیره</button></div>
-<div class="c"><div class="tw"><table id="tb2"></table></div><br><button id="e2">خروجی اکسل</button><div class="m xs"></div></div></section>
+<div class="c"><div class="tw"><table id="tb2"></table></div><br><div class="r"><button id="e2">خروجی اکسل</button><button id="e2s" class="o">📤 اشتراک‌گذاری</button></div><div class="m xs"></div></div></section>
 </div>
 
-<!-- اسکریپت‌های اصلی برنامه -->
 <script>
 const $=s=>document.querySelector(s),fa=(n,m=2)=>(n!==null&&n!==undefined&&n!==''&&isFinite(n))?Number(n).toLocaleString('fa-IR',{maximumFractionDigits:m}):'—';
 const toFa=s=>String(s).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]).replace(/\./g,'٫'),toEn=s=>String(s).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٫،,]/g,'.');
@@ -360,47 +414,64 @@ loadActive();norm();
 const store=()=>{saveActive();bnr();try{if(window.syncSoon)window.syncSoon()}catch(e){}};
 
 let RECENT=[];try{RECENT=JSON.parse(localStorage.getItem('recentSp')||'[]')}catch(e){}
+/* اصلاح ۳: SNAPS باید قبل از اولین استفاده تعریف شود */
+let SNAPS=[];try{SNAPS=JSON.parse(localStorage.getItem('snaps')||'[]')}catch(e){}
 function addRecent(sp){
   if(!sp)return;
-  RECENT=[sp,...RECENT.filter(x=>x!==sp)].slice(0,5);
+  RECENT=[sp,...RECENT.filter(x=>x!==sp)].slice(0,6);
   try{localStorage.setItem('recentSp',JSON.stringify(RECENT))}catch(e){}
   renderRecent();
 }
+const DEF_SP=['راش','ممرز','افرا','توسکا','بلوط','ون'];
 function renderRecent(){
   const el=$('#recentSp');if(!el)return;
-  if(!RECENT.length){el.innerHTML='';return}
-  el.innerHTML=RECENT.map(s=>`<button type="button" class="o chipbtn" data-sp="${esc(s)}">${esc(s)}</button>`).join('');
+  const list=[...RECENT,...DEF_SP.filter(s=>!RECENT.includes(s))].slice(0,6),csel=$('#sp')?$('#sp').value:'';
+  el.innerHTML=list.map(s=>`<button type="button" class="${s===csel?'':'o '}spchip" data-sp="${esc(s)}">${esc(s)}</button>`).join('');
   el.querySelectorAll('button').forEach(b=>{
     b.onclick=()=>{$('#sps').value='';fillSp('');$('#sp').value=b.dataset.sp;$('#sp').onchange();};
   });
 }
-
 let SIM=false;try{SIM=localStorage.getItem('simSp')==='1'}catch(e){}
 function updSimBtn(){const b=document.getElementById('simBtn');if(!b)return;b.className=SIM?'':'o';b.textContent=SIM?'🔁 مشابه ✓':'🔁 مشابه'}
 
+let HEAD=null,gotAbs=false,QLOC=null;
+try{QLOC=JSON.parse(localStorage.getItem('qloc')||'null')}catch(e){}
+const KAABA={lat:21.4225,lng:39.8262};
+function qiblaBearing(la,lo){const p1=rad(la),p2=rad(KAABA.lat),dl=rad(KAABA.lng-lo);return(Math.atan2(Math.sin(dl)*Math.cos(p2),Math.cos(p1)*Math.sin(p2)-Math.sin(p1)*Math.cos(p2)*Math.cos(dl))*180/Math.PI+360)%360}
+function setQ(la,lo){QLOC={lat:la,lng:lo};try{localStorage.setItem('qloc',JSON.stringify(QLOC))}catch(e){}updQibla()}
+function updQibla(){
+  const n=document.getElementById('qiblaNeedle'),t=document.getElementById('qiblaDeg'),h=document.getElementById('qiblaHint');
+  if(!n||!t)return;
+  if(!QLOC){t.textContent='قبله: --°';if(h)h.textContent='برای تعیین، لمس کنید';n.style.visibility='hidden';return}
+  n.style.visibility='visible';
+  const b=qiblaBearing(QLOC.lat,QLOC.lng);
+  t.textContent='قبله: '+toFa(Math.round(b))+'°';
+  if(h)h.textContent=HEAD==null?'قطب‌نمای گوشی فعال نیست':'';
+  n.style.transform='rotate('+(b-(HEAD||0))+'deg)';
+}
 function initCompass(){
-  if (window.DeviceOrientationEvent) {
-    window.addEventListener('deviceorientationabsolute', handleOrientation, true);
-    window.addEventListener('deviceorientation', handleOrientation, true);
+  if(window.DeviceOrientationEvent){
+    window.addEventListener('deviceorientationabsolute',handleOrientation,true);
+    window.addEventListener('deviceorientation',handleOrientation,true);
   }
+  document.addEventListener('click',()=>{try{if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function')DeviceOrientationEvent.requestPermission().catch(()=>{})}catch(e){}},{once:true});
+  const qb=document.getElementById('qiblaBlk');
+  if(qb)qb.onclick=()=>{if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>setQ(+p.coords.latitude.toFixed(5),+p.coords.longitude.toFixed(5)),()=>{},{enableHighAccuracy:false,timeout:15000,maximumAge:600000})};
 }
-function handleOrientation(event){
-  let heading = 0;
-  if (event.webkitCompassHeading) {
-    heading = event.webkitCompassHeading;
-  } else if (event.alpha !== null) {
-    heading = 360 - event.alpha;
-  }
-  const needle = document.getElementById('compassNeedle');
-  const degText = document.getElementById('compassDeg');
-  if(needle && degText){
-    needle.style.transform = `rotate(${heading}deg)`;
-    degText.textContent = `زاویه: ${Math.round(heading)}°`;
-  }
+function handleOrientation(e){
+  let hd=null;
+  if(e.webkitCompassHeading!=null)hd=e.webkitCompassHeading;
+  else if(e.type==='deviceorientationabsolute'||e.absolute===true){if(e.alpha!=null){hd=(360-e.alpha)%360;gotAbs=true}}
+  else if(!gotAbs&&e.alpha!=null)hd=(360-e.alpha)%360;
+  if(hd==null)return;
+  HEAD=hd;
+  const needle=document.getElementById('compassNeedle'),degText=document.getElementById('compassDeg');
+  if(needle&&degText){needle.style.transform='rotate('+(-hd)+'deg)';degText.textContent='زاویه: '+toFa(Math.round(hd))+'°'}
+  updQibla();
 }
-initCompass();
+initCompass();updQibla();
 
-let cur=null,wid=null,gpsOn=false;
+let cur=null,wid=null,gpsOn=false,gbHidden=false,GBUF=[];
 function utm(lat,lon,zf){const a=6378137,f=1/298.257223563,k=.9996,e2=f*(2-f),ep=e2/(1-e2),z=zf||Math.floor((lon+180)/6)+1,l0=rad((z-1)*6-177),p=rad(lat),A=Math.cos(p)*(rad(lon)-l0),n=a/Math.sqrt(1-e2*Math.sin(p)**2),t=Math.tan(p)**2,c=ep*Math.cos(p)**2;
  const M=a*((1-e2/4-3*e2*e2/64-5*e2**3/256)*p-(3*e2/8+3*e2*e2/32+45*e2**3/1024)*Math.sin(2*p)+(15*e2*e2/256+45*e2**3/1024)*Math.sin(4*p)-(35*e2**3/3072)*Math.sin(6*p));
  return{z,E:Math.round(k*n*(A+(1-t+c)*A**3/6+(5-18*t+t*t+72*c-58*ep)*A**5/120)+5e5),N:Math.round(k*(M+n*Math.tan(p)*(A*A/2+(5-t+9*c+4*c*c)*A**4/24+(61-58*t+t*t+600*c-330*ep)*A**6/720)))}}
@@ -408,25 +479,38 @@ function utm(lat,lon,zf){const a=6378137,f=1/298.257223563,k=.9996,e2=f*(2-f),ep
 function gShow(){
   if(!cur){updateGpsUI();return}
   const c=cur,a=c.acc,k=a<=5?1:a<=10?2:3,b=$('#gb');
-  if(b){b.classList.remove('hid','g1','g2','g3');b.classList.add('g'+k)}
+  if(b){b.classList.remove('g1','g2','g3');b.classList.toggle('hid',gbHidden);b.classList.add('g'+k)}
+  const tg=$('#gTog');if(tg)tg.classList.remove('hid');const gsE=$('#gs');if(gsE)gsE.classList.add('hid');
   if($('#gX'))$('#gX').textContent=toFa(c.u.E);
   if($('#gY'))$('#gY').textContent=toFa(c.u.N);
   if($('#gZ'))$('#gZ').textContent=toFa(c.u.z)+' شمالی';
-  if($('#gA'))$('#gA').textContent='دقت: ± '+fa(a,0)+' متر — '+['','عالی','متوسط','ضعیف'][k];
+  if($('#gA'))$('#gA').textContent='دقت: ± '+fa(a,0)+' متر — '+['','عالی','متوسط','ضعیف'][k]+(c.n>1?' · میانگین '+toFa(c.n)+' قرائت':'');
   if($('#gs'))$('#gs').textContent='مختصات فعال است.';
   updateGpsUI();
 }
 
+function gdist(a,b,c,d){const dy=(c-a)*110540,dx=(d-b)*111320*Math.cos(a*Math.PI/180);return Math.hypot(dx,dy)}
+function gpsFix(la,lo,acc){
+  const now=Date.now();
+  GBUF=GBUF.filter(g=>now-g.t<15000&&gdist(g.la,g.lo,la,lo)<=Math.max(8,acc*1.5));
+  GBUF.push({la,lo,acc,t:now});
+  if(GBUF.length>8)GBUF.shift();
+  let sw=0,sa=0,so=0,best=1e9;
+  GBUF.forEach(g=>{const w=1/Math.max(g.acc,1)**2;sw+=w;sa+=w*g.la;so+=w*g.lo;best=Math.min(best,g.acc)});
+  cur={lat:+(sa/sw).toFixed(6),lng:+(so/sw).toFixed(6),acc:best,n:GBUF.length};
+  cur.u=utm(cur.lat,cur.lng);
+  setQ(cur.lat,cur.lng);gShow();mapCheck();
+}
 function startGPS(){
   if(gpsOn)return;
-  if(!navigator.geolocation){if($('#gs'))$('#gs').textContent='پشتیبانی نمی‌شود.';return}
+  if(!navigator.geolocation){if($('#gs')){$('#gs').textContent='پشتیبانی نمی‌شود.';$('#gs').classList.remove('hid')}return}
   aud(); gpsOn=true;
   if($('#ga')){$('#ga').textContent='⏸ توقف';$('#ga').classList.add('o')}
-  if($('#gs'))$('#gs').textContent='در حال یافتن موقعیت…';
+  if($('#gs')){$('#gs').textContent='در حال یافتن موقعیت…';$('#gs').classList.remove('hid')}
   updateGpsUI();
   wid=navigator.geolocation.watchPosition(
-    p=>{cur={lat:+p.coords.latitude.toFixed(6),lng:+p.coords.longitude.toFixed(6),acc:p.coords.accuracy};cur.u=utm(cur.lat,cur.lng);gShow();mapCheck();},
-    err=>{gpsOn=false;cur=null;if($('#ga')){$('#ga').textContent='نمایش مختصات';$('#ga').classList.add('o')}let msg='خطا در مختصات';if(err.code===1)msg='دسترسی رد شد. «بدون مختصات» بزنید.';if($('#gs'))$('#gs').textContent=msg;updateGpsUI();},
+    p=>{gpsFix(p.coords.latitude,p.coords.longitude,p.coords.accuracy)},
+    err=>{gpsOn=false;cur=null;if($('#ga')){$('#ga').textContent='📍 مختصات';$('#ga').classList.add('o')}let msg='خطا در مختصات';if(err.code===1)msg='دسترسی رد شد. «بدون مختصات» بزنید.';if($('#gs')){$('#gs').textContent=msg;$('#gs').classList.remove('hid')}const gb0=$('#gb');if(gb0)gb0.classList.add('hid');const tg0=$('#gTog');if(tg0)tg0.classList.add('hid');updateGpsUI();},
     {enableHighAccuracy:true,maximumAge:2000,timeout:30000}
   );
 }
@@ -434,14 +518,14 @@ function startGPS(){
 function stopGPS(){
   if(wid!==null){try{navigator.geolocation.clearWatch(wid)}catch(e){}wid=null}
   gpsOn=false;cur=null;
-  if($('#ga')){$('#ga').textContent='نمایش مختصات';$('#ga').classList.add('o')}
+  if($('#ga')){$('#ga').textContent='📍 مختصات';$('#ga').classList.add('o')}
   if($('#gs'))$('#gs').textContent='مختصات متوقف شد.';
-  const b=$('#gb');if(b)b.classList.add('hid');
+  const b=$('#gb');if(b)b.classList.add('hid');gbHidden=false;GBUF=[];const tg=$('#gTog');if(tg){tg.classList.add('hid');tg.textContent='▴'}const gsE=$('#gs');if(gsE)gsE.classList.add('hid');
   updateGpsUI();
 }
 
 function updateGpsUI(){
-  const strip=$('#gpsStrip');
+  const strip=$('#gpsStripTxt');
   if(strip){
     if(!gpsOn){strip.innerHTML='<span style="color:var(--mu)">◌ مختصات خاموش</span>'}
     else if(!cur){strip.innerHTML='<span style="color:#b78500">◌ در حال یافتن موقعیت…</span>'}
@@ -454,7 +538,7 @@ function updateGpsUI(){
   }
   const hint=$('#svHint');
   if(hint){
-    if(!gpsOn){hint.innerHTML='<span style="color:var(--mu)">مختصات خاموش است؛ «ذخیره بدون مختصات» یا «نمایش مختصات».</span>'}
+    if(!gpsOn){hint.innerHTML='<span style="color:var(--mu)">مختصات خاموش است</span>'}
     else if(!cur){hint.innerHTML='<span style="color:#b78500">◌ در حال یافتن…</span>'}
     else{hint.innerHTML='<span style="color:#2e9d4f">✓ آماده — دقت ±'+fa(cur.acc,0)+' متر</span>'}
   }
@@ -469,58 +553,71 @@ function updateGpsUI(){
 $('#btnManualCoord').onclick = () => {
   const area = $('#manualCoordArea');
   area.classList.toggle('hid');
-  if(!area.classList.contains('hid') && manualCoords.length === 0) addManualCoordRow();
+  if(!area.classList.contains('hid') && !$('#manualCoordList').children.length) addManualCoordRow();
 };
 function addManualCoordRow() {
   const list = $('#manualCoordList');
+  const zs = list.querySelectorAll('.mc-z');
+  const z = zs.length ? zs[zs.length-1].value : (cur ? cur.u.z : (MAPZ || 39));
   const div = document.createElement('div');
   div.className = 'mc-row';
-  div.innerHTML = `<input type="number" placeholder="X" class="mc-x" style="flex:1"><input type="number" placeholder="Y" class="mc-y" style="flex:1"><button class="x" onclick="this.parentElement.remove()">×</button>`;
+  div.innerHTML = `<input type="text" inputmode="decimal" placeholder="X" class="mc-x" style="flex:1.3"><input type="text" inputmode="decimal" placeholder="Y" class="mc-y" style="flex:1.3"><input type="text" inputmode="numeric" placeholder="Z زون" class="mc-z" value="${z}" style="flex:.8"><button class="x" onclick="this.parentElement.remove()">×</button>`;
   list.appendChild(div);
 }
 $('#addManualRow').onclick = addManualCoordRow;
 $('#applyManualCoord').onclick = () => {
-  const rows = document.querySelectorAll('.mc-row');
-  manualCoords = [];
-  rows.forEach(r => {
-    const x = parseFloat(r.querySelector('.mc-x').value); const y = parseFloat(r.querySelector('.mc-y').value);
-    if(!isNaN(x) && !isNaN(y)) manualCoords.push([x, y]);
+  const pts = [];
+  document.querySelectorAll('.mc-row').forEach(r => {
+    const x = parseFloat(toEn(r.querySelector('.mc-x').value)), y = parseFloat(toEn(r.querySelector('.mc-y').value)), z = parseInt(toEn(r.querySelector('.mc-z').value));
+    if(isFinite(x) && isFinite(y) && z >= 1 && z <= 60) pts.push([x, y, z]);
   });
-  if(manualCoords.length > 0) mapCheck();
+  if(pts.length < 3){ alert('حداقل ۳ نقطه با X و Y و زون معتبر لازم است.'); return; }
+  const z0 = pts[0][2];
+  const poly = pts.map(([x, y, z]) => { if(z === z0) return [x, y]; const g = ll(x, y, z), u = utm(g[0], g[1], z0); return [u.E, u.N]; });
+  if(MAPP.length && !confirm('نقشهٔ فعلی با این محدوده جایگزین شود؟')) return;
+  manualCoords = [];
+  setMap([{n:'ورود دستی', o:poly, i:[]}], z0, 'ورود دستی', true);
 };
 
-function mdraw(sel,u){
+function treeZone(){return MAPP.length?MAPZ:((T.find(t=>t.uz)||{}).uz||MAPZ||39)}
+function treePts(){const Z=treeZone();return T.filter(t=>t.lat&&t.lng).map(t=>{const u=utm(t.lat,t.lng,Z);return{E:u.E,N:u.N,t}})}
+function mdraw(sel,u,pts){
+  pts=pts||[];
   const c=$('#mc2'),x=c.getContext('2d'),W=c.width,H=c.height;x.clearRect(0,0,W,H);
   let x0=1e18,x1=-1e18,y0=1e18,y1=-1e18;
   const ext=(a,b)=>{x0=Math.min(x0,a);x1=Math.max(x1,a);y0=Math.min(y0,b);y1=Math.max(y1,b)};
   sel.forEach(p=>p.o.forEach(q=>ext(q[0],q[1])));
-  manualCoords.forEach(p=>ext(p[0],p[1]));
+  pts.forEach(p=>ext(p.E,p.N));
   if(u)ext(u.E,u.N);
-  if(x0 === 1e18) return;
-  const pad=20,sc=Math.min((W-2*pad)/((x1-x0)||1),(H-2*pad)/((y1-y0)||1)),ox=(W-(x1-x0)*sc)/2,oy=(H-(y1-y0)*sc)/2,X=e=>ox+(e-x0)*sc,Y=n=>H-(oy+(n-y0)*sc);
+  if(x0===1e18)return;
+  if(x1-x0<30){const m=(x0+x1)/2;x0=m-15;x1=m+15}
+  if(y1-y0<30){const m=(y0+y1)/2;y0=m-15;y1=m+15}
+  const pad=20,sc=Math.min((W-2*pad)/(x1-x0),(H-2*pad)/(y1-y0)),ox=(W-(x1-x0)*sc)/2,oy=(H-(y1-y0)*sc)/2,X=e=>ox+(e-x0)*sc,Y=n=>H-(oy+(n-y0)*sc);
   x.lineWidth=2;sel.forEach(p=>{x.beginPath();[p.o,...p.i].forEach(r=>{r.forEach((q,k)=>k?x.lineTo(X(q[0]),Y(q[1])):x.moveTo(X(q[0]),Y(q[1])));x.closePath()});x.fillStyle='rgba(60,160,90,.25)';x.strokeStyle='#2e9d4f';x.fill('evenodd');x.stroke()});
-  if(manualCoords.length > 0){
-    x.beginPath();
-    manualCoords.forEach((q, i) => { if(i === 0) x.moveTo(X(q[0]), Y(q[1])); else x.lineTo(X(q[0]), Y(q[1])); });
-    if(manualCoords.length > 2) x.closePath();
-    x.strokeStyle='#007bff'; x.lineWidth=2; x.stroke();
-    x.fillStyle='#007bff';
-    manualCoords.forEach(q => { x.beginPath(); x.arc(X(q[0]), Y(q[1]), 4, 0, Math.PI*2); x.fill(); });
-  }
+  const lab=pts.length<=40,tc=getComputedStyle(document.body).color||'#000';
+  pts.forEach(p=>{
+    const hz=p.t.ty==='h';let col=hz?'#e08a00':'#1b7a34';
+    if(sel.length&&!mtest(sel,p.E,p.N).in)col='#d33';
+    x.beginPath();x.arc(X(p.E),Y(p.N),hz?3:4.5,0,7);x.fillStyle=col;x.fill();x.strokeStyle='#fff';x.lineWidth=1.2;x.stroke();
+    if(lab&&!hz&&p.t.no){x.fillStyle=tc;x.font='11px Vazirmatn,Tahoma,sans-serif';x.fillText(toFa(p.t.no),X(p.E)+6,Y(p.N)-5)}
+  });
   if(u){x.beginPath();x.arc(X(u.E),Y(u.N),9,0,7);x.fillStyle=u.in?'#2e9d4f':'#d33';x.fill();x.strokeStyle='#fff';x.lineWidth=3;x.stroke()}
 }
 
-function mapCheck(){
-  const box=$('#ms'),cv=$('#mc2');
-  if(!MAPP.length && manualCoords.length === 0){if(box)box.classList.add('hid');if(cv)cv.classList.add('hid');return;}
-  if(cv)cv.classList.remove('hid');if(box)box.classList.remove('hid');
-  if(!cur && manualCoords.length > 0){ mdraw(MAPP,null); box.className='gbox'; $('#mst').textContent='مختصات دستی رسم شد'; $('#msd').textContent='تعداد نقاط: '+manualCoords.length; return; }
-  if(!cur){ mdraw(MAPP,null);box.className='gbox';$('#mst').textContent='نقشه بارگذاری شد';$('#msd').textContent='برای موقعیت، «نمایش مختصات» را بزنید.';return; }
-  const u=utm(cur.lat,cur.lng,MAPZ),r=mtest(MAPP,u.E,u.N);u.in=r.in;mdraw(MAPP,u);
+function mapCheck(quiet){
+  const box=$('#ms'),cv=$('#mc2'),leg=$('#mapLegend'),pts=treePts();
+  if(!MAPP.length&&!pts.length){if(box)box.classList.add('hid');if(cv)cv.classList.add('hid');if(leg)leg.classList.add('hid');return}
+  cv.classList.remove('hid');box.classList.remove('hid');if(leg)leg.classList.toggle('hid',!pts.length);
+  if(!MAPP.length){
+    const u=cur?utm(cur.lat,cur.lng,treeZone()):null;if(u)u.in=true;
+    mdraw([],u,pts);box.className='gbox';$('#mst').textContent='نقشهٔ محدوده بارگذاری نشده';$('#msd').textContent=toFa(pts.length)+' درخت دارای مختصات';return;
+  }
+  if(!cur){mdraw(MAPP,null,pts);box.className='gbox';$('#mst').textContent='نقشه بارگذاری شد';$('#msd').textContent=(pts.length?toFa(pts.length)+' درخت روی نقشه — ':'')+'برای موقعیت، «مختصات» را بزنید.';return}
+  const u=utm(cur.lat,cur.lng,MAPZ),r=mtest(MAPP,u.E,u.N);u.in=r.in;mdraw(MAPP,u,pts);
   box.className='gbox '+(r.in?'g1':'g3 al');
   $('#mst').textContent=r.in?'✅ داخل محدوده':'⛔ خارج از محدوده';
   $('#msd').textContent=(r.in?'فاصله تا مرز: ':'فاصله: ')+toFa(Math.round(r.d))+' متر';
-  if(!r.in)alarm();updateGpsUI();
+  if(!r.in&&!quiet)alarm();updateGpsUI();
 }
 
 function renderTabs(){
@@ -812,12 +909,12 @@ $('#mm').onclick=()=>{$('#cm').classList.add('hid');$('#mm').className='';$('#mc
 
 function clr(){
   tyM=false;noM=false;
-  $('#nn').value='۱';$('#ds').value='';$('#d').value='';$('#h').value='';
+  $('#nn').value='۱';$('#ds').value='';$('#d').value='';$('#gi').value='';$('#h').value='';
   if(!SIM){$('#sps').value='';fillSp('');$('#sp').value=''}
   IMG={1:null,2:null};MK={1:{},2:{}};
   $('#fi').value='';$('#im').removeAttribute('src');
   $('#photoArea').classList.add('hid');
-  act=getDef()[0][0];setStep(1);calc();updateGpsUI();
+  act=getDef()[0][0];setStep(1);calc();updateGpsUI();renderRecent();
 }
 
 let edId=null,lastSavedId=null,saveTimer=null;
@@ -832,6 +929,9 @@ function doSave(useCoords){
     if(!cur){ $('#svHint').innerHTML='<span style="color:#d33">⛔ مختصات آماده نیست.</span>'; setTimeout(updateGpsUI,5000); return; }
     coords={lat:cur.lat,lng:cur.lng,ux:cur.u.E,uy:cur.u.N,uz:cur.u.z,ua:Math.round(cur.acc)};
   }
+  {const w=saveWarnings(d,h,$('#ty').value==='h',toEn($('#no').value),null);
+   if(coords&&cur&&cur.acc>10)w.push('دقت مختصات ±'+fa(cur.acc,0)+' متر است (بدتر از ۱۰ متر).');
+   if(w.length&&!confirm('⚠ '+w.join('\n⚠ ')+'\n\nبا همین مقادیر ذخیره شود؟'))return;}
   const hz=$('#ty').value==='h';
   const o={no:hz?'':toEn($('#no').value),sp,g:+$('#gd').value,ty:$('#ty').value,n:hz?Math.max(1,Math.round(N('#nn'))||1):1,d,h,f:ff(),v:volSp(sp,d,h),ds:$('#ds').value};
   const newId=T.reduce((a,t)=>Math.max(a,t.id),0)+1;
@@ -839,7 +939,7 @@ function doSave(useCoords){
   const out=coords&&MAPP.length&&!insideLL(coords.lat,coords.lng);
   store(); addRecent(sp); draw();
   lastSavedId=newId; clearTimeout(saveTimer);
-  $('#msg').innerHTML=(coords?'✓ ذخیره شد':'✓ ذخیره بدون مختصات')+(out?' <span style="color:#d33">⚠ خارج از محدوده!</span>':'')+' • <a href="#" onclick="undoLast();return false" style="color:var(--ac);font-weight:700">برگرداندن</a>';
+  $('#msg').innerHTML=(coords?'✓ ذخیره شد':'✓ ذخیره بدون مختصات')+(out?' <span style="color:#d33">⚠ خارج از محدوده!</span>':'')+gapHtml()+' • <a href="#" onclick="undoLast();return false" style="color:var(--ac);font-weight:700">برگرداندن</a>';
   saveTimer=setTimeout(()=>{if($('#msg').innerHTML.includes('برگرداندن'))$('#msg').textContent=''},10000);
   if(out)alarm(true);
   clr();
@@ -851,6 +951,7 @@ $('#svEdit').onclick=()=>{
   const d=N('#d'),h=N('#h'),sp=$('#sp').value;
   if(!sp){$('#msg').textContent='ابتدا گونه را انتخاب کنید.';return}
   if(!(d>0&&h>0)){$('#msg').textContent='قطر و ارتفاع را وارد کنید.';return}
+  {const w=saveWarnings(d,h,$('#ty').value==='h',toEn($('#no').value),edId);if(w.length&&!confirm('⚠ '+w.join('\n⚠ ')+'\n\nبا همین مقادیر ذخیره شود؟'))return;}
   const t=T.find(x=>x.id==edId);
   if(t){
     const hz=$('#ty').value==='h';
@@ -868,7 +969,7 @@ $('#ce').onclick=()=>{endEdit();clr();};
 window.ed=id=>{
   const t=T.find(x=>x.id==id);if(!t)return;
   edId=id; $('#sps').value='';fillSp('');$('#sp').value=t.sp;
-  $('#gd').value=t.g;$('#d').value=toFa(t.d);$('#h').value=toFa(t.h);
+  $('#gd').value=t.g;$('#gi').value='';$('#d').value=toFa(t.d);$('#h').value=toFa(t.h);
   tyM=true;$('#ty').value=t.ty;$('#nn').value=toFa(t.n||1);
   noM=true;$('#no').value=t.ty==='h'?'':toFa(t.no||'');$('#ds').value=t.ds||'';
   $('#newSaveBtns').classList.add('hid'); $('#svEdit').classList.remove('hid'); $('#ce').classList.remove('hid');
@@ -887,6 +988,31 @@ function updateNoCoord(){
   el.classList.toggle('hid',!n);
   if(n)el.textContent='⚠ '+toFa(n)+' درخت بدون مختصات — برای تکمیل، ویرایش کنید.';
 }
+function numIssues(){
+  const nums=T.filter(t=>t.ty!='h'&&t.no!==''&&t.no!=null).map(t=>parseInt(t.no)).filter(n=>n>0);
+  const seen={},dup=[];nums.forEach(n=>{if(seen[n]===1)dup.push(n);seen[n]=(seen[n]||0)+1});
+  const max=nums.reduce((a,b)=>Math.max(a,b),0),miss=[];for(let i=1;i<=max;i++)if(!seen[i])miss.push(i);
+  return{dup:[...new Set(dup)],miss};
+}
+function gapHtml(){const x=numIssues();return x.miss.length?' <span style="color:#b78500">⚠ شماره‌های جاافتاده: '+toFa(x.miss.slice(0,6).join('، '))+(x.miss.length>6?'…':'')+'</span>':''}
+function updateNumCheck(){
+  const el=$('#numCheck');if(!el)return;
+  const x=numIssues(),p=[];
+  if(x.dup.length)p.push('شمارهٔ تکراری: '+toFa(x.dup.slice(0,10).join('، '))+(x.dup.length>10?'…':''));
+  if(x.miss.length)p.push('شمارهٔ جاافتاده: '+toFa(x.miss.slice(0,10).join('، '))+(x.miss.length>10?'…':''));
+  el.classList.toggle('hid',!p.length);
+  if(p.length)el.textContent='⚠ '+p.join(' • ');
+}
+function saveWarnings(d,h,hz,no,exId){
+  const w=[];
+  if(d>180)w.push('قطر '+fa(d,1)+' سانتی‌متر خیلی زیاد است.');
+  if(d>0&&d<5)w.push('قطر کمتر از ۵ سانتی‌متر است.');
+  if(h>60)w.push('ارتفاع '+fa(h,1)+' متر خیلی زیاد است.');
+  if(h>0&&h<2)w.push('ارتفاع کمتر از ۲ متر است.');
+  if(d>0&&h>0){const r=h/(d/100);if(r>150)w.push('ارتفاع نسبت به قطر غیرعادی زیاد است.');else if(r<20)w.push('ارتفاع نسبت به قطر غیرعادی کم است.')}
+  if(!hz&&no){const k=String(no).trim();if(k&&T.some(t=>t.id!=exId&&t.ty!='h'&&String(t.no)===k))w.push('شمارهٔ '+toFa(k)+' قبلاً ثبت شده است.')}
+  return w;
+}
 function updateTotSummary(){
   const el=$('#totSummary');if(!el)return;
   const I=T.filter(t=>t.ty!='h'),H=T.filter(t=>t.ty==='h');
@@ -895,9 +1021,9 @@ function updateTotSummary(){
   el.innerHTML='تعداد کل: <b>'+toFa(tc)+'</b> اصله به حجم <b>'+fa(tvAll,3)+'</b> مترمکعب';
 }
 function draw(){
-  bnr();updateNoCoord();updateTotSummary();
+  bnr();updateNoCoord();updateNumCheck();updateTotSummary();
   $('#tb').innerHTML='<tr><th>شماره</th><th>گونه</th><th>دسته</th><th>نوع</th><th>قطر</th><th>ارتفاع</th><th>حجم</th><th>X</th><th>Y</th><th>زون</th><th>توضیحات</th><th></th></tr>'+
-    T.map(t=>`<tr><td>${t.ty==='h'?'—':toFa(t.no||'')}</td><td>${t.sp}</td><td>${G[t.g]}</td><td>${t.ty==='h'?'هیزمی ('+toFa(cnt(t))+')':'صنعتی'}</td><td>${fa(t.d,1)}</td><td>${fa(t.h,1)}</td><td>${fa(tv(t),3)}</td><td>${t.ux?toFa(t.ux):'<span style="color:#d33">⚠</span>'}</td><td>${t.uy?toFa(t.uy):'—'}</td><td>${t.uz?toFa(t.uz):'—'}</td><td>${t.ds||''}</td><td><button class="o chipbtn" onclick="ed(${t.id})">ویرایش</button> <button class="x" onclick="del(${t.id})">حذف</button></td></tr>`).join('');
+    T.map(t=>`<tr><td>${t.ty==='h'?'—':toFa(t.no||'')}</td><td>${t.sp}</td><td>${G[t.g]}</td><td>${t.ty==='h'?'هیزمی ('+toFa(cnt(t))+')':'صنعتی'}</td><td>${fa(t.d,1)}</td><td>${fa(t.h,1)}</td><td>${fa(tv(t),3)}</td><td${t.ua>10?' style="color:#b78500" title="دقت ضعیف"':''}>${t.ux?toFa(t.ux):'<span style="color:#d33">⚠</span>'}</td><td>${t.uy?toFa(t.uy):'—'}</td><td>${t.uz?toFa(t.uz):'—'}</td><td>${t.ds||''}</td><td><button class="o chipbtn" onclick="ed(${t.id})">ویرایش</button> <button class="x" onclick="del(${t.id})">حذف</button></td></tr>`).join('');
   $('#tot').textContent=fa(sv(T),3);
   const x=sumX();
   $('#sm').innerHTML='<tr><th rowspan="2">ردیف</th><th rowspan="2">دسته‌بندی</th><th colspan="2">صنعتی</th><th colspan="2">هیزمی</th></tr><tr><th>تعداد</th><th>حجم</th><th>تعداد</th><th>حجم</th></tr>'+
@@ -908,6 +1034,7 @@ function draw(){
   if(cu)$('#hs2').value=cu;
   $('#tb2').innerHTML='<tr><th>#</th><th>گونه</th><th>حجم اولیه</th><th>حجم تجدید</th><th>تغییر٪</th><th>استحصال</th><th>تاریخ</th></tr>'+
     T.filter(t=>t.v2||t.hv).map(t=>`<tr><td>${t.ty==='h'?'هیزمی':toFa(t.no||t.id)}</td><td>${t.sp}</td><td>${fa(t.v,3)}</td><td>${fa(t.v2,3)}</td><td>${t.v2?fa((t.v2-t.v)/t.v*100,1):'—'}</td><td>${fa(t.hv,3)}</td><td>${t.hd||'—'}</td></tr>`).join('');
+  try{mapCheck(true)}catch(e){}
 }
 window.del=id=>{T=T.filter(t=>t.id!==id);store();draw()};
 $('#sh').onclick=()=>{
@@ -936,18 +1063,24 @@ function fillSp(q){
 const nz=x=>String(x).replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/آ/g,'ا').replace(/[\u200c\s]/g,''),NAMES=Object.keys(SP).sort((a,b)=>a.localeCompare(b,'fa'));
 $('#sps').addEventListener('input',()=>{fillSp($('#sps').value)});
 fillSp('');
-$('#sp').onchange=()=>{const v=$('#sp').value;if($('#sps').value){$('#sps').value='';fillSp('');$('#sp').value=v}const x=SP[v];if(x)$('#gd').value=x[1];calc()};
+$('#sp').onchange=()=>{const v=$('#sp').value;if($('#sps').value){$('#sps').value='';fillSp('');$('#sp').value=v}const x=SP[v];if(x)$('#gd').value=x[1];calc();renderRecent()};
 $('#simBtn').onclick=()=>{SIM=!SIM;try{localStorage.setItem('simSp',SIM?'1':'0')}catch(e){}updSimBtn()};
+$('#gTog').onclick=()=>{gbHidden=!gbHidden;$('#gb').classList.toggle('hid',gbHidden);$('#gTog').textContent=gbHidden?'▾':'▴';$('#gTog').title=gbHidden?'نمایش مختصات':'مخفی کردن مختصات'};
+$('#cmpTog').onclick=()=>{const w=$('#compassWrap');w.classList.toggle('hid');const off=w.classList.contains('hid');$('#cmpTog').className=off?'o sbtn':'sbtn';try{localStorage.setItem('cmpOn',off?'0':'1')}catch(e){}};
+try{if(localStorage.getItem('cmpOn')==='1'){$('#compassWrap').classList.remove('hid');$('#cmpTog').className='sbtn'}}catch(e){}
 $('#ga').onclick=e=>{if(e){e.preventDefault();e.stopPropagation()}if(gpsOn)stopGPS();else startGPS();};
 
-function calc(){autoTy();const v=($('#sp').value?volSp($('#sp').value,N('#d'),N('#h')):0)*($('#ty').value=='h'?Math.max(1,Math.round(N('#nn'))||1):1);$('#v').textContent=v>0?fa(v,3):'—'}
+function calc(){autoTy();const v=($('#sp').value?volSp($('#sp').value,N('#d'),N('#h')):0)*($('#ty').value=='h'?Math.max(1,Math.round(N('#nn'))||1):1);{const t=v>0?fa(v,3):'—';const e=$('#vBar');if(e)e.textContent=t}}
 ['#d','#h'].forEach(i=>$(i).addEventListener('input',calc));
+$('#gi').addEventListener('input',()=>{const g=N('#gi');if(g>0)$('#d').value=toFa((g/Math.PI).toFixed(1));calc()});
+$('#d').addEventListener('input',()=>{$('#gi').value=''});
 const autoNo=()=>{$('#cw').classList.toggle('hid',$('#ty').value!='h');if(noM)return;if($('#ty').value=='h'){$('#no').value=''}else{$('#no').value=toFa(T.filter(t=>t.ty!='h').reduce((a,t)=>Math.max(a,+t.no||0),0)+1)}};
 let tyM=false, noM=false;
 const autoTy=()=>{if(!tyM)$('#ty').value=(N('#d')>0&&N('#d')<20)?'h':'i';autoNo()};
 $('#no').addEventListener('input',()=>{noM=true});
 const ff=()=>(SP[$('#sp').value]||[.5])[0];
 
+// ورود داده‌ها
 document.getElementById('btnSmartImport').onclick = () => document.getElementById('smartImportFile').click();
 document.getElementById('smartImportFile').onchange = async (e) => {
   const file = e.target.files[0]; if (!file) return; e.target.value = ''; 
@@ -1032,8 +1165,8 @@ function showImportPreview(data) {
               <tr style="border-bottom:1px solid var(--bd);">
                 <td style="padding:4px;"><input type="text" class="imp-no" value="${item.no || ''}" style="padding:4px;text-align:center;width:50px;"></td>
                 <td style="padding:4px;"><input type="text" class="imp-sp" value="${item.sp || ''}" style="padding:4px;text-align:center;width:70px;"></td>
-                <td style="padding:4px;"><input type="number" class="imp-d" value="${item.d || ''}" style="padding:4px;text-align:center;width:60px;"></td>
-                <td style="padding:4px;"><input type="number" class="imp-h" value="${item.h || ''}" style="padding:4px;text-align:center;width:60px;"></td>
+                <td style="padding:4px;"><input type="text" inputmode="decimal" class="imp-d" value="${item.d || ''}" style="padding:4px;text-align:center;width:60px;"></td>
+                <td style="padding:4px;"><input type="text" inputmode="decimal" class="imp-h" value="${item.h || ''}" style="padding:4px;text-align:center;width:60px;"></td>
                 <td style="padding:4px;"><input type="text" class="imp-ds" value="${item.ds || ''}" style="padding:4px;text-align:center;width:100px;"></td>
                 <td style="padding:4px;text-align:center;"><button class="x" onclick="this.closest('tr').remove()">×</button></td>
               </tr>
@@ -1051,7 +1184,7 @@ function showImportPreview(data) {
     let currentMaxNo = T.filter(t=>t.ty!='h').reduce((max, t) => Math.max(max, parseInt(t.no) || 0), 0);
     rows.forEach(tr => {
       const no = tr.querySelector('.imp-no').value.trim(); let sp = tr.querySelector('.imp-sp').value.trim();
-      const d = parseFloat(tr.querySelector('.imp-d').value); const h = parseFloat(tr.querySelector('.imp-h').value) || 0; const ds = tr.querySelector('.imp-ds').value.trim();
+      const d = parseFloat(toEn(tr.querySelector('.imp-d').value)); const h = parseFloat(toEn(tr.querySelector('.imp-h').value)) || 0; const ds = tr.querySelector('.imp-ds').value.trim();
       if (d > 0) {
         if (!sp) sp = 'نامشخص'; 
         let finalNo = no;
@@ -1091,7 +1224,7 @@ document.getElementById('btnQuickEntry').onclick = () => {
     const rows = tbody.querySelectorAll('tr'); let added = 0;
     let currentMaxNo = T.filter(t=>t.ty!='h').reduce((max, t) => Math.max(max, parseInt(t.no) || 0), 0);
     rows.forEach(tr => {
-      let sp = tr.querySelector('.q-sp').value.trim(); const d = parseFloat(tr.querySelector('.q-d').value); const h = parseFloat(tr.querySelector('.q-h').value) || 0; const count = parseInt(tr.querySelector('.q-count').value) || 1;
+      let sp = tr.querySelector('.q-sp').value.trim(); const d = parseFloat(toEn(tr.querySelector('.q-d').value)); const h = parseFloat(toEn(tr.querySelector('.q-h').value)) || 0; const count = parseInt(toEn(tr.querySelector('.q-count').value)) || 1;
       if (d > 0) {
         if (!sp) sp = 'نامشخص';
         for(let i=0; i<count; i++){
@@ -1105,16 +1238,10 @@ document.getElementById('btnQuickEntry').onclick = () => {
     if (added > 0) { store(); draw(); alert(`تعداد ${toFa(added)} درخت ثبت شد.`); } else { alert('سطر معتبری پیدا نشد.'); }
     ov.remove();
   };
-});
-function quickRowHtml() { return `<tr style="border-bottom:1px solid var(--bd);"><td style="padding:4px;"><input type="text" class="q-sp" style="padding:6px;text-align:center;width:80px;"></td><td style="padding:4px;"><input type="number" class="q-d" style="padding:6px;text-align:center;width:60px;"></td><td style="padding:4px;"><input type="number" class="q-h" style="padding:6px;text-align:center;width:60px;"></td><td style="padding:4px;"><input type="number" class="q-count" value="1" style="padding:6px;text-align:center;width:50px;"></td><td style="padding:4px;text-align:center;"><button class="x" onclick="this.closest('tr').remove()">×</button></td></tr>`; }
+};  /* اصلاح ۱: قبلاً به‌اشتباه «});» بود */
+function quickRowHtml() { return `<tr style="border-bottom:1px solid var(--bd);"><td style="padding:4px;"><input type="text" class="q-sp" style="padding:6px;text-align:center;width:80px;"></td><td style="padding:4px;"><input type="text" inputmode="decimal" class="q-d" style="padding:6px;text-align:center;width:60px;"></td><td style="padding:4px;"><input type="text" inputmode="decimal" class="q-h" style="padding:6px;text-align:center;width:60px;"></td><td style="padding:4px;"><input type="text" inputmode="decimal" class="q-count" value="1" style="padding:6px;text-align:center;width:50px;"></td><td style="padding:4px;text-align:center;"><button class="x" onclick="this.closest('tr').remove()">×</button></td></tr>`; }
 
-renderTabs();updateMapInfo();renderSnaps();updSimBtn();renderRecent();
-$('#refType').value=refType;
-if(refType==='custom')$('#refSize').classList.remove('hid');
-updateModeUI();act=getDef()[0][0];setStep(1);$('#sp').onchange();draw();mapCheck();updateGpsUI();updateTotSummary();
-$('#ga').textContent='نمایش مختصات';$('#ga').classList.add('o');
-
-let SNAPS=[];try{SNAPS=JSON.parse(localStorage.getItem('snaps')||'[]')}catch(e){}
+/* ذخیره‌های نام‌دار (SNAPS) */
 function saveSnaps(){try{localStorage.setItem('snaps',JSON.stringify(SNAPS));stWarn(false)}catch(e){stWarn(true)}}
 function renderSnaps(){const el=$('#savedList');if(!el)return;if(!SNAPS.length){el.innerHTML='<div class="m">هنوز موردی ذخیره نشده است.</div>';return}el.innerHTML=SNAPS.slice().reverse().map(s=>`<div class="sitem"><div class="sinfo"><b>${esc(s.name)}</b><small>${toFa((s.trees||[]).length)} درخت</small></div><button class="o" style="padding:4px 10px;font-size:12px" data-load="${s.id}">باز کردن</button><button class="x" data-del="${s.id}">×</button></div>`).join('');el.querySelectorAll('[data-load]').forEach(b=>b.onclick=()=>loadSnap(+b.dataset.load));el.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const id=+b.dataset.del;if(!confirm('حذف شود؟'))return;SNAPS=SNAPS.filter(s=>s.id!==id);saveSnaps();renderSnaps()});}
 $('#saveSnap').onclick=()=>{
@@ -1129,8 +1256,15 @@ $('#saveSnap').onclick=()=>{
 };
 function loadSnap(id){const s=SNAPS.find(x=>x.id===id);if(!s)return;const existingSheet=SHEETS.find(sh=>sh.name===s.name);if(existingSheet){if(!confirm('جایگزین شود؟'))return;saveActive();existingSheet.trees=JSON.parse(JSON.stringify(s.trees||[]));existingSheet.map=s.map?JSON.parse(JSON.stringify(s.map)):null;switchSheet(existingSheet.id,true);return;}if(!confirm('سربرگ جدید باز شود؟'))return;const nid=SHEETS.reduce((a,x)=>Math.max(a,x.id),0)+1;SHEETS.push({id:nid,name:s.name,trees:JSON.parse(JSON.stringify(s.trees||[])),map:s.map?JSON.parse(JSON.stringify(s.map)):null});switchSheet(nid);}
 
+/* راه‌اندازی اولیه (بعد از تعریف همهٔ توابع و متغیرها) */
+renderTabs();updateMapInfo();renderSnaps();updSimBtn();renderRecent();
+$('#refType').value=refType;
+if(refType==='custom')$('#refSize').classList.remove('hid');
+updateModeUI();act=getDef()[0][0];setStep(1);$('#sp').onchange();draw();mapCheck();updateGpsUI();updateTotSummary();
+$('#ga').textContent='📍 مختصات';$('#ga').classList.add('o');
+
+/* پشتیبان‌گیری */
 const DL={save:async({filename,data})=>{const u=URL.createObjectURL(data),a=document.createElement('a');a.href=u;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000)}};
-$('#bk').onclick=async()=>{ if(!DL){alert('ذخیره ممکن نیست.');return} try{ const dt=new Date().toISOString().slice(0,10); saveActive(); const payload={app:'hyrcanian',v:3,sheets:SHEETS,activeId,trees:T,snaps:SNAPS}; const blob=new Blob([JSON.stringify(payload)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='backup-'+dt+'.json'; a.click(); BK={n:tot(),dt}; localStorage.setItem('bk',JSON.stringify(BK)); bnr(); alert('ذخیره شد.'); }catch(e){alert('خطا')} };
 $('#rb').onclick=()=>$('#rf').click();
 $('#rf').onchange=async e=>{ const f=e.target.files[0];if(!f)return; try{ const j=JSON.parse(await f.text()); const sheetsArr=Array.isArray(j.sheets)?j.sheets:null; const treesArr=Array.isArray(j)?j:(Array.isArray(j.trees)?j.trees:null); if(sheetsArr){ if($('#rm').value==='r'){SHEETS=sheetsArr;activeId=SHEETS[0]?.id||1;}else{let m=SHEETS.reduce((a,s)=>Math.max(a,s.id),0);sheetsArr.forEach(s=>{m++;let nm=s.name,k=2;while(SHEETS.some(x=>x.name===nm))nm=s.name+' ('+(k++)+')';SHEETS.push(Object.assign({},s,{id:m,name:nm}))})} loadActive();norm();saveActive(); if(Array.isArray(j.snaps)){if($('#rm').value==='r')SNAPS=j.snaps;else{let m2=SNAPS.reduce((a,x)=>Math.max(a,x.id||0),0);j.snaps.forEach(x=>{m2++;SNAPS.push(Object.assign({},x,{id:m2}))})}saveSnaps();renderSnaps()} }else if(treesArr){ if($('#rm').value==='r'){T=treesArr}else{let m=T.reduce((x,t)=>Math.max(x,t.id),0);T=T.concat(treesArr.map(t=>Object.assign({},t,{id:++m})))} norm();saveActive(); }else throw 0; renderTabs();updateMapInfo();draw();mapCheck();alert('بازیابی شد.'); }catch(x){alert('فایل معتبر نیست.')} e.target.value=''; };
 
@@ -1138,18 +1272,94 @@ const R3=x=>+(+x).toFixed(3),say=(m,bad)=>document.querySelectorAll('.xs').forEa
 async function mkX(sheets){ const wb=new ExcelJS.Workbook(),bd={style:'thin'}; sheets.forEach(([n,rows,mg,hr=1,tot])=>{ const ws=wb.addWorksheet(n,{views:[{rightToLeft:true}]}),W=rows[0].length; rows.forEach(r=>ws.addRow(r)); for(let i=1;i<=W;i++)ws.getColumn(i).width=n==='درختان'?14:18; for(let r=1;r<=rows.length;r++)for(let c=1;c<=W;c++){const x=ws.getCell(r,c);x.alignment={horizontal:'center',vertical:'middle',wrapText:true};x.border={top:bd,left:bd,bottom:bd,right:bd}; if(r<=hr){x.font={bold:true};x.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFE3EEDF'}}}else if(tot&&r==rows.length)x.font={bold:true}} (mg||[]).forEach(([a,b,c,d])=>ws.mergeCells(a+1,b+1,c+1,d+1))}); return await wb.xlsx.writeBuffer()}
 const MIME='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',msg=e=>String(e&&e.message||e);
 const safe=f=>()=>{try{const r=f();if(r&&r.catch)r.catch(e=>say('خطا: '+msg(e),1))}catch(e){say('خطا: '+msg(e),1)}};
-async function exp(fn,sheets){ if(!DL){say('ذخیره ممکن نیست.',1);return} let blob=null,why=''; if(window.ExcelJS){try{blob=new Blob([await mkX(sheets)],{type:MIME})}catch(e){why=msg(e)}} if(!blob&&window.XLSX){try{ const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]}; sheets.forEach(([n,rows,mg])=>{const ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=rows[0].map(()=>({wch:16}));if(mg)ws['!merges']=mg.map(([a,b,c,d])=>({s:{r:a,c:b},e:{r:c,c:d}}));XLSX.utils.book_append_sheet(wb,ws,n)}); blob=new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})],{type:MIME})}catch(e){why+='|'+msg(e)}} if(blob)fn+='.xlsx'; else{blob=new Blob(['\ufeff'+sheets[0][1].map(r=>r.map(c=>'"'+String(c??'').replace(/"/g,'""')+'"').join(',')).join('\r\n')],{type:'text/csv'});fn+='.csv'} try{await DL.save({filename:fn,data:blob});say(why?'ذخیره شد، با قالب ساده ('+why+')':'فایل ذخیره شد.',!!why)}catch(e){say('ذخیره انجام نشد: '+msg(e),1)}}
 
 function sumSheets(){ const x=sumX(),n3=a=>a.slice(0,1).concat(a.slice(1).map((v,i)=>i%2?R3(v):v)); const A=[['خلاصه وضعیت درختان مورد نشانه‌گذاری شده','','','','',''],['ردیف','دسته‌بندی درختان نشانه‌گذاری شده','درختان صنعتی','','درختان هیزمی',''],['','','تعداد','حجم','تعداد','حجم']].concat(x.r.map((a,i)=>[i+1].concat(n3(a))),[['مجموع',''].concat(n3(x.t).slice(1))]),L=A.length-1; const gs=[1,2,3].map(g=>{const I=T.filter(t=>t.g==g&&t.ty!='h'),H=T.filter(t=>t.g==g&&t.ty==='h');return[G[g],ct(I),R3(sv(I)),ct(H),R3(sv(H))]}); const B=[['خلاصه بر اساس دسته','','','',''],['دسته','درختان صنعتی','','درختان هیزمی',''],['','تعداد','حجم','تعداد','حجم']].concat(gs); return[['خلاصه',A,[[0,0,0,5],[1,0,2,0],[1,1,2,1],[1,2,1,3],[1,4,1,5],[L,0,L,1]],3,1],['خلاصه دسته',B,[[0,0,0,4],[1,0,2,0],[1,1,1,2],[1,3,1,4]],3]]}
 function buildE1(title){ const ind=T.filter(t=>t.ty!='h').sort((a,b)=>(+a.no||a.id)-(+b.no||b.id)),fw=T.filter(t=>t.ty==='h'),gm={}; fw.forEach(t=>{const d=Math.round(t.d),h=Math.round(t.h),k=t.sp+'|'+d+'|'+h;gm[k]=gm[k]||{sp:t.sp,d,h,n:0,v:0};gm[k].n+=cnt(t);gm[k].v+=tv(t)}); const gr=Object.values(gm),W=12,pad=a=>a.concat(Array(W-a.length).fill('')); const rows=[pad(['سیاهه درختان — '+title]),pad(['درختان صنعتی','','','','','','درختان هیزمی']),pad(['شماره درخت','جنس','ابعاد','','حجم (مترمکعب)','توضیحات','جنس','ابعاد','','حجم یک اصله','تعداد','حجم']),pad(['','','قطر (cm)','طول (m)','','','','قطر (cm)','طول (m)'])]; for(let i=0;i<Math.max(ind.length,gr.length);i++){const a=ind[i],g=gr[i];rows.push(pad((a?[a.no||i+1,a.sp,a.d,a.h,R3(a.v),a.ds||'']:Array(6).fill('')).concat(g?[g.sp,g.d,g.h,R3(g.v/g.n),g.n,R3(g.v)]:[])))} rows.push(pad(['جمع','','','',R3(sv(ind)),'','','','','',ct(fw),R3(sv(fw))])); const L=rows.length-1,mg=[[0,0,0,11],[1,0,1,5],[1,6,1,11],[2,0,3,0],[2,1,3,1],[2,2,2,3],[2,4,3,4],[2,5,3,5],[2,6,3,6],[2,7,2,8],[2,9,3,9],[2,10,3,10],[2,11,3,11],[L,0,L,3]]; return[['درختان',rows,mg,4,1],['مختصات',[['شماره','گونه','X (UTM)','Y (UTM)','زون','دقت (± متر)','وضعیت']].concat(ind.map((t,i)=>[t.no||i+1,t.sp,t.ux||'',t.uy||'',t.uz||'',t.ua||'',t.ux?'✓':'⚠ بدون مختصات']))],...sumSheets()];}
 function fnm(){return String(getActiveSheet().name).replace(/[\\\/:*?"<>|]/g,'-').trim()+'-'+new Date().toISOString().slice(0,10)}
 function shn(n,used){const b=String(n).replace(/[\\\/\?\*\[\]:]/g,'-').slice(0,28)||'برگه';let x=b,k=2;while(used.has(x))x=b+' ('+(k++)+')';used.add(x);return x}
-$('#e1').onclick=safe(()=>exp(fnm(),buildE1(getActiveSheet().name)));
-$('#e3').onclick=safe(()=>{ saveActive(); const used=new Set(),out=[],all=[],o=T; try{ SHEETS.forEach(sh=>{T=sh.trees||[];norm();const b=buildE1(sh.name)[0];b[0]=shn(sh.name,used);out.push(b);all.push(...T)}); T=all;const s2=sumSheets()[0];s2[0]='خلاصه کل';s2[1][0][0]='خلاصه وضعیت درختان مورد نشانه‌گذاری شده (همهٔ زمین‌ها)';out.push(s2) }finally{T=o} return exp('all-lands-'+new Date().toISOString().slice(0,10),out) });
-$('#e2').onclick=safe(()=>exp('harvest-'+fnm(),[['تجدید و استحصال',[['شماره','گونه','دسته','حجم اولیه (مترمکعب)','قطر جدید','ارتفاع جدید','حجم تجدید (مترمکعب)','تغییر %','حجم استحصال (مترمکعب)','تاریخ استحصال','یادداشت']].concat(T.filter(t=>t.v2||t.hv).map(t=>[t.ty==='h'?'هیزمی':(t.no||''),t.sp,G[t.g],R3(t.v),t.d2||'',t.h2||'',t.v2?R3(t.v2):'',t.v2?+((t.v2-t.v)/t.v*100).toFixed(1):'',t.hv||'',t.hd||'',t.hn||'']))]]));
+const today=()=>new Date().toISOString().slice(0,10);
+async function shareBlob(fn,blob){
+  try{
+    const file=new File([blob],fn,{type:blob.type||'application/octet-stream'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      try{await navigator.share({files:[file],title:fn});return 'shared'}catch(e){if(e&&e.name==='AbortError')return 'cancel'}
+    }
+  }catch(e){}
+  await DL.save({filename:fn,data:blob});return 'saved';
+}
+async function outBlob(fn,blob,share,why){
+  if(share){
+    const r=await shareBlob(fn,blob);
+    if(r==='shared'){say('✓ ارسال شد');return true}
+    if(r==='cancel'){say('');return false}
+    say('اشتراک مستقیم این نوع فایل در مرورگر ممکن نیست؛ فایل ذخیره شد. از مدیر فایل گوشی بفرستید.');return true;
+  }
+  await DL.save({filename:fn,data:blob});
+  say(why?'ذخیره شد، با قالب ساده ('+why+')':'✓ فایل ذخیره شد.',!!why);return true;
+}
+async function exp(fn,sheets,share){ let blob=null,why=''; if(window.ExcelJS){try{blob=new Blob([await mkX(sheets)],{type:MIME})}catch(e){why=msg(e)}} if(!blob&&window.XLSX){try{ const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]}; sheets.forEach(([n,rows,mg])=>{const ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=rows[0].map(()=>({wch:16}));if(mg)ws['!merges']=mg.map(([a,b,c,d])=>({s:{r:a,c:b},e:{r:c,c:d}}));XLSX.utils.book_append_sheet(wb,ws,n)}); blob=new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})],{type:MIME})}catch(e){why+='|'+msg(e)}} if(blob)fn+='.xlsx'; else{blob=new Blob(['\ufeff'+sheets[0][1].map(r=>r.map(c=>'"'+String(c??'').replace(/"/g,'""')+'"').join(',')).join('\r\n')],{type:'text/csv'});fn+='.csv'} return outBlob(fn,blob,share,why)}
+function allSheets(){ saveActive(); const used=new Set(),out=[],all=[],o=T; try{ SHEETS.forEach(sh=>{T=sh.trees||[];norm();const b=buildE1(sh.name)[0];b[0]=shn(sh.name,used);out.push(b);all.push(...T)}); T=all;const s2=sumSheets()[0];s2[0]='خلاصه کل';s2[1][0][0]='خلاصه وضعیت درختان مورد نشانه‌گذاری شده (همهٔ زمین‌ها)';out.push(s2) }finally{T=o} return out }
+function harvestSheets(){return [['تجدید و استحصال',[['شماره','گونه','دسته','حجم اولیه (مترمکعب)','قطر جدید','ارتفاع جدید','حجم تجدید (مترمکعب)','تغییر %','حجم استحصال (مترمکعب)','تاریخ استحصال','یادداشت']].concat(T.filter(t=>t.v2||t.hv).map(t=>[t.ty==='h'?'هیزمی':(t.no||''),t.sp,G[t.g],R3(t.v),t.d2||'',t.h2||'',t.v2?R3(t.v2):'',t.v2?+((t.v2-t.v)/t.v*100).toFixed(1):'',t.hv||'',t.hd||'',t.hn||'']))]]}
+function backupBlob(){ saveActive(); const payload={app:'hyrcanian',v:3,sheets:SHEETS,activeId,trees:T,snaps:SNAPS}; return new Blob([JSON.stringify(payload)],{type:'application/json'}) }
+async function buildKMZ(){
+  if(!window.JSZip)throw new Error('JSZip بارگذاری نشد (اینترنت لازم است)');
+  const X=x=>String(x==null?'':x).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const pt=t=>{if(t.lat&&t.lng)return[t.lat,t.lng];if(t.ux&&t.uy&&t.uz)return ll(t.ux,t.uy,t.uz);return null};
+  const cs=(la,lo)=>lo.toFixed(7)+','+la.toFixed(7)+',0';
+  const ring=r=>{const a=r.map(q=>{const g=ll(q[0],q[1],MAPZ);return cs(g[0],g[1])});if(a.length&&a[0]!==a[a.length-1])a.push(a[0]);return '<LinearRing><coordinates>'+a.join(' ')+'</coordinates></LinearRing>'};
+  const ic='<Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href></Icon>';
+  const sh=getActiveSheet();
+  let k='<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>'+X(sh.name)+'</name>'
+   +'<Style id="b"><LineStyle><color>ff4f9d2e</color><width>3</width></LineStyle><PolyStyle><color>334f9d2e</color></PolyStyle></Style>'
+   +'<Style id="ti"><IconStyle><color>ff4f9d2e</color><scale>0.9</scale>'+ic+'</IconStyle><LabelStyle><scale>0.8</scale></LabelStyle></Style>'
+   +'<Style id="th"><IconStyle><color>ff008ae0</color><scale>0.7</scale>'+ic+'</IconStyle><LabelStyle><scale>0</scale></LabelStyle></Style>';
+  if(MAPP.length){k+='<Folder><name>محدوده</name>';MAPP.forEach(p=>{k+='<Placemark><name>'+X(p.n||'محدوده')+'</name><styleUrl>#b</styleUrl><Polygon><tessellate>1</tessellate><outerBoundaryIs>'+ring(p.o)+'</outerBoundaryIs>'+(p.i||[]).map(r=>'<innerBoundaryIs>'+ring(r)+'</innerBoundaryIs>').join('')+'</Polygon></Placemark>'});k+='</Folder>'}
+  [['درختان صنعتی',t=>t.ty!='h','ti'],['درختان هیزمی',t=>t.ty==='h','th']].forEach(([title,f,st])=>{
+    const L=T.filter(f).map(t=>[t,pt(t)]).filter(a=>a[1]);if(!L.length)return;
+    k+='<Folder><name>'+title+'</name>';
+    L.forEach(([t,g])=>{
+      const nm=(t.ty==='h'?'':(t.no?t.no+' ':''))+t.sp;
+      const dsc='گونه: '+X(t.sp)+'<br>قطر: '+fa(t.d,1)+' cm<br>ارتفاع: '+fa(t.h,1)+' m<br>حجم: '+fa(tv(t),3)+' m³'+(cnt(t)>1?'<br>تعداد: '+fa(cnt(t),0):'')+(t.ds?'<br>'+X(t.ds):'')+(t.ua?'<br>دقت GPS: ±'+fa(t.ua,0)+' m':'');
+      k+='<Placemark><name>'+X(nm)+'</name><styleUrl>#'+st+'</styleUrl><description><![CDATA['+dsc+']]></description><Point><coordinates>'+cs(g[0],g[1])+'</coordinates></Point></Placemark>';
+    });
+    k+='</Folder>';
+  });
+  k+='</Document></kml>';
+  const z=new JSZip();z.file('doc.kml',k);
+  return await z.generateAsync({type:'blob',mimeType:'application/vnd.google-earth.kmz',compression:'DEFLATE'});
+}
+async function runExport(kind,share){
+  try{
+    say('در حال ساخت فایل…');
+    if(kind==='x1')return await exp(fnm(),buildE1(getActiveSheet().name),share);
+    if(kind==='x3')return await exp('all-lands-'+today(),allSheets(),share);
+    if(kind==='kmz'){
+      if(!MAPP.length&&!T.some(t=>t.lat)){say('نه محدوده‌ای بارگذاری شده و نه درختی با مختصات ثبت شده.',1);return}
+      return await outBlob(fnm()+'.kmz',await buildKMZ(),share);
+    }
+    if(kind==='bk'){
+      const ok=await outBlob('backup-'+today()+'.json',backupBlob(),share);
+      if(ok){BK={n:tot(),dt:today()};try{localStorage.setItem('bk',JSON.stringify(BK))}catch(e){}bnr()}
+      return ok;
+    }
+  }catch(e){say('خطا: '+msg(e),1)}
+}
+$('#expSave').onclick=()=>runExport($('#expType').value,false);
+$('#expShare').onclick=()=>runExport($('#expType').value,true);
+$('#e2').onclick=safe(()=>exp('harvest-'+fnm(),harvestSheets(),false));
+$('#e2s').onclick=safe(()=>exp('harvest-'+fnm(),harvestSheets(),true));
+
+/* ناوبری بین سه بخش اصلی */
+document.querySelectorAll('nav button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
+    ['m','l','h'].forEach(k=>{const s=document.getElementById('sec-'+k);if(s)s.classList.toggle('hid',k!==b.dataset.t)});
+    const sb=document.getElementById('saveBar');if(sb)sb.classList.toggle('hid',b.dataset.t!=='m');
+  };
+});
 </script>
 
-<!-- همگام‌سازی Supabase و احراز هویت -->
+<!-- همگام‌سازی Supabase و مدیریت اسپلش -->
 <script>
 (function(){
 const SB_URL='https://hgzdghjkwzufdhmjcfaz.supabase.co'.trim();
@@ -1238,7 +1448,7 @@ const row=s=>({user_id:S.uid,uid:s.uid,name:s.name,data:{trees:s.trees||[],map:s
 
 function ui(){
   if(!S){
-    A.innerHTML='<button id="aIn" class="o">☁️ ورود / ثبت‌نام آنلاین</button>';
+    A.innerHTML='<button id="aIn" class="o">☁️ ورود / ثبت‌نام</button>';
     A.querySelector('#aIn').onclick=login;return;
   }
   A.innerHTML='<span>☁️ '+esc(S.name)+' · '+msg+'</span><button id="aSy" class="o">همگام‌سازی</button><button id="aOut" class="o">خروج</button>';
@@ -1248,54 +1458,24 @@ function ui(){
 
 function login(){
   const o=document.createElement('div');o.id='aov';
-  o.innerHTML='<div class="bx"><b>حساب کاربری</b><input id="aU" placeholder="نام کاربری" autocomplete="username"><input id="aP" type="password" placeholder="رمز عبور"><div id="aer"></div><div class="r"><button id="aL" onclick="window.doAuthAction(false)">ورود</button><button id="aR" class="o" onclick="window.doAuthAction(true)">ثبت‌نام</button><button class="o" onclick="this.closest(\'#aov\').remove()">انصراف</button></div></div>';
+  o.innerHTML='<div class="bx"><b>حساب کاربری</b><input id="aU" placeholder="نام کاربری" autocomplete="username"><input id="aP" type="password" placeholder="رمز عبور"><div id="aer"></div><div class="r"><button id="aL">ورود</button><button id="aR" class="o">ثبت‌نام</button><button id="aC" class="o">انصراف</button></div></div>';
   document.body.append(o);
+  const go=async su=>{
+    const u=o.querySelector('#aU').value.trim().toLowerCase();
+    const p=o.querySelector('#aP').value,er=o.querySelector('#aer');
+    if(!/^[a-z0-9._-]{3,30}$/.test(u)){er.textContent='نام کاربری انگلیسی ۳-۳۰ حرف';return}
+    if(p.length<6){er.textContent='رمز کوتاه است.';return}
+    er.textContent='…';
+    try{
+      const j=await api(su?'/auth/v1/signup':'/auth/v1/token?grant_type=password','POST',{email:em(u),password:p});
+      if(!j.access_token)throw new Error('تایید ایمیل خاموش نیست.');
+      setS(j,u);o.remove();msg='';ui();sync();
+    }catch(e){er.textContent=fe(e)}
+  };
+  o.querySelector('#aL').onclick=()=>go(false);
+  o.querySelector('#aR').onclick=()=>go(true);
+  o.querySelector('#aC').onclick=()=>o.remove();
 }
-
-// توابع سراسری که مستقیماً توسط دکمه‌های HTML فراخوانی می‌شوند
-window.doGuestLogin = function() {
-  document.getElementById('splash').style.display='none';
-  document.getElementById('app').style.display='block';
-};
-
-window.doSplashAuth = async function(isSignup) {
-  const u = document.getElementById('splashUser').value.trim().toLowerCase();
-  const p = document.getElementById('splashPass').value;
-  const er = document.getElementById('splashErr');
-  
-  if(!/^[a-z0-9._-]{3,30}$/.test(u)){er.textContent='نام کاربری انگلیسی ۳-۳۰ حرف';return}
-  if(p.length<6){er.textContent='رمز کوتاه است.';return}
-  
-  er.textContent='در حال اتصال...';
-  try{
-    const j=await api(isSignup?'/auth/v1/signup':'/auth/v1/token?grant_type=password','POST',{email:em(u),password:p});
-    if(!j.access_token)throw new Error('تایید ایمیل خاموش نیست.');
-    setS(j,u);
-    er.textContent='';
-    document.getElementById('splash').style.display='none';
-    document.getElementById('app').style.display='block';
-    ui(); sync();
-  }catch(e){er.textContent=fe(e)}
-};
-
-window.doAuthAction = async function(isSignup) {
-  const u = document.getElementById('aU').value.trim().toLowerCase();
-  const p = document.getElementById('aP').value;
-  const er = document.getElementById('aer');
-  
-  if(!/^[a-z0-9._-]{3,30}$/.test(u)){er.textContent='نام کاربری انگلیسی ۳-۳۰ حرف';return}
-  if(p.length<6){er.textContent='رمز کوتاه است.';return}
-  
-  er.textContent='در حال اتصال...';
-  try{
-    const j=await api(isSignup?'/auth/v1/signup':'/auth/v1/token?grant_type=password','POST',{email:em(u),password:p});
-    if(!j.access_token)throw new Error('تایید ایمیل خاموش نیست.');
-    setS(j,u);
-    er.textContent='';
-    document.getElementById('aov').remove();
-    ui(); sync();
-  }catch(e){er.textContent=fe(e)}
-};
 
 async function logout(){
   const ok=await sync();
@@ -1311,6 +1491,29 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync()});
 setInterval(sync,90000);
 ui();
 
+// مدیریت صفحه Splash و دکمه‌ها
+window.splashGo = async (su) => {
+  const u = document.getElementById('splashUser').value.trim().toLowerCase();
+  const p = document.getElementById('splashPass').value;
+  const er = document.getElementById('splashErr');
+  if(!/^[a-z0-9._-]{3,30}$/.test(u)){er.textContent='نام کاربری انگلیسی ۳-۳۰ حرف';return}
+  if(p.length<6){er.textContent='رمز کوتاه است.';return}
+  er.textContent='…';
+  try{
+    const j=await api(su?'/auth/v1/signup':'/auth/v1/token?grant_type=password','POST',{email:em(u),password:p});
+    if(!j.access_token)throw new Error('تایید ایمیل خاموش نیست.');
+    setS(j,u);
+    document.getElementById('splash').style.display='none';
+    document.getElementById('app').style.display='block';
+    ui(); sync();
+  }catch(e){er.textContent=fe(e)}
+};
+
+window.splashGuest = () => {
+  document.getElementById('splash').style.display='none';
+  document.getElementById('app').style.display='block';
+};
+
 // باز کردن خودکار برنامه اگر از قبل لاگین بوده
 if(S) {
   document.getElementById('splash').style.display='none';
@@ -1318,7 +1521,39 @@ if(S) {
   sync();
 }
 })();
+
+// اتصال دکمه‌های HTML به توابع (مستقل از دیتابیس تا هرگز از کار نیفتد)
+document.getElementById('splashLogin').onclick = () => window.splashGo(false);
+document.getElementById('splashSignup').onclick = () => window.splashGo(true);
+document.getElementById('splashGuest').onclick = () => window.splashGuest();
 </script>
 
+<script>
+(function(){
+  if('serviceWorker' in navigator){
+    addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').then(r=>{try{r.update()}catch(e){}}).catch(()=>{});});
+  }
+  let base=null,shown=false;
+  function showBar(){
+    const b=document.createElement('div');
+    b.style.cssText='position:fixed;top:0;left:0;right:0;z-index:10000;background:#2f6b3c;color:#fff;padding:10px 12px;text-align:center;font-size:13px;cursor:pointer';
+    b.innerHTML='🔄 نسخهٔ جدید برنامه آماده است — <u>به‌روزرسانی</u>';
+    b.onclick=()=>location.reload();document.body.append(b);
+  }
+  async function chk(){
+    if(shown||!navigator.onLine)return;
+    try{
+      const r=await fetch(location.href.split('#')[0],{method:'HEAD',cache:'no-store'});
+      const v=(r.headers.get('etag')||'')+'|'+(r.headers.get('last-modified')||'');
+      if(v==='|')return;
+      if(base===null){base=v;return}
+      if(v!==base){shown=true;showBar()}
+    }catch(e){}
+  }
+  addEventListener('load',chk);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk()});
+  setInterval(chk,300000);
+})();
+</script>
 </body>
 </html>
