@@ -119,6 +119,8 @@ details.c[open]>summary .arr{transform:rotate(180deg)}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<!-- کتابخانه خواندن عکس (OCR) -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
 <body>
 
@@ -269,6 +271,19 @@ details.c[open]>summary .arr{transform:rotate(180deg)}
 <div class="m" id="msg"></div>
 <div id="totSummary">—</div>
 </div>
+
+<!-- شروع بخش ورود هوشمند -->
+<div class="c" style="border: 2px dashed var(--ac); background: var(--bg);">
+  <b>📥 ورود هوشمند داده‌ها</b>
+  <div class="m" style="margin-bottom: 8px;">فایل اکسل، ورد (Word) یا عکس از کاغذ سیاهه خود را انتخاب کنید. برنامه تلاش می‌کند اعداد را خودکار بخواند.</div>
+  <input type="file" id="smartImportFile" accept=".xlsx, .xls, .csv, .docx, image/*" class="hid">
+  <button id="btnSmartImport" style="width:100%; padding: 12px; font-size: 15px;">انتخاب فایل (اکسل، ورد، عکس)</button>
+  <div class="m" style="color: #b78500; font-size: 11px; margin-top: 6px; line-height: 1.4;">
+    ⚠️ در صورتی که اعداد در عکس یا فایل ناخوانا باشند، فیلد مربوطه خالی می‌ماند تا شما آن را به صورت دستی وارد کنید.
+  </div>
+</div>
+<!-- پایان بخش ورود هوشمند -->
+
 </section>
 
 <section id="sec-l" class="hid">
@@ -1323,6 +1338,154 @@ setInterval(sync,90000);
 ui();
 setTimeout(sync,1500);
 })();
+</script>
+
+<!-- سیستم ورود هوشمند (اکسل، ورد، عکس) -->
+<script>
+document.getElementById('btnSmartImport').onclick = () => document.getElementById('smartImportFile').click();
+
+document.getElementById('smartImportFile').onchange = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  e.target.value = ''; 
+
+  const btn = document.getElementById('btnSmartImport');
+  const originalText = btn.innerHTML;
+
+  try {
+    let extractedData = []; 
+
+    if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls') || file.name.endsWith('.csv')) {
+      btn.innerHTML = '⏳ در حال خواندن اکسل...';
+      const data = await file.arrayBuffer();
+      const workbook = XLSX.read(data, { type: 'array' });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+      
+      for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        if (!row || row.length === 0) continue;
+        const nums = row.map(v => parseFloat(v)).filter(n => !isNaN(n));
+        if (nums.length >= 2) {
+          extractedData.push({ sp: 'نامشخص', d: nums[0], h: nums[1] });
+        }
+      }
+    } 
+    else if (file.name.endsWith('.docx')) {
+      btn.innerHTML = '⏳ در حال خواندن ورد...';
+      const zip = await JSZip.loadAsync(await file.arrayBuffer());
+      const docXml = await zip.file('word/document.xml').async('string');
+      const text = docXml.replace(/<[^>]+>/g, ' ');
+      const matches = text.match(/\d+(\.\d+)?\s+\d+(\.\d+)?/g) || [];
+      matches.forEach(m => {
+        const nums = m.trim().split(/\s+/).map(Number);
+        if (nums.length >= 2) extractedData.push({ sp: 'نامشخص', d: nums[0], h: nums[1] });
+      });
+    }
+    else if (file.type.startsWith('image/')) {
+      btn.innerHTML = '⏳ در حال خواندن عکس (ممکن است زمان‌بر باشد)...';
+      const result = await Tesseract.recognize(file, 'fas+eng', { logger: m => console.log(m) });
+      const text = result.data.text;
+      const lines = text.split('\n');
+      
+      lines.forEach(line => {
+        const matches = line.match(/\d+(\.\d+)?/g);
+        if (matches && matches.length >= 2) {
+          extractedData.push({ sp: 'نامشخص', d: parseFloat(matches[0]), h: parseFloat(matches[1]) });
+        }
+      });
+    }
+
+    btn.innerHTML = originalText;
+
+    if (extractedData.length === 0) {
+      alert('هیچ داده معتبری پیدا نشد. لطفاً از فایل یا عکس واضح‌تری استفاده کنید یا فیلدها را دستی وارد کنید.');
+      return;
+    }
+
+    showImportPreview(extractedData);
+
+  } catch (err) {
+    btn.innerHTML = originalText;
+    console.error(err);
+    alert('خطا در خواندن فایل: ' + err.message);
+  }
+};
+
+function showImportPreview(data) {
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#0009;display:flex;flex-direction:column;padding:16px;';
+  ov.innerHTML = `
+    <div style="background:var(--sf);border-radius:14px;padding:16px;flex:1;display:flex;flex-direction:column;max-height:90vh;">
+      <h3 style="margin:0 0 10px 0;color:var(--ac)">بازبینی داده‌های خوانده شده</h3>
+      <p class="m" style="margin:0 0 10px 0;color:#d33;font-size:12px;">⚠️ اعداد زیر توسط هوش مصنوعی خوانده شده‌اند. اگر فیلدی خالی یا اشتباه است، همین‌جا اصلاح کنید.</p>
+      
+      <div style="flex:1;overflow:auto;border:1px solid var(--bd);border-radius:8px;">
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead style="position:sticky;top:0;background:var(--bg);z-index:2;">
+            <tr>
+              <th style="padding:6px;">#</th>
+              <th style="padding:6px;">گونه</th>
+              <th style="padding:6px;">قطر (cm)</th>
+              <th style="padding:6px;">ارتفاع (m)</th>
+              <th style="padding:6px;">حذف</th>
+            </tr>
+          </thead>
+          <tbody id="impTbBody">
+            ${data.map((item, i) => `
+              <tr style="border-bottom:1px solid var(--bd);">
+                <td style="padding:4px;text-align:center;">${i+1}</td>
+                <td style="padding:4px;"><input type="text" class="imp-sp" value="${item.sp}" style="padding:4px;text-align:center;width:80px;"></td>
+                <td style="padding:4px;"><input type="number" class="imp-d" value="${item.d || ''}" style="padding:4px;text-align:center;width:70px;"></td>
+                <td style="padding:4px;"><input type="number" class="imp-h" value="${item.h || ''}" style="padding:4px;text-align:center;width:70px;"></td>
+                <td style="padding:4px;text-align:center;"><button class="x" onclick="this.closest('tr').remove()">×</button></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="r" style="margin-top:12px;">
+        <button id="impCancel" class="o">انصراف</button>
+        <button id="impConfirm" style="background:#2e9d4f;">تایید و افزودن به سیاهه</button>
+      </div>
+    </div>
+  `;
+  document.body.append(ov);
+
+  ov.querySelector('#impCancel').onclick = () => ov.remove();
+  
+  ov.querySelector('#impConfirm').onclick = () => {
+    const rows = ov.querySelectorAll('#impTbBody tr');
+    let added = 0;
+    
+    rows.forEach(tr => {
+      const sp = tr.querySelector('.imp-sp').value.trim() || 'نامشخص';
+      const d = parseFloat(tr.querySelector('.imp-d').value);
+      const h = parseFloat(tr.querySelector('.imp-h').value);
+      
+      if (d > 0 && h > 0) {
+        const newId = T.reduce((a, t) => Math.max(a, t.id), 0) + 1;
+        const newTree = {
+          id: newId, no: '', sp: sp, g: (SP[sp] || [0,3])[1], ty: d < 20 ? 'h' : 'i', n: 1,
+          d: d, h: h, f: 0.5, v: volSp(sp, d, h), ds: 'ورود از فایل',
+          lat: null, lng: null, ux: null, uy: null, uz: null, ua: null, dt: new Date().toISOString().slice(0,10)
+        };
+        T.push(newTree);
+        added++;
+      }
+    });
+
+    if (added > 0) {
+      store(); 
+      draw();  
+      alert(`تعداد ${toFa(added)} درخت با موفقیت به سیاهه اضافه شد.`);
+    } else {
+      alert('هیچ سطر معتبری برای افزودن پیدا نشد.');
+    }
+    ov.remove();
+  };
+}
 </script>
 
 </body>
