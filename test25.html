@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2f6b3c">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>برآورد و استحصال چوب‌آلات هیرکانی</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Vazirmatn:wght@400;700&display=swap">
+<style>
+:root{--bg:#f4f7f2;--sf:#fff;--tx:#18241b;--mu:#5c6b5f;--ac:#2f6b3c;--ac2:#fff;--bd:#d5dfd3;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101a13;--sf:#18251c;--tx:#e8f0e9;--mu:#9fb2a3;--ac:#5fb374;--ac2:#08140b;--bd:#2b3d30;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#101a13;--sf:#18251c;--tx:#e8f0e9;--mu:#9fb2a3;--ac:#5fb374;--ac2:#08140b;--bd:#2b3d30;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.7 Vazirmatn,Tahoma,sans-serif}
+
+#bismillah{background:linear-gradient(135deg,#2f6b3c 0%,#1d3b2a 55%,#152a1e 100%);padding:20px 16px 18px;display:flex;align-items:center;justify-content:center;position:relative;border-bottom:2px solid #d4c88a;box-shadow:0 2px 14px rgba(0,0,0,.18);overflow:hidden}
+#bismillah::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% -20%, rgba(212,200,138,.22), transparent 60%),radial-gradient(circle at 0% 100%, rgba(212,200,138,.08), transparent 50%),radial-gradient(circle at 100% 100%, rgba(212,200,138,.08), transparent 50%);pointer-events:none}
+#bismillah .bism-wrap{display:flex;align-items:center;gap:18px;position:relative}
+#bismillah .bism{font-family:'Amiri','Scheherazade New',serif;font-size:26px;font-weight:700;color:#f4ebc8;letter-spacing:.5px;text-shadow:0 2px 10px rgba(0,0,0,.55),0 0 24px rgba(212,200,138,.25);line-height:1.7}
+#bismillah .orn{color:#d4c88a;font-size:22px;opacity:.9;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+@media (max-width:380px){#bismillah{padding:14px 12px 12px}#bismillah .bism{font-size:20px}#bismillah .orn{font-size:15px}#bismillah .bism-wrap{gap:10px}}
+
+#splash{position:fixed;inset:0;z-index:9;background:#1d3b2a;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;overflow:hidden}
+#splash svg{position:absolute;inset:0;width:100%;height:100%}
+.sp{position:relative;text-align:center;color:#fff;padding:24px 24px calc(48px + env(safe-area-inset-bottom,0px));text-shadow:0 2px 8px #0008}
+.sp h1{margin:0;font-size:34px}.sp p{margin:6px 0 20px}
+button{font:inherit;background:var(--ac);color:var(--ac2);border:0;border-radius:10px;padding:10px 16px;cursor:pointer}
+button.o{background:none;color:var(--ac);border:1px solid var(--ac)}button.x{background:#b3402f;color:#fff;padding:2px 8px}
+#app{max-width:640px;margin:auto;padding:12px 12px 80px}
+#topbar{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:2}
+#sheetbar{display:flex;gap:4px;overflow-x:auto;padding:4px 0 6px;align-items:center;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+#sheetbar::-webkit-scrollbar{display:none}
+#sheetbar .tab{background:var(--sf);color:var(--tx);border:1px solid var(--bd);border-radius:20px;padding:6px 12px;cursor:pointer;font:inherit;font-size:13px;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:6px}
+#sheetbar .tab.on{background:var(--ac);color:var(--ac2);border-color:var(--ac)}
+#sheetbar .tab .tname{max-width:120px;overflow:hidden;text-overflow:ellipsis}
+#sheetbar .tab .del{font-size:14px;opacity:.55;padding:0 2px;line-height:1;font-style:normal}
+#sheetbar .tab.on .del{opacity:.9}
+#sheetbar .add{background:var(--sf);color:var(--ac);border:1px dashed var(--ac);border-radius:20px;padding:6px 14px;cursor:pointer;font-size:16px;font-weight:700;flex-shrink:0;font-family:inherit}
+#simBtn{padding:8px 10px!important;font-size:12px!important;white-space:nowrap;flex:0 0 auto!important}
+#gpsStrip{padding:4px 8px;font-size:12px;text-align:center;border-top:1px solid var(--bd);background:var(--sf);border-radius:8px;margin-bottom:6px;min-height:22px;display:flex;align-items:center;justify-content:center;gap:4px}
+.sitem{display:flex;align-items:center;gap:6px;padding:8px;border:1px solid var(--bd);border-radius:10px;margin:6px 0}
+.sitem .sinfo{flex:1;min-width:0}
+.sitem .sinfo b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px}
+.sitem .sinfo small{color:var(--mu);font-size:11px}
+nav{display:flex;gap:6px;background:var(--bg);padding:8px 0}
+nav button{flex:1;background:var(--sf);color:var(--tx);border:1px solid var(--bd)}nav button.on{background:var(--ac);color:var(--ac2)}
+.c{background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:12px;margin:10px 0}
+label{display:block;font-size:13px;color:var(--mu);margin-top:8px}
+input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)}
+.r{display:flex;gap:8px}.r>*{flex:1}
+.big{font-size:22px;font-weight:700;color:var(--ac)}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}th,td{border-bottom:1px solid var(--bd);padding:6px;text-align:center}
+.m{color:var(--mu);font-size:12px}.hid{display:none!important}
+.gbox{border:3px solid var(--bd);border-radius:14px;padding:10px;margin-top:8px;text-align:center}
+.gbox .gx{display:flex;justify-content:space-around;gap:6px;flex-wrap:wrap}.gbox b{display:block;font-size:24px;line-height:1.3}.gbox small{color:var(--mu)}
+.gbox.g1{border-color:#2e9d4f}.gbox.g2{border-color:#d19a00}.gbox.g3{border-color:#d33}
+.gbox .ac{margin-top:6px;font-weight:700}.g1 .ac{color:#2e9d4f}.g2 .ac{color:#b78500}.g3 .ac{color:#d33}
+@keyframes bl{50%{opacity:.35}}.gbox.al{animation:bl 1s infinite}#mc2{width:100%;border:1px solid var(--bd);border-radius:10px;margin-top:8px;background:var(--bg)}
+#gen{margin-top:6px;padding:8px;border:1px dashed var(--bd);border-radius:8px;font-size:13px;color:var(--tx)}
+#bn{background:#fff3cd;color:#5c4400;border-radius:10px;padding:8px 10px;margin:8px 0}
+
+.seg{display:flex;gap:0;border:1px solid var(--bd);border-radius:10px;overflow:hidden;margin:6px 0}
+.seg button{flex:1;background:var(--sf);color:var(--tx);border:0;border-radius:0;padding:9px 6px;font-size:13px;font-family:inherit}
+.seg button.on{background:var(--ac);color:var(--ac2)}
+.seg button+button{border-right:1px solid var(--bd)}
+
+#adv summary{list-style:none;padding:10px 0;cursor:pointer;font-size:13px;color:var(--mu);user-select:none}
+#adv summary::-webkit-details-marker{display:none}
+#adv summary::before{content:'▸ ';display:inline-block;transition:transform .15s}
+#adv[open] summary::before{content:'▾ '}
+
+details.c>summary{list-style:none;padding:4px 0;cursor:pointer;font-size:14px;user-select:none;display:flex;align-items:center;gap:8px;justify-content:space-between}
+details.c>summary::-webkit-details-marker{display:none}
+details.c>summary .arr{transition:transform .15s;font-size:12px;color:var(--mu)}
+details.c[open]>summary .arr{transform:rotate(180deg)}
+
+#pw{position:relative;margin-top:10px;touch-action:none;overflow:hidden;border-radius:10px}
+#pw img{width:100%;display:block;user-select:none;-webkit-user-drag:none;pointer-events:none}
+#ov{position:absolute;inset:0;touch-action:none;cursor:crosshair}
+#mag{position:fixed;width:140px;height:140px;border-radius:50%;overflow:hidden;border:3px solid #fff;box-shadow:0 0 0 2px #000a,0 6px 16px #000a;pointer-events:none;z-index:9999;display:none;background:#000}
+#mag canvas{width:100%;height:100%;display:block}
+.vl,.hl{position:absolute;pointer-events:none}
+.vl{top:0;bottom:0;width:1px;margin-left:-.5px}
+.hl{left:0;right:0;height:1px;margin-top:-.5px}
+.vl::after,.hl::after{content:'';position:absolute;inset:-1px;background:inherit;opacity:.9;filter:blur(1px)}
+.vl::before,.hl::before{content:'';position:absolute;inset:0;background:inherit;z-index:1}
+.vl i,.hl i{position:absolute;font:11px Vazirmatn,Tahoma;background:#000c;color:#fff;padding:1px 5px;border-radius:4px;white-space:nowrap;font-style:normal;z-index:2}
+.vl i{top:4px;right:4px}.hl i{right:4px;top:4px}
+#chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;direction:ltr}
+#chips button{flex:1 1 45%;padding:7px 6px;font-size:12px;min-width:0;direction:rtl}
+#chips button.done{background:#2e9d4f;color:#fff;border-color:#2e9d4f}
+#chips button.active{outline:2px solid #ffd400;outline-offset:1px}
+#hint{color:var(--ac);font-weight:700;font-size:13px;margin-top:8px;min-height:1.5em}
+#gd1{min-height:2.6em;margin:8px 0;line-height:1.4}
+
+#spSug{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+#spSug button{background:var(--sf);color:var(--tx);border:1px solid var(--bd);border-radius:16px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:inherit;line-height:1.2}
+#spSug button:hover{background:var(--ac);color:var(--ac2);border-color:var(--ac)}
+
+#totSummary{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:8px 10px;margin-top:10px;font-size:13px;color:var(--tx);line-height:1.6}
+#totSummary b{color:var(--ac)}
+
+.chipbtn{padding:2px 8px!important;font-size:12px!important}
+#recentSp{display:flex;gap:4px;flex-wrap:wrap;margin:4px 0}
+#recentSp button{padding:6px 10px!important;font-size:12px!important;flex:0 0 auto!important}
+#svHint{font-size:12px;margin-bottom:6px;min-height:18px}
+#noCoordBanner{background:#fff3cd;color:#5c4400;border-radius:10px;padding:8px 10px;margin:8px 0;font-size:13px}
+
+#acct{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:6px 10px;font-size:12px;color:var(--mu)}
+#acct button{padding:4px 10px!important;font-size:12px!important}
+#aov{position:fixed;inset:0;z-index:20;background:#0009;display:flex;align-items:center;justify-content:center;padding:16px}
+#aov .bx{background:var(--sf);color:var(--tx);border-radius:14px;padding:16px;width:100%;max-width:340px}
+#aov input{width:100%;margin:4px 0 10px;direction:ltr;text-align:left}
+#aer{color:#b3261e;min-height:20px;font-size:13px}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+
+<div id="bismillah">
+  <div class="bism-wrap">
+    <span class="orn">❁</span>
+    <span class="bism">بسم الله الرحمن الرحیم</span>
+    <span class="orn">❁</span>
+  </div>
+</div>
+
+<div id="splash">
+<svg viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+<defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9fc7b0"/><stop offset=".55" stop-color="#e3eedd"/></linearGradient></defs>
+<rect width="400" height="800" fill="url(#sk)"/>
+<path d="M0 420Q90 330 180 400T400 360V800H0Z" fill="#7aa58b" opacity=".7"/>
+<path d="M0 480Q120 400 230 470T400 440V800H0Z" fill="#4f8062"/>
+<g fill="#2c5a3d"><path d="M40 560l30-170 30 170z"/><path d="M110 600l36-210 36 210z"/><path d="M200 570l30-180 30 180z"/><path d="M290 610l36-220 36 220z"/><path d="M350 560l26-150 26 150z"/></g>
+<g fill="#1b3d2a"><path d="M-10 800l50-380 50 380z"/><path d="M80 800l44-300 44 300z"/><path d="M250 800l50-340 50 340z"/><path d="M340 800l50-400 50 400z"/></g>
+<g fill="#5b3d26"><rect x="36" y="620" width="8" height="180"/><rect x="120" y="640" width="8" height="160"/><rect x="296" y="630" width="9" height="170"/></g>
+</svg>
+<div class="sp"><h1>هادی آقاجانی</h1><p>برآورد و استحصال چوب‌آلات<br>جنگل‌های هیرکانی</p><button id="go">ورود</button></div>
+</div>
+
+<div id="app">
+<div id="topbar">
+<div id="sheetbar"></div>
+<nav><button data-t="m" class="on">نشانه‌گذاری</button><button data-t="l">دریافت سیاهه</button><button data-t="h">تجدید و استحصال</button></nav>
+<div id="gpsStrip"><span style="color:var(--mu)">◌ مختصات غیرفعال</span></div>
+</div>
+<div id="bn" class="hid"></div>
+<div id="acct"></div>
+<div id="sw" class="hid" style="background:#f8d7da;color:#58151c;border-radius:10px;padding:8px 10px;margin:8px 0"></div>
+
+<section id="sec-m">
+
+<details class="c" id="gpsDetails">
+  <summary>
+    <span style="display:flex;align-items:center;gap:6px;flex:1;min-width:0">
+      <button id="ga" class="o" type="button" style="padding:5px 10px;font-size:12px;flex:0 0 auto">نمایش مختصات</button>
+      <span id="gpsMapSum" class="m" style="font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">📍 مختصات</span>
+    </span>
+    <span class="arr">▾</span>
+  </summary>
+  <div style="margin-top:8px">
+    <div id="gb" class="gbox hid"><div class="gx"><div><small>X</small><b id="gX"></b></div><div><small>Y</small><b id="gY"></b></div><div><small>زون</small><b id="gZ"></b></div></div><div class="ac" id="gA"></div></div>
+    <div class="m" id="gs" style="margin-top:6px">مختصات غیرفعال است.</div>
+  </div>
+</details>
+
+<div class="c" id="mp">
+  <b>نقشهٔ محدوده</b> <span class="m">(KMZ، KML یا DXF)</span>
+  <div class="r" style="margin-top:6px">
+    <button id="mb" class="o">انتخاب فایل نقشه</button>
+    <button id="mx" class="o hid">حذف نقشه</button>
+  </div>
+  <input type="file" id="mf" accept=".kmz,.kml,.dxf,.dwg" class="hid">
+  <button id="gk" style="width:100%;margin-top:6px">ساخت فایل نقشه و درخت‌ها برای گوگل ارث</button>
+  <div class="m" id="gen">با دکمهٔ بالا فایلی از مرز نقشه و درخت‌ها ساخته می‌شود. بعد از ذخیره، پسوند آن را از zip به kmz عوض کنید و با گوگل ارث باز کنید.</div>
+  <div class="m" id="mi" style="margin-top:6px">نقشه‌ای بارگذاری نشده است.</div>
+  <canvas id="mc2" width="640" height="400" class="hid"></canvas>
+  <div id="ms" class="gbox hid"><b id="mst"></b><div class="ac" id="msd"></div></div>
+  <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="mal" checked style="width:auto"> هشدار صوتی و لرزشی هنگام خروج از محدوده</label>
+</div>
+
+<div class="c">
+<div class="r" style="margin-bottom:6px"><button id="mm">ورود دستی</button><button id="mc" class="o">با دوربین</button></div>
+
+<div id="cm" class="hid">
+  <label class="m">روش اندازه‌گیری</label>
+  <div class="seg">
+    <button id="mref" class="on" type="button">📏 با شیء مرجع</button>
+    <button id="mdist" type="button">📐 با فاصله</button>
+  </div>
+
+  <div id="refBox">
+    <label>شیء مرجع</label>
+    <select id="refType">
+      <option value="a4">کاغذ A4 (۲۹٫۷ سانتی‌متر)</option>
+      <option value="card">کارت بانکی (۸٫۵۶ سانتی‌متر)</option>
+      <option value="coin">سکه (۲٫۵ سانتی‌متر)</option>
+      <option value="person">قد یک شخص (پیش‌فرض ۱۷۰ سانتی‌متر)</option>
+      <option value="custom">اندازه دلخواه</option>
+    </select>
+    <input id="refSize" type="number" placeholder="اندازه دلخواه (سانتی‌متر)" class="hid" style="margin-top:6px">
+  </div>
+
+  <div id="distBox" class="hid">
+    <label id="distLabel">فاصله دوربین تا تنه (متر)</label>
+    <input id="D1" type="number" value="1">
+  </div>
+
+  <label class="m">هدف اندازه‌گیری</label>
+  <div class="seg">
+    <button id="s1" class="on" type="button">قطر درخت</button>
+    <button id="s2" type="button">ارتفاع درخت</button>
+  </div>
+
+  <button id="ph" style="width:100%;padding:14px;font-size:16px;margin-top:10px">📷 عکس‌برداری</button>
+  <input type="file" id="fi" accept="image/*" capture="environment" class="hid">
+
+  <p id="gd1" class="m"></p>
+  <p class="m" style="margin-top:4px;color:#b78500">📷 برآورد با استفاده از دوربین تقریبی است و جایگزین کالیپر و شیب‌سنج نیست.</p>
+
+  <div id="photoArea" class="hid">
+    <div id="pw">
+      <img id="im" alt="">
+      <div id="ov"></div>
+    </div>
+    <div id="hint"></div>
+    <div id="chips"></div>
+    <div id="rd" class="big" style="margin-top:8px"></div>
+    <div class="m" id="st"></div>
+    <div class="r" style="margin-top:8px">
+      <button id="clrMarkers" class="o" style="font-size:13px">🔄 تنظیم مجدد نشانگرها</button>
+      <button id="ph2" class="o" style="font-size:13px">📷 عکس جدید</button>
+    </div>
+  </div>
+
+  <details id="adv" style="margin-top:8px">
+    <summary>⚙️ تنظیمات پیشرفته</summary>
+    <div style="margin-top:6px">
+      <label>فاصله کانونی (میلی‌متر، معادل ۳۵mm)</label>
+      <input id="fl" type="number" value="26">
+      <div class="m" id="fls">اگه زوم کردی یا از لنز واید استفاده کردی، این عدد رو اصلاح کن.</div>
+    </div>
+  </details>
+</div>
+
+<div class="r"><div><label>قطر برابر سینه (سانتی‌متر)</label><input id="d" type="number" inputmode="decimal"></div><div><label>ارتفاع (متر)</label><input id="h" type="number" inputmode="decimal"></div></div>
+<label>گونه</label>
+<div id="recentSp"></div>
+<div class="r" style="align-items:stretch">
+<input id="sps" placeholder="جستجو: حرف اول گونه را بزنید" autocomplete="off" style="flex:1">
+<button id="simBtn" class="o" type="button" title="پس از ذخیره، گونه تغییر نکند">🔁 مشابه</button>
+</div>
+<div id="spSug" class="hid"></div>
+<select id="sp" style="margin-top:6px"></select>
+<div class="r"><div><label>دسته (تشخیص خودکار)</label><select id="gd"><option value="1">دسته اول</option><option value="2">دسته دوم</option><option value="3">دسته سوم</option></select></div></div>
+<div class="r"><div><label>نوع درخت (خودکار)</label><select id="ty"><option value="i">صنعتی</option><option value="h">هیزمی</option></select></div><div><label>شماره / پلاک درخت</label><input id="no"></div></div>
+<div id="cw" class="hid"><label>تعداد درختان هیزمی (هم‌گونه و هم‌اندازه)</label><input id="nn" type="number" inputmode="decimal" value="1"></div>
+<label>توضیحات</label><input id="ds" placeholder="مثلاً وضعیت تنه، شیب، پارسل…">
+<p>حجم برآوردی: <span class="big" id="v">—</span> متر مکعب</p>
+<div id="svHint"></div>
+<div id="newSaveBtns" class="r"><button id="sv">📌 ذخیره با مختصات</button><button id="svNo" class="o">ذخیره بدون مختصات</button></div>
+<button id="svEdit" class="hid" style="width:100%">💾 ذخیرهٔ ویرایش</button>
+<div class="r" style="margin-top:6px"><button id="ce" class="o hid" style="width:100%">لغو ویرایش</button></div>
+<div class="m" id="msg"></div>
+<div id="totSummary">—</div>
+</div>
+</section>
+
+<section id="sec-l" class="hid">
+<div id="noCoordBanner" class="hid"></div>
+<div class="c"><div class="tw"><table id="tb"></table></div><p>جمع حجم: <b id="tot">۰</b> متر مکعب</p>
+<b>خلاصه وضعیت درختان نشانه‌گذاری‌شده</b><div class="tw"><table id="sm"></table></div><br><button id="e1">خروجی اکسل این زمین</button><button id="e3" class="o" style="margin-right:6px">اکسل همهٔ زمین‌ها (هر زمین یک برگه)</button><div class="m xs"></div></div>
+<div class="c">
+<b>موارد ذخیره شده</b>
+<div class="m">ذخیره هم‌نام با سربرگ فعلی انجام می‌شود. اگر نام را عوض کنی، سربرگ هم تغییر می‌کند.</div>
+<button id="saveSnap" class="o" style="width:100%;margin-top:6px">💾 ذخیرهٔ سربرگ فعلی با نام</button>
+<div class="m" id="snapMsg" style="min-height:18px"></div>
+<div id="savedList" style="margin-top:2px"></div>
+</div>
+<div class="c">
+<b>پشتیبان‌گیری و بازیابی</b><div class="m" id="bks"></div>
+<div class="r" style="margin-top:6px"><button id="bk" class="o">پشتیبان‌گیری</button><button id="rb" class="o">بازیابی</button></div>
+<label>روش بازیابی</label><select id="rm"><option value="a">افزودن به داده‌های فعلی</option><option value="r">جایگزینی کامل</option></select>
+<input type="file" id="rf" accept=".json,application/json" class="hid"></div>
+</section>
+
+<section id="sec-h" class="hid"><div class="c">
+<label>درخت</label><select id="hs2"></select>
+<div class="r"><div><label>قطر جدید (سانتی‌متر)</label><input id="d2" type="number" inputmode="decimal"></div><div><label>ارتفاع جدید (متر)</label><input id="h2" type="number" inputmode="decimal"></div></div>
+<div class="r"><div><label>حجم استحصال‌شده (مترمکعب)</label><input id="hv" type="number" inputmode="decimal"></div><div><label>تاریخ استحصال</label><input id="hd" type="date"></div></div>
+<label>یادداشت</label><input id="hn"><br><button id="sh" style="width:100%">ذخیره</button></div>
+<div class="c"><div class="tw"><table id="tb2"></table></div><br><button id="e2">خروجی اکسل</button><div class="m xs"></div></div></section>
+</div>
+
+<script>
+const $=s=>document.querySelector(s),fa=(n,m=2)=>(n!==null&&n!==undefined&&n!==''&&isFinite(n))?Number(n).toLocaleString('fa-IR',{maximumFractionDigits:m}):'—';
+const toFa=s=>String(s).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]).replace(/\./g,'٫'),toEn=s=>String(s).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٫،,]/g,'.');
+const N=id=>+toEn($(id).value),rad=x=>x*Math.PI/180,vol=(d,h,f)=>Math.PI/4*(d/100)**2*h*f;
+const SP={
+  'سرخدار':[.5,1],'زربین':[.5,1],'ارس':[.5,1],'شمشاد':[.5,1],'گردو':[.5,1],'آزاد':[.5,1],
+  'کاج':[.5,3],'سرو':[.5,3],
+  'راش':[.52,2],'افرا':[.5,2],'توسکا':[.48,2],'ون':[.5,2],'شیردار':[.5,2],'بلوط':[.5,2],'نمدار':[.5,2],'ملچ':[.5,2],'بارانک':[.5,2],'الوکک':[.5,2],
+  'ممرز':[.5,3],'لرگ':[.5,3],'انجیلی':[.5,3],'شب‌خسب':[.5,3],'سپیدار':[.45,3],'کلهو':[.5,3],'اوجا':[.5,3],'ولیک':[.5,3],'ازگیل وحشی':[.5,3],'کرات':[.5,3]
+};
+const G={1:'دسته اول',2:'دسته دوم',3:'دسته سوم'};
+const VT={"10": [0.01, 0.03, 0.05, 0.07], "15": [0.05, 0.09, 0.14, 0.18], "20": [0.09, 0.17, 0.23, 0.29], "25": [0.14, 0.24, 0.33, 0.42], "30": [0.39, 0.57, 0.71, 0.86], "35": [0.55, 0.75, 0.94, 1.06], "40": [0.63, 0.95, 1.22, 1.43], "45": [0.73, 1.23, 1.53, 1.8], "50": [0.92, 1.45, 1.88, 2.21, 2.5], "55": [1.11, 1.75, 2.27, 2.69, 3.06], "60": [1.21, 2.07, 2.71, 3.21, 3.68], "65": [1.52, 2.42, 3.18, 3.79, 4.27], "70": [1.76, 2.81, 3.69, 4.4, 5.09, 5.7], "75": [2.01, 3.22, 4.25, 5.11, 5.89, 6.63], "80": [2.21, 3.68, 4.86, 5.83, 6.74, 7.67], "85": [2.61, 4.19, 5.55, 6.6, 7.64, 8.73], "90": [2.92, 4.67, 6.2, 7.45, 8.63, 9.83], "95": [3.21, 5.21, 6.95, 8.35, 9.71, 11.09], "100": [3.6, 5.7, 7.69, 9.28, 10.7, 11.26]};
+function tbl(d,h){const hi=h/5-1,d0=Math.floor(d/5)*5,i0=Math.floor(hi),c=(a,i)=>(VT[a]&&VT[a][i]!=null)?VT[a][i]:null;
+ const a=c(d0,i0),b=c(d0+5,i0),e=c(d0,i0+1),g=c(d0+5,i0+1);
+ if(i0>=0&&[a,b,e,g].every(x=>x!==null)){const u=(d-d0)/5,w=hi-i0;return a*(1-u)*(1-w)+b*u*(1-w)+e*(1-u)*w+g*u*w}
+ let ff=.5,bd=1e9;for(const k in VT)VT[k].forEach((v,i)=>{const q=((+k-d)/5)**2+(i-hi)**2;if(q<bd){bd=q;ff=v/(Math.PI/4*(k/100)**2*(i+1)*5)}});
+ return vol(d,h,ff)}
+const volSp=(sp,d,h)=>(sp=='راش'||sp=='بلوط')?vol(d,h,SP[sp][0]):tbl(d,h);
+
+let SHEETS=[];try{SHEETS=JSON.parse(localStorage.getItem('sheets')||'[]')}catch(e){}
+let activeId=null;try{activeId=+localStorage.getItem('activeSheet')||null}catch(e){}
+let T=[],MAPP=[],MAPZ=39,MAPNM='';
+if(!SHEETS.length){
+  let oldT=[],oldMap=null;
+  try{oldT=JSON.parse(localStorage.getItem('trees')||'[]')}catch(e){}
+  try{oldMap=JSON.parse(localStorage.getItem('map')||'null')}catch(e){}
+  SHEETS=[{id:1,name:'زمین ۱',trees:oldT,map:oldMap?{p:oldMap.p,z:oldMap.z,nm:oldMap.nm}:null}];
+  activeId=1;
+  try{localStorage.setItem('sheets',JSON.stringify(SHEETS));localStorage.setItem('activeSheet','1')}catch(e){}
+}
+function getActiveSheet(){return SHEETS.find(s=>s.id===activeId)||SHEETS[0]}
+function loadActive(){const sh=getActiveSheet();if(!sh)return;activeId=sh.id;T=sh.trees||[];MAPP=(sh.map&&sh.map.p)||[];MAPZ=(sh.map&&sh.map.z)||39;MAPNM=(sh.map&&sh.map.nm)||'';try{localStorage.setItem('activeSheet',String(activeId))}catch(e){}}
+function saveActive(){const sh=getActiveSheet();if(!sh)return;sh.trees=T;if(MAPP.length)sh.map={p:MAPP,z:MAPZ,nm:MAPNM};else delete sh.map;try{localStorage.setItem('sheets',JSON.stringify(SHEETS));stWarn(false)}catch(e){stWarn(true)}}
+function stWarn(bad){const e=document.getElementById('sw');if(!e)return;e.classList.toggle('hid',!bad);e.textContent='⛔ ذخیرهٔ داده در حافظهٔ مرورگر انجام نشد (احتمالاً حافظه پر است). همین حالا از تب «دریافت سیاهه» پشتیبان بگیرید.'}
+const norm=()=>T.forEach(t=>{if(t.sp=='زبان‌گنجشک')t.sp='ون';if(!t.g)t.g=(SP[t.sp]||[0,3])[1];if(!t.ty)t.ty=t.d<20?'h':'i';if(SP[t.sp]){t.v=volSp(t.sp,t.d,t.h);if(t.d2)t.v2=volSp(t.sp,t.d2,t.h2)}if(t.lat&&!t.ux){const u=utm(t.lat,t.lng);t.ux=u.E;t.uy=u.N;t.uz=u.z}});
+loadActive();norm();
+const store=()=>{saveActive();bnr();try{if(window.syncSoon)window.syncSoon()}catch(e){}};
+
+let RECENT=[];try{RECENT=JSON.parse(localStorage.getItem('recentSp')||'[]')}catch(e){}
+function addRecent(sp){
+  if(!sp)return;
+  RECENT=[sp,...RECENT.filter(x=>x!==sp)].slice(0,5);
+  try{localStorage.setItem('recentSp',JSON.stringify(RECENT))}catch(e){}
+  renderRecent();
+}
+function renderRecent(){
+  const el=$('#recentSp');if(!el)return;
+  if(!RECENT.length){el.innerHTML='';return}
+  el.innerHTML=RECENT.map(s=>`<button type="button" class="o chipbtn" data-sp="${esc(s)}">${esc(s)}</button>`).join('');
+  el.querySelectorAll('button').forEach(b=>{
+    b.onclick=()=>{$('#sps').value='';fillSp('');$('#sp').value=b.dataset.sp;$('#sp').onchange();};
+  });
+}
+
+let SIM=false;try{SIM=localStorage.getItem('simSp')==='1'}catch(e){}
+function updSimBtn(){const b=document.getElementById('simBtn');if(!b)return;b.className=SIM?'':'o';b.textContent=SIM?'🔁 مشابه ✓':'🔁 مشابه'}
+
+let cur=null,wid=null,gpsOn=false;
+function utm(lat,lon,zf){const a=6378137,f=1/298.257223563,k=.9996,e2=f*(2-f),ep=e2/(1-e2),z=zf||Math.floor((lon+180)/6)+1,l0=rad((z-1)*6-177),p=rad(lat),A=Math.cos(p)*(rad(lon)-l0),n=a/Math.sqrt(1-e2*Math.sin(p)**2),t=Math.tan(p)**2,c=ep*Math.cos(p)**2;
+ const M=a*((1-e2/4-3*e2*e2/64-5*e2**3/256)*p-(3*e2/8+3*e2*e2/32+45*e2**3/1024)*Math.sin(2*p)+(15*e2*e2/256+45*e2**3/1024)*Math.sin(4*p)-(35*e2**3/3072)*Math.sin(6*p));
+ return{z,E:Math.round(k*n*(A+(1-t+c)*A**3/6+(5-18*t+t*t+72*c-58*ep)*A**5/120)+5e5),N:Math.round(k*(M+n*Math.tan(p)*(A*A/2+(5-t+9*c+4*c*c)*A**4/24+(61-58*t+t*t+600*c-330*ep)*A**6/720)))}}
+
+function gShow(){
+  if(!cur){updateGpsUI();return}
+  const c=cur,a=c.acc,k=a<=5?1:a<=10?2:3,b=$('#gb');
+  if(b){b.classList.remove('hid','g1','g2','g3');b.classList.add('g'+k)}
+  if($('#gX'))$('#gX').textContent=toFa(c.u.E);
+  if($('#gY'))$('#gY').textContent=toFa(c.u.N);
+  if($('#gZ'))$('#gZ').textContent=toFa(c.u.z)+' شمالی';
+  if($('#gA'))$('#gA').textContent='دقت: ± '+fa(a,0)+' متر — '+['','عالی','متوسط','ضعیف'][k];
+  if($('#gs'))$('#gs').textContent='مختصات فعال — هنگام ذخیره خودکار ثبت می‌شود.';
+  updateGpsUI();
+}
+
+function startGPS(){
+  if(gpsOn)return;
+  if(!navigator.geolocation){if($('#gs'))$('#gs').textContent='این مرورگر مختصات را پشتیبانی نمی‌کند.';return}
+  aud();
+  gpsOn=true;
+  if($('#ga')){$('#ga').textContent='⏸ توقف';$('#ga').classList.add('o')}
+  if($('#gs'))$('#gs').textContent='در حال یافتن موقعیت…';
+  updateGpsUI();
+  wid=navigator.geolocation.watchPosition(
+    p=>{cur={lat:+p.coords.latitude.toFixed(6),lng:+p.coords.longitude.toFixed(6),acc:p.coords.accuracy};cur.u=utm(cur.lat,cur.lng);gShow();mapCheck();},
+    err=>{gpsOn=false;cur=null;if($('#ga')){$('#ga').textContent='نمایش مختصات';$('#ga').classList.add('o')}let msg='خطا در دریافت مختصات';if(err.code===1)msg='دسترسی به موقعیت رد شد. می‌توانید «بدون مختصات» ذخیره کنید.';else if(err.code===2)msg='موقعیت در دسترس نیست.';else if(err.code===3)msg='زمان انتظار تمام شد.';if($('#gs'))$('#gs').textContent=msg;updateGpsUI();},
+    {enableHighAccuracy:true,maximumAge:2000,timeout:30000}
+  );
+}
+
+function stopGPS(){
+  if(wid!==null){try{navigator.geolocation.clearWatch(wid)}catch(e){}wid=null}
+  gpsOn=false;cur=null;
+  if($('#ga')){$('#ga').textContent='نمایش مختصات';$('#ga').classList.add('o')}
+  if($('#gs'))$('#gs').textContent='مختصات متوقف شد.';
+  const b=$('#gb');if(b)b.classList.add('hid');
+  updateGpsUI();
+}
+
+function updateGpsUI(){
+  const strip=$('#gpsStrip');
+  if(strip){
+    if(!gpsOn){strip.innerHTML='<span style="color:var(--mu)">◌ مختصات خاموش</span>'}
+    else if(!cur){strip.innerHTML='<span style="color:#b78500">◌ در حال یافتن موقعیت…</span>'}
+    else{
+      const a=cur.acc,d=a<=5?'#2e9d4f':a<=10?'#d19a00':'#d33';
+      let t='<span style="color:'+d+'">● دقت ±'+fa(a,0)+' متر</span>';
+      if(MAPP.length){const r=mtest(MAPP,cur.u.E,cur.u.N);t+=' • <span style="color:'+(r.in?'#2e9d4f':'#d33')+'">'+(r.in?'داخل محدوده':'خارج محدوده')+'</span>';}
+      strip.innerHTML=t;
+    }
+  }
+  const hint=$('#svHint');
+  if(hint){
+    if(!gpsOn){hint.innerHTML='<span style="color:var(--mu)">مختصات خاموش است؛ «ذخیره بدون مختصات» یا «نمایش مختصات».</span>'}
+    else if(!cur){hint.innerHTML='<span style="color:#b78500">◌ در حال یافتن موقعیت…</span>'}
+    else if(cur.acc>15){hint.innerHTML='<span style="color:#b78500">⚠ دقت ±'+fa(cur.acc,0)+' متر؛ کمی صبر کنید یا «بدون مختصات» را بزنید.</span>'}
+    else{hint.innerHTML='<span style="color:#2e9d4f">✓ آماده — دقت ±'+fa(cur.acc,0)+' متر (نزدیک تنه بایستید)</span>'}
+  }
+  const sum=$('#gpsMapSum');
+  if(sum){
+    if(!gpsOn)sum.textContent='📍 مختصات — خاموش';
+    else if(!cur)sum.textContent='📍 مختصات — در حال یافتن…';
+    else{let t='📍 دقت ±'+fa(cur.acc,0)+'م';if(MAPP.length){const r=mtest(MAPP,cur.u.E,cur.u.N);t+=' • '+(r.in?'✓ داخل':'✗ خارج');}sum.textContent=t;}
+  }
+}
+
+function renderTabs(){
+  const bar=document.getElementById('sheetbar');if(!bar)return;
+  bar.innerHTML=SHEETS.map(s=>{
+    const on=s.id===activeId;
+    return `<button class="tab ${on?'on':''}" data-id="${s.id}" data-act="switch"><span class="tname">${esc(s.name)}</span>${on?`<i class="del" data-act="rename" title="تغییر نام">✏️</i>${SHEETS.length>1?`<i class="del" data-act="delete" title="حذف">×</i>`:''}`:''}</button>`;
+  }).join('')+`<button class="add" data-act="add" title="سربرگ جدید">+</button>`;
+  bar.querySelectorAll('button').forEach(b=>{
+    b.onclick=e=>{
+      e.stopPropagation();
+      const t=e.target,act=t.dataset.act||b.dataset.act,id=+(b.dataset.id||0);
+      if(act==='add')addSheet();
+      else if(act==='rename')renameSheet(id);
+      else if(act==='delete')deleteSheet(id);
+      else if(act==='switch'&&id!==activeId)switchSheet(id);
+    };
+  });
+}
+function addSheet(){
+  const def='زمین '+(SHEETS.length+1);
+  const name=prompt('نام سربرگ جدید (نام زمین):',def);
+  if(name===null)return;
+  const nm=name.trim()||def;
+  if(SHEETS.some(s=>s.name===nm)){alert('سربرگی با نام «'+nm+'» از قبل وجود دارد.');return}
+  const id=SHEETS.reduce((a,s)=>Math.max(a,s.id),0)+1;
+  SHEETS.push({id,name:nm,trees:[]});
+  switchSheet(id);
+  store();
+}
+function renameSheet(id){
+  const sh=SHEETS.find(s=>s.id===id);if(!sh)return;
+  const name=prompt('نام جدید برای سربرگ:',sh.name);
+  if(name===null)return;
+  const nm=name.trim()||sh.name;
+  if(nm===sh.name)return;
+  if(SHEETS.some(s=>s.id!==id&&s.name===nm)){alert('سربرگ دیگری با نام «'+nm+'» وجود دارد.');return}
+  const snap=SNAPS.find(s=>s.name===sh.name);
+  if(snap){snap.name=nm;saveSnaps();renderSnaps()}
+  sh.name=nm;
+  store();
+  renderTabs();
+}
+function deleteSheet(id){
+  if(SHEETS.length<=1){alert('حداقل یک سربرگ باید باقی بماند.');return}
+  const sh=SHEETS.find(s=>s.id===id);if(!sh)return;
+  if(!confirm('سربرگ «'+sh.name+'» با تمام درختان و نقشه‌اش حذف شود؟'))return;
+  if(activeId===id){
+    SHEETS=SHEETS.filter(s=>s.id!==id);
+    switchSheet(SHEETS[0].id,true);
+    store();
+  }else{
+    SHEETS=SHEETS.filter(s=>s.id!==id);
+    store();
+    renderTabs();
+    draw();
+  }
+}
+function switchSheet(id,skipSave){
+  if(!skipSave)saveActive();
+  if(typeof endEdit==='function')endEdit();
+  activeId=id;
+  loadActive();norm();
+  const oldSIM=SIM;SIM=false;clr();SIM=oldSIM;updSimBtn();
+  cur=null;
+  renderTabs();updateMapInfo();draw();mapCheck();updateGpsUI();
+  const gs=document.getElementById('gs');
+  if(gs&&gpsOn)gs.textContent='مختصات فعال — هنگام ذخیره خودکار ثبت می‌شود.';
+}
+
+let BK={n:0,dt:''};try{BK=JSON.parse(localStorage.getItem('bk')||'{"n":0,"dt":""}')}catch(e){}
+const tot=()=>SHEETS.reduce((a,s)=>a+((s.id===activeId?T:s.trees)||[]).length,0);
+function bnr(){const k=tot()-BK.n,b=$('#bn'),x=$('#bks');
+ if(b){b.classList.toggle('hid',!(k>=10));b.textContent='⚠ '+toFa(k)+' درخت از آخرین پشتیبان‌گیری ثبت شده؛ از تب «دریافت سیاهه» پشتیبان بگیرید.'}
+ if(x)x.textContent=BK.dt?'آخرین پشتیبان: '+BK.dt+' ('+toFa(BK.n)+' درخت)':'هنوز پشتیبان‌گیری نشده است.'}
+
+try{
+  if(localStorage.getItem('gv')!='3'){
+    SHEETS.forEach(sh=>(sh.trees||[]).forEach(t=>{if(t.sp=='کاج'||t.sp=='سرو')t.g=3}));
+    try{localStorage.setItem('sheets',JSON.stringify(SHEETS))}catch(e){}
+    try{localStorage.setItem('gv','3')}catch(e){}
+  }
+}catch(e){}
+
+document.querySelectorAll('input[type=number]').forEach(i=>{i.type='text';i.inputMode='decimal';i.value=toFa(i.value);i.addEventListener('input',()=>{i.value=toFa(toEn(i.value))})});
+
+$('#go').onclick=()=>{$('#splash').classList.add('hid');setTimeout(startGPS,400);};
+
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));['m','l','h'].forEach(s=>$('#sec-'+s).classList.toggle('hid',s!==b.dataset.t));draw()});
+const nz=x=>String(x).replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/آ/g,'ا').replace(/[\u200c\s]/g,''),NAMES=Object.keys(SP).sort((a,b)=>a.localeCompare(b,'fa'));
+
+function fillSp(q){
+  q=nz(q||'');
+  const a=q?NAMES.filter(n=>nz(n).startsWith(q)).concat(NAMES.filter(n=>!nz(n).startsWith(q)&&nz(n).includes(q))):NAMES;
+  $('#sp').innerHTML='<option value="">— گونه را انتخاب کنید —</option>'+a.map(k=>`<option>${k}</option>`).join('');
+  $('#sp').size=q?Math.min(7,a.length+1):1;
+  const sug=$('#spSug');
+  if(sug){
+    if(q&&a.length){
+      sug.classList.remove('hid');
+      sug.innerHTML=a.map(k=>`<button type="button" data-sp="${esc(k)}">${esc(k)}</button>`).join('');
+      sug.querySelectorAll('button').forEach(b=>{
+        b.onclick=()=>{const k=b.dataset.sp;$('#sps').value='';fillSp('');$('#sp').value=k;$('#sp').onchange();};
+      });
+    }else{sug.classList.add('hid');sug.innerHTML='';}
+  }
+  return a;
+}
+$('#sps').addEventListener('input',()=>{fillSp($('#sps').value)});
+fillSp('');
+const _sb=document.getElementById('simBtn');if(_sb)_sb.onclick=()=>{SIM=!SIM;try{localStorage.setItem('simSp',SIM?'1':'0')}catch(e){}updSimBtn()};
+$('#sp').onchange=()=>{const v=$('#sp').value;if($('#sps').value){$('#sps').value='';fillSp('');$('#sp').value=v}const x=SP[v];if(x)$('#gd').value=x[1];calc()};
+const ff=()=>(SP[$('#sp').value]||[.5])[0];let tyM=false;
+let noM=false;
+const autoNo=()=>{$('#cw').classList.toggle('hid',$('#ty').value!='h');if(noM)return;if($('#ty').value=='h'){$('#no').value='';$('#no').placeholder='بدون شماره (هیزمی)'}else{$('#no').placeholder='';$('#no').value=toFa(T.filter(t=>t.ty!='h').reduce((a,t)=>Math.max(a,+t.no||0),0)+1)}};
+$('#no').addEventListener('input',()=>{noM=true});
+const autoTy=()=>{if(!tyM)$('#ty').value=(N('#d')>0&&N('#d')<20)?'h':'i';autoNo()};
+function calc(){autoTy();const v=($('#sp').value?volSp($('#sp').value,N('#d'),N('#h')):0)*($('#ty').value=='h'?Math.max(1,Math.round(N('#nn'))||1):1);$('#v').textContent=v>0?fa(v,3):'—'}
+['#d','#h'].forEach(i=>$(i).addEventListener('input',calc));$('#ty').onchange=()=>{tyM=true;autoNo();calc()};$('#nn').addEventListener('input',calc);
+
+$('#ga').onclick=e=>{if(e){e.preventDefault();e.stopPropagation()}if(gpsOn)stopGPS();else startGPS();};
+
+let ac=null,lastA=0;
+function aud(){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();ac.resume()}catch(e){}}
+function alarm(force){if(!$('#mal').checked)return;const n=Date.now();if(!force&&n-lastA<4000)return;lastA=n;try{navigator.vibrate&&navigator.vibrate([400,150,400])}catch(e){}
+ try{if(ac){const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=880;o.connect(g);g.connect(ac.destination);g.gain.setValueAtTime(.3,ac.currentTime);o.start();o.stop(ac.currentTime+.5)}}catch(e){}}
+function parseKML(t){const d=new DOMParser().parseFromString(t,'text/xml'),out=[];
+ const ring=e=>{const c=e&&e.querySelector('coordinates');return c?c.textContent.trim().split(/\s+/).map(v=>v.split(',').map(Number)).filter(a=>a.length>=2&&isFinite(a[0])&&isFinite(a[1])):[]};
+ const nm=e=>{const p=e.closest('Placemark'),n=p&&p.querySelector('name');return(n&&n.textContent.trim())||'بدون‌نام'};
+ d.querySelectorAll('Polygon').forEach(g=>{const o=ring(g.querySelector('outerBoundaryIs')),i=[...g.querySelectorAll('innerBoundaryIs')].map(ring).filter(r=>r.length>=3);if(o.length>=3)out.push({n:nm(g),o,i,ll:true})});
+ d.querySelectorAll('LineString,LinearRing').forEach(g=>{if(g.closest('Polygon'))return;const o=ring(g);if(o.length>=4&&Math.hypot(o[0][0]-o[o.length-1][0],o[0][1]-o[o.length-1][1])<1e-6)out.push({n:nm(g),o,i:[],ll:true})});return out}
+function parseDXF(t){const L=t.split(/\r?\n/),P=[],out=[];for(let i=0;i+1<L.length;i+=2)P.push([+L[i].trim(),L[i+1].trim()]);
+ const add=(n,pts,cl)=>{pts=pts.filter(q=>isFinite(q[0])&&isFinite(q[1]));if(pts.length<3)return;const f=pts[0],l=pts[pts.length-1];
+  if(!cl&&Math.hypot(f[0]-l[0],f[1]-l[1])>(Math.abs(f[0])<=180?1e-6:.5))return;out.push({n,o:pts,i:[],ll:pts.every(q=>Math.abs(q[0])<=180&&Math.abs(q[1])<=90)})};
+ for(let k=0;k<P.length;k++){if(P[k][0]!==0)continue;
+  if(P[k][1]==='LWPOLYLINE'){let ly='0',cl=false,pts=[],j=k+1;for(;j<P.length&&P[j][0]!==0;j++){const a=P[j][0],b=P[j][1];if(a===8)ly=b;else if(a===70)cl=(+b&1)==1;else if(a===10)pts.push([+b,NaN]);else if(a===20&&pts.length)pts[pts.length-1][1]=+b}add(ly,pts,cl);k=j-1}
+  else if(P[k][1]==='POLYLINE'){let ly='0',cl=false,pts=[],j=k+1;for(;j<P.length&&P[j][0]!==0;j++){if(P[j][0]===8)ly=P[j][1];else if(P[j][0]===70)cl=(+P[j][1]&1)==1}
+   for(;j<P.length&&!(P[j][0]===0&&P[j][1]==='SEQEND');j++){if(P[j][0]===0&&P[j][1]==='VERTEX'){let x=NaN,y=NaN;for(let q=j+1;q<P.length&&P[q][0]!==0;q++){if(P[q][0]===10)x=+P[q][1];else if(P[q][0]===20)y=+P[q][1]}pts.push([x,y])}}add(ly,pts,cl);k=j}}
+ return out}
+function pir(r,x,y){let c=false;for(let i=0,j=r.length-1;i<r.length;j=i++){const a=r[i],b=r[j];if((a[1]>y)!=(b[1]>y)&&x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0])c=!c}return c}
+function sdist(r,x,y){let m=1e18;for(let i=0,j=r.length-1;i<r.length;j=i++){const a=r[j],b=r[i],dx=b[0]-a[0],dy=b[1]-a[1],l=dx*dx+dy*dy;let t=l?((x-a[0])*dx+(y-a[1])*dy)/l:0;t=Math.max(0,Math.min(1,t));m=Math.min(m,Math.hypot(x-a[0]-t*dx,y-a[1]-t*dy))}return m}
+function mtest(sel,x,y){let inn=false,d=1e18;sel.forEach(p=>{if(pir(p.o,x,y)&&!p.i.some(h=>pir(h,x,y)))inn=true;[p.o,...p.i].forEach(r=>{d=Math.min(d,sdist(r,x,y))})});return{in:inn,d}}
+function ll(E,N,z){const a=6378137,f=1/298.257223563,k=.9996,e2=f*(2-f),ep=e2/(1-e2),e1=(1-Math.sqrt(1-e2))/(1+Math.sqrt(1-e2)),x=E-5e5,mu=(N/k)/(a*(1-e2/4-3*e2*e2/64-5*e2**3/256));
+ const p1=mu+(3*e1/2-27*e1**3/32)*Math.sin(2*mu)+(21*e1*e1/16-55*e1**4/32)*Math.sin(4*mu)+(151*e1**3/96)*Math.sin(6*mu)+(1097*e1**4/512)*Math.sin(8*mu);
+ const s=Math.sin(p1),c=Math.cos(p1),t=Math.tan(p1)**2,C=ep*c*c,n=a/Math.sqrt(1-e2*s*s),r=a*(1-e2)/Math.pow(1-e2*s*s,1.5),D=x/(n*k);
+ const lat=p1-(n*Math.tan(p1)/r)*(D*D/2-(5+3*t+10*C-4*C*C-9*ep)*D**4/24+(61+90*t+298*C+45*t*t-252*ep-3*C*C)*D**6/720);
+ const lon=((z-1)*6-177)*Math.PI/180+(D-(1+2*t+C)*D**3/6+(5-2*C+28*t-3*C*C+8*ep+24*t*t)*D**5/120)/c;return[lat*180/Math.PI,lon*180/Math.PI]}
+const esc=x=>String(x==null?'':x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function kmlStr(){const co=r=>r.concat([r[0]]).map(q=>{const[la,lo]=ll(q[0],q[1],MAPZ);return lo.toFixed(7)+','+la.toFixed(7)+',0'}).join(' ');
+ let k='<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>نقشه و درختان</name>'+
+ '<Style id="b"><LineStyle><color>ff00cc00</color><width>3</width></LineStyle><PolyStyle><color>3300ff00</color></PolyStyle></Style>'+
+ '<Style id="i"><IconStyle><scale>0.9</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href></Icon></IconStyle></Style>'+
+ '<Style id="h"><IconStyle><scale>0.9</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png</href></Icon></IconStyle></Style>';
+ if(MAPP.length){k+='<Folder><name>محدودهٔ نقشه</name>'+MAPP.map(p=>'<Placemark><name>'+esc(p.n)+'</name><styleUrl>#b</styleUrl><Polygon><outerBoundaryIs><LinearRing><coordinates>'+co(p.o)+'</coordinates></LinearRing></outerBoundaryIs>'+p.i.map(r=>'<innerBoundaryIs><LinearRing><coordinates>'+co(r)+'</coordinates></LinearRing></innerBoundaryIs>').join('')+'</Polygon></Placemark>').join('')+'</Folder>'}
+ [['i','درختان صنعتی'],['h','درختان هیزمی']].forEach(([ty,nm])=>{const ts=T.filter(t=>(t.ty=='h'?'h':'i')==ty&&t.lat);if(!ts.length)return;
+  k+='<Folder><name>'+nm+'</name>'+ts.map(t=>'<Placemark><name>'+esc(t.ty=='h'?t.sp:(t.no||t.sp))+'</name><description>'+esc(t.sp+' | '+G[t.g]+' | قطر '+t.d+' | ارتفاع '+t.h+' | حجم '+R3(tv(t))+'م۳'+(t.ty=='h'?' | تعداد '+cnt(t):'')+(t.ds?' | '+t.ds:''))+'</description><styleUrl>#'+ty+'</styleUrl><Point><coordinates>'+t.lng+','+t.lat+',0</coordinates></Point></Placemark>').join('')+'</Folder>'});
+ return k+'</Document></kml>'}
+function crc32(u){let t=crc32.t;if(!t){t=crc32.t=[];for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}}let r=-1;for(let i=0;i<u.length;i++)r=t[(r^u[i])&255]^(r>>>8);return(r^-1)>>>0}
+function zip1(name,d){const nb=new TextEncoder().encode(name),n=nb.length,sz=d.length,crc=crc32(d);
+ const lh=new DataView(new ArrayBuffer(30)),cd=new DataView(new ArrayBuffer(46)),eo=new DataView(new ArrayBuffer(22)),L=true;
+ lh.setUint32(0,0x04034b50,L);lh.setUint16(4,20,L);lh.setUint16(6,0x0800,L);lh.setUint16(12,0x21,L);lh.setUint32(14,crc,L);lh.setUint32(18,sz,L);lh.setUint32(22,sz,L);lh.setUint16(26,n,L);
+ cd.setUint32(0,0x02014b50,L);cd.setUint16(4,20,L);cd.setUint16(6,20,L);cd.setUint16(8,0x0800,L);cd.setUint16(14,0x21,L);cd.setUint32(16,crc,L);cd.setUint32(20,sz,L);cd.setUint32(24,sz,L);cd.setUint16(28,n,L);
+ eo.setUint32(0,0x06054b50,L);eo.setUint16(8,1,L);eo.setUint16(10,1,L);eo.setUint32(12,46+n,L);eo.setUint32(16,30+n+sz,L);
+ return new Blob([lh,nb,d,cd,nb,eo],{type:'application/zip'})}
+$('#gk').onclick=async()=>{const m=$('#gen');m.textContent='در حال ساخت فایل…';
+ try{if(!MAPP.length&&!T.some(t=>t.lat)){m.textContent='نه نقشه‌ای بارگذاری شده و نه درختی با مختصات ثبت شده است.';return}
+  if(!DL){m.textContent='ذخیره ممکن نیست.';return}
+  const b=zip1('doc.kml',new TextEncoder().encode(kmlStr()));m.textContent='پنجره ذخیره را بپذیرید…';
+  await DL.save({filename:'trees-map.zip',data:b});m.textContent='فایل ذخیره شد. پسوند را به kmz عوض کنید.'}
+ catch(e){m.textContent='خطا: '+String(e&&e.message||e)}};
+function insideLL(lat,lng){const u=utm(lat,lng,MAPZ);return mtest(MAPP,u.E,u.N).in}
+function mdraw(sel,u){const c=$('#mc2'),x=c.getContext('2d'),W=c.width,H=c.height;x.clearRect(0,0,W,H);
+ let x0=1e18,x1=-1e18,y0=1e18,y1=-1e18;const ext=(a,b)=>{x0=Math.min(x0,a);x1=Math.max(x1,a);y0=Math.min(y0,b);y1=Math.max(y1,b)};
+ sel.forEach(p=>p.o.forEach(q=>ext(q[0],q[1])));if(u)ext(u.E,u.N);
+ const pad=20,sc=Math.min((W-2*pad)/((x1-x0)||1),(H-2*pad)/((y1-y0)||1)),ox=(W-(x1-x0)*sc)/2,oy=(H-(y1-y0)*sc)/2,X=e=>ox+(e-x0)*sc,Y=n=>H-(oy+(n-y0)*sc);
+ x.lineWidth=2;sel.forEach(p=>{x.beginPath();[p.o,...p.i].forEach(r=>{r.forEach((q,k)=>k?x.lineTo(X(q[0]),Y(q[1])):x.moveTo(X(q[0]),Y(q[1])));x.closePath()});x.fillStyle='rgba(60,160,90,.25)';x.strokeStyle='#2e9d4f';x.fill('evenodd');x.stroke()});
+ if(u){x.beginPath();x.arc(X(u.E),Y(u.N),9,0,7);x.fillStyle=u.in?'#2e9d4f':'#d33';x.fill();x.strokeStyle='#fff';x.lineWidth=3;x.stroke()}}
+function mapCheck(){const box=$('#ms'),cv=$('#mc2');
+ if(!MAPP.length){if(box)box.classList.add('hid');if(cv)cv.classList.add('hid');updateGpsUI();return}
+ if(cv)cv.classList.remove('hid');if(box)box.classList.remove('hid');
+ if(!cur){mdraw(MAPP,null);box.className='gbox';$('#mst').textContent='نقشه بارگذاری شد';$('#msd').textContent='برای تشخیص موقعیت، «نمایش مختصات» را بزنید.';updateGpsUI();return}
+ const u=utm(cur.lat,cur.lng,MAPZ),r=mtest(MAPP,u.E,u.N);u.in=r.in;mdraw(MAPP,u);
+ box.className='gbox '+(r.in?'g1':'g3 al');
+ $('#mst').textContent=r.in?'✅ داخل محدوده':'⛔ خارج از محدوده';
+ $('#msd').textContent=(r.in?'فاصله تا مرز: ':'فاصله تا محدوده: ')+toFa(Math.round(r.d))+' متر'+(r.d<cur.acc?' — نزدیک مرز':'');
+ if(!r.in)alarm();updateGpsUI()}
+function setMap(p,z,nm,save){MAPP=p;MAPZ=z;MAPNM=nm;updateMapInfo();if(save)store();mapCheck()}
+function updateMapInfo(){if(MAPP.length){$('#mi').textContent='نقشه: '+MAPNM+' — '+toFa(MAPP.length)+' پلیگون';$('#mx').classList.remove('hid')}else{$('#mi').textContent='نقشه‌ای بارگذاری نشده است.';$('#mx').classList.add('hid')}}
+$('#mb').onclick=()=>{aud();$('#mf').click()};
+$('#mx').onclick=()=>{MAPP=[];MAPNM='';store();updateMapInfo();mapCheck()};
+$('#mf').onchange=async e=>{const f=e.target.files[0];if(!f)return;const ext=f.name.split('.').pop().toLowerCase(),S=m=>{$('#mi').textContent=m};
+ try{let po=[];
+  if(ext=='dwg'){S('DWG مستقیم خوانده نمی‌شود؛ به DXF تبدیل کنید.');return}
+  if(ext=='kmz'){if(!window.JSZip){S('JSZip بارگذاری نشد.');return}
+   const zip=await JSZip.loadAsync(await f.arrayBuffer()),k=Object.keys(zip.files).filter(n=>/\.kml$/i.test(n)).sort((a,b)=>/doc\.kml$/i.test(b)-/doc\.kml$/i.test(a))[0];if(!k)throw 0;po=parseKML(await zip.files[k].async('string'))}
+  else if(ext=='kml')po=parseKML(await f.text());
+  else if(ext=='dxf')po=parseDXF(await f.text());
+  else{S('فرمت پشتیبانی‌نشده.');return}
+  if(!po.length){S('پلیگون بسته‌ای پیدا نشد.');return}
+  const f0=po[0].o[0],zn=po[0].ll?Math.floor((f0[0]+180)/6)+1:(cur?cur.u.z:39);
+  const cv=(r,ll)=>r.map(q=>{if(ll){const u=utm(q[1],q[0],zn);return[u.E,u.N]}return[Math.round(q[0]*10)/10,Math.round(q[1]*10)/10]});
+  setMap(po.map(q=>({n:q.n,o:cv(q.o,q.ll),i:q.i.map(r=>cv(r,q.ll))})),zn,f.name,true)}
+ catch(x){S('خواندن فایل ممکن نشد.')}
+ e.target.value=''};
+
+let camMode='ref';try{camMode=localStorage.getItem('camMode')||'ref'}catch(e){}
+let refType='a4';try{refType=localStorage.getItem('refType')||'a4'}catch(e){}
+const REF_SIZES={a4:29.7,card:8.56,coin:2.5,person:170,custom:0};
+const MARK_HINT={tL:'روی لبه چپ تنه بزن',tR:'روی لبه راست تنه بزن',top:'روی نوک تاج بزن',base:'روی پای درخت بزن',rL:'روی لبه چپ شیء مرجع بزن',rR:'روی لبه راست شیء مرجع بزن',rT:'روی بالای شیء مرجع بزن',rB:'روی پای شیء مرجع بزن',tT:'روی نوک درخت بزن'};
+const MARK_COL={tL:'#ffd400',tR:'#ffd400',top:'#ff4d4d',base:'#3ddc84',rL:'#00d4ff',rR:'#00d4ff',rT:'#00d4ff',rB:'#00d4ff',tT:'#ff4d4d'};
+let stp=1,act=null,MK={1:{},2:{}},IMG={1:null,2:null},NEW=false;
+
+function getDef(){
+  if(camMode==='dist'){
+    if(stp===1)return[['tL','لبه چپ تنه','v'],['tR','لبه راست تنه','v']];
+    return[['top','نوک تاج','h'],['base','پای درخت','h']];
+  }
+  if(stp===1)return[['rL','لبه چپ شیء','v'],['rR','لبه راست شیء','v'],['tL','لبه چپ تنه','v'],['tR','لبه راست تنه','v']];
+  return[['rT','بالای شیء','h'],['rB','پای شیء','h'],['tT','نوک درخت','h']];
+}
+function updateModeUI(){
+  $('#mref').className=camMode==='ref'?'on':'';
+  $('#mdist').className=camMode==='dist'?'on':'';
+  $('#refBox').classList.toggle('hid',camMode!=='ref');
+  $('#distBox').classList.toggle('hid',camMode!=='dist');
+  try{localStorage.setItem('camMode',camMode)}catch(e){}
+  updateGuide();
+}
+function updateGuide(){
+  const hasPhoto=!!IMG[stp];
+  let g='';
+  if(!hasPhoto){
+    if(camMode==='ref'){
+      if(stp===1)g='شیء مرجع (مثل کاغذ A4 یا کارت بانکی) را روی تنه، در ارتفاع ۱٫۳ متر بچسبان و عکس بگیر.';
+      else g='یک نفر با قد مشخص کنار درخت بایستد و عکس بگیر؛ از پا تا سر و نوک درخت در کادر باشند.';
+    }else{
+      if(stp===1)g='گوشی را افقی و موازی تنه، در ارتفاع سینه (۱٫۳ متر) و از فاصله حدود ۱ متری نگه دار.';
+      else g='گوشی را صاف و عمودی نگه دار؛ پای درخت تا نوک تاج در کادر باشد.';
+    }
+  }else{
+    if(act){g='👉 '+(MARK_HINT[act]||'روی نقطه مورد نظر بزن');}
+    else{g='همه نشانگرها تنظیم شد. اگه لازمه، «تنظیم مجدد نشانگرها» رو بزن.';}
+  }
+  $('#gd1').textContent=g;
+}
+function setStep(n){
+  stp=n;
+  $('#s1').className=n===1?'on':'';
+  $('#s2').className=n===2?'on':'';
+  $('#distLabel').textContent=n===1?'فاصله دوربین تا تنه (متر)':'فاصله دوربین تا پای درخت (متر)';
+  const DEFS=getDef();
+  act=DEFS.find(x=>MK[stp][x[0]]==null)?.[0]||null;
+  const u=IMG[n];
+  const pw=$('#pw');
+  if(u){pw.classList.remove('hid');$('#photoArea').classList.remove('hid');if($('#im').getAttribute('src')!==u)$('#im').src=u;}
+  else{$('#photoArea').classList.add('hid');}
+  chips();render();compute();updateGuide();
+}
+$('#s1').onclick=()=>{if(stp!==1){stp=1;MK={1:{},2:{}};setStep(1)}};
+$('#s2').onclick=()=>{if(stp!==2){stp=2;MK={1:{},2:{}};setStep(2)}};
+$('#mref').onclick=()=>{if(camMode==='ref')return;camMode='ref';MK={1:{},2:{}};act=null;updateModeUI();setStep(stp)};
+$('#mdist').onclick=()=>{if(camMode==='dist')return;camMode='dist';MK={1:{},2:{}};act=null;updateModeUI();setStep(stp)};
+$('#refType').onchange=()=>{refType=$('#refType').value;try{localStorage.setItem('refType',refType)}catch(e){};$('#refSize').classList.toggle('hid',refType!=='custom');compute()};
+$('#refSize').addEventListener('input',()=>{compute()});
+
+async function exifF(f){const b=new DataView(await f.slice(0,131072).arrayBuffer());if(b.getUint16(0)!==0xFFD8)return null;let o=2;
+ while(o<b.byteLength-10){const m=b.getUint16(o);if(m===0xFFE1&&b.getUint32(o+4)===0x45786966){const t=o+10,le=b.getUint16(t)===0x4949,g16=p=>b.getUint16(p,le),g32=p=>b.getUint32(p,le);let r=0;
+   const sc=p=>{const n=g16(p);for(let i=0;i<n;i++){const e=p+2+i*12,tg=g16(e);if(tg===0x8769)sc(t+g32(e+8));else if(tg===0xA405)r=g16(e+8)}};sc(t+g32(t+4));return r||null}
+  if((m&0xFF00)!==0xFF00)break;o+=2+b.getUint16(o+2)}return null}
+
+function render(){
+  const o=$('#ov'),m=MK[stp];
+  o.innerHTML='';
+  getDef().forEach(([k,t,ty])=>{
+    if(m[k]==null)return;
+    const e=document.createElement('div');
+    e.className=ty=='v'?'vl':'hl';
+    e.style[ty=='v'?'left':'top']=(m[k]*100)+'%';
+    e.style.background=MARK_COL[k]||'#ff0';
+    if(k===act)e.style.outline='2px solid #fff';
+    e.innerHTML='<i>'+t+'</i>';
+    o.append(e);
+  });
+}
+function chips(){
+  const c=$('#chips');c.innerHTML='';
+  getDef().forEach(([k,t])=>{
+    const b=document.createElement('button');
+    const done=MK[stp][k]!=null;
+    b.className='o'+(done?' done':'')+(k===act?' active':'');
+    b.type='button';
+    b.textContent=(done?'✓ ':'● ')+t;
+    b.onclick=()=>{act=k;chips();render();updateGuide();compute();};
+    c.append(b);
+  });
+}
+let mag={el:null,canvas:null,pos:null};
+function ensureMag(){if(mag.el)return;mag.el=document.createElement('div');mag.el.id='mag';mag.canvas=document.createElement('canvas');mag.canvas.width=mag.canvas.height=280;mag.el.append(mag.canvas);document.body.append(mag.el)}
+function showMag(clientX,clientY){
+  ensureMag();
+  const im=$('#im'),ov=$('#ov');
+  const r=ov.getBoundingClientRect();
+  const x=Math.max(0,Math.min(1,(clientX-r.left)/r.width));
+  const y=Math.max(0,Math.min(1,(clientY-r.top)/r.height));
+  let mx=clientX-70,my=clientY-170;
+  if(my<10)my=clientY+40;
+  if(my+140>innerHeight-10)my=innerHeight-150;
+  if(mx<10)mx=10;
+  if(mx+140>innerWidth-10)mx=innerWidth-150;
+  mag.el.style.left=mx+'px';mag.el.style.top=my+'px';mag.el.style.display='block';
+  const ctx=mag.canvas.getContext('2d');
+  const Z=5,srcSize=280/Z,sx=x*im.naturalWidth-srcSize/2,sy=y*im.naturalHeight-srcSize/2;
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,280,280);
+  try{ctx.drawImage(im,sx,sy,srcSize,srcSize,0,0,280,280)}catch(e){}
+  ctx.strokeStyle='#ffd400';ctx.lineWidth=1.5;ctx.beginPath();
+  ctx.moveTo(140,90);ctx.lineTo(140,128);ctx.moveTo(140,152);ctx.lineTo(140,190);
+  ctx.moveTo(90,140);ctx.lineTo(128,140);ctx.moveTo(152,140);ctx.lineTo(190,140);ctx.stroke();
+  ctx.fillStyle='#ff4d4d';ctx.beginPath();ctx.arc(140,140,2.5,0,Math.PI*2);ctx.fill();
+  mag.pos={x,y};
+}
+function hideMag(){if(mag.el)mag.el.style.display='none'}
+let dragging=false;
+$('#ov').addEventListener('pointerdown',e=>{if(!act)return;dragging=true;try{$('#ov').setPointerCapture(e.pointerId)}catch(x){};showMag(e.clientX,e.clientY);e.preventDefault()});
+$('#ov').addEventListener('pointermove',e=>{if(!dragging)return;showMag(e.clientX,e.clientY);e.preventDefault()});
+$('#ov').addEventListener('pointerup',e=>{
+  if(!dragging)return;dragging=false;hideMag();
+  if(!mag.pos)return;
+  const DEFS=getDef();
+  const info=DEFS.find(x=>x[0]===act);if(!info)return;
+  MK[stp][act]=info[2]==='v'?mag.pos.x:mag.pos.y;
+  const idx=DEFS.findIndex(x=>x[0]===act);
+  const next=DEFS.find((x,j)=>j>idx&&MK[stp][x[0]]==null);
+  act=next?next[0]:null;
+  chips();render();updateGuide();compute();
+});
+$('#ov').addEventListener('pointercancel',()=>{dragging=false;hideMag()});
+
+function compute(){
+  const im=$('#im'),m=MK[stp],W=im.naturalWidth,H=im.naturalHeight,R=$('#rd'),S=$('#st');
+  R.textContent='';S.textContent='';
+  if(!IMG[stp]||!W)return;
+  const DEFS=getDef();
+  if(!DEFS.every(x=>m[x[0]]!=null))return;
+  if(camMode==='ref'){
+    let refCm=0;
+    if(refType==='custom'){refCm=parseFloat(toEn($('#refSize').value));if(!(refCm>0)){S.textContent='اندازه شیء مرجع را وارد کنید.';return}}
+    else refCm=REF_SIZES[refType];
+    if(stp===1){
+      const refPx=Math.abs(m.rR-m.rL)*W,trPx=Math.abs(m.tR-m.tL)*W;
+      if(refPx<3){S.textContent='شیء مرجع خیلی کوچیکه.';return}
+      const dia=(trPx/refPx)*refCm;
+      if(!(dia>0&&isFinite(dia))){S.textContent='نشانگرها نامعتبرند.';return}
+      R.textContent='قطر: '+fa(dia,1)+' سانتی‌متر';S.textContent='نسبت: '+fa(trPx/refPx,2)+' — بدون نیاز به فاصله';
+      $('#d').value=toFa(dia.toFixed(1));calc();
+    }else{
+      const refPx=Math.abs(m.rB-m.rT)*H,trPx=Math.abs(m.rB-m.tT)*H;
+      if(refPx<3){S.textContent='شیء مرجع خیلی کوچیکه.';return}
+      const hM=(trPx/refPx)*refCm/100;
+      if(!(hM>0&&isFinite(hM))){S.textContent='نشانگرها نامعتبرند.';return}
+      R.textContent='ارتفاع: '+fa(hM,1)+' متر';S.textContent='شیء مرجع: '+fa(refCm,1)+' سانتی‌متر';
+      $('#h').value=toFa(hM.toFixed(1));calc();
+    }
+  }else{
+    const f=N('#fl')*Math.hypot(W,H)/43.267;
+    if(stp===1){
+      const D=N('#D1')*100;if(!(D>0)){S.textContent='فاصله را وارد کنید.';return}
+      const sn=Math.sin(Math.abs(Math.atan((m.tR-.5)*W/f)-Math.atan((m.tL-.5)*W/f))/2);
+      const dia=2*D*sn/(1-sn);
+      if(!(dia>0&&isFinite(dia))){S.textContent='نشانگرها نامعتبرند.';return}
+      R.textContent='قطر: '+fa(dia,1)+' سانتی‌متر';S.textContent='دقت به دقت فاصله بستگی دارد.';
+      $('#d').value=toFa(dia.toFixed(1));calc();
+    }else{
+      const D=N('#D1')*100;if(!(D>0)){S.textContent='فاصله را وارد کنید.';return}
+      const r=Math.max(0,N('#d')/2),th=y=>Math.atan((.5-y)*H/f);
+      const hM=((D+r)*Math.tan(th(m.top))-D*Math.tan(th(m.base)))/100;
+      if(!(hM>0&&isFinite(hM))){S.textContent='نشانگرها نامعتبرند.';return}
+      R.textContent='ارتفاع: '+fa(hM,1)+' متر';S.textContent='گوشی باید صاف و عمودی باشه.';
+      $('#h').value=toFa(hM.toFixed(1));calc();
+    }
+  }
+}
+
+$('#ph').onclick=()=>$('#fi').click();
+$('#ph2').onclick=()=>$('#fi').click();
+$('#fi').onchange=async e=>{
+  const f=e.target.files[0];if(!f)return;
+  let fx=null;try{fx=await exifF(f)}catch(x){}
+  if(fx){$('#fl').value=toFa(fx);$('#fls').textContent='از EXIF عکس خوانده شد.'}
+  else{$('#fls').textContent='EXIF خوانده نشد؛ مقدار پیش‌فرض.'}
+  IMG[stp]=URL.createObjectURL(f);MK[stp]={};NEW=true;
+  $('#photoArea').classList.remove('hid');$('#im').src=IMG[stp];
+  e.target.value='';
+};
+$('#im').onload=()=>{if(NEW){NEW=false;suggest()}render();compute();updateGuide()};
+$('#im').onerror=()=>{$('#st').textContent='خطا در بارگذاری عکس.'};
+
+function suggest(){
+  const im=$('#im');if(!im.naturalWidth)return;
+  const w=320,h=Math.round(w*im.naturalHeight/im.naturalWidth);
+  const c=document.createElement('canvas');c.width=w;c.height=h;
+  const x=c.getContext('2d');x.drawImage(im,0,0,w,h);
+  let d;try{d=x.getImageData(0,0,w,h).data}catch(e){return}
+  const gray=new Float32Array(w*h);
+  for(let i=0;i<w*h;i++){const k=i*4;gray[i]=.3*d[k]+.59*d[k+1]+.11*d[k+2]}
+  const R=2,blur=new Float32Array(w*h);
+  for(let y=0;y<h;y++){for(let xx=0;xx<w;xx++){let s=0,n=0;for(let dy=-R;dy<=R;dy++){const ny=y+dy;if(ny<0||ny>=h)continue;for(let dx=-R;dx<=R;dx++){const nx=xx+dx;if(nx<0||nx>=w)continue;s+=gray[ny*w+nx];n++}}blur[y*w+xx]=s/n}}
+  const colGrad=(y0,y1)=>{const a=new Array(w).fill(0);for(let xx=4;xx<w-4;xx++){let sum=0,cnt=0;for(let y=Math.floor(h*y0);y<Math.floor(h*y1);y++){const g=Math.abs(blur[y*w+xx+4]-blur[y*w+xx-4]);if(g>12){sum+=g;cnt++}}a[xx]=cnt>=Math.floor((y1-y0)*h*0.3)?sum:0}return a};
+  const pk=(a,x0,x1)=>{let b=-1,mx=-1;for(let i=Math.floor(w*x0);i<Math.floor(w*x1);i++)if(a[i]>mx){mx=a[i];b=i}return b>=0?b/w:null};
+  if(stp===1&&camMode==='dist'){const a=colGrad(.25,.75);MK[stp].tL=pk(a,.03,.5);MK[stp].tR=pk(a,.5,.97)}
+  else if(stp===2&&camMode==='dist'){
+    const a=colGrad(.7,.9),L=pk(a,.1,.5),Rr=pk(a,.5,.9);
+    if(L!=null&&Rr!=null){
+      const cx=(L+Rr)/2,bw=Math.max(.03,(Rr-L)/2);
+      for(let j=0;j<h*.8;j++){
+        let ns=0,n=0;
+        for(let xx=Math.floor((cx-bw)*w);xx<=Math.floor((cx+bw)*w);xx++){
+          const k=(j*w+xx)*4,lum=.3*d[k]+.59*d[k+1]+.11*d[k+2];
+          const sky=lum>150&&d[k+2]>=d[k]-5&&d[k+2]>=d[k+1]-15;
+          n++;if(!sky)ns++;
+        }
+        if(ns/n>.5){MK[stp].top=(j+2)/h;break}
+      }
+      MK[stp].base=.92;
+    }
+  }
+}
+
+$('#clrMarkers').onclick=()=>{MK[stp]={};const DEFS=getDef();act=DEFS[0][0];chips();render();updateGuide();compute()};
+$('#fl').addEventListener('input',()=>{compute()});
+$('#D1').addEventListener('input',()=>{compute()});
+$('#mc').onclick=()=>{$('#cm').classList.remove('hid');$('#mc').className='';$('#mm').className='o';updateModeUI();setStep(stp)};
+$('#mm').onclick=()=>{$('#cm').classList.add('hid');$('#mm').className='';$('#mc').className='o';$('#d').focus()};
+
+function resetPh(){
+  IMG={1:null,2:null};MK={1:{},2:{}};
+  $('#fi').value='';$('#im').removeAttribute('src');
+  $('#photoArea').classList.add('hid');
+  act=getDef()[0][0];
+  setStep(1);
+}
+function clr(){
+  tyM=false;noM=false;
+  $('#nn').value='۱';$('#ds').value='';$('#d').value='';$('#h').value='';
+  if(!SIM){$('#sps').value='';fillSp('');$('#sp').value=''}
+  resetPh();calc();updateGpsUI();
+}
+
+let edId=null,lastSavedId=null,saveTimer=null;
+function endEdit(){
+  edId=null;
+  $('#newSaveBtns').classList.remove('hid');
+  $('#svEdit').classList.add('hid');
+  $('#ce').classList.add('hid');
+}
+window.undoLast=()=>{
+  if(lastSavedId===null)return;
+  T=T.filter(t=>t.id!==lastSavedId);
+  lastSavedId=null;
+  clearTimeout(saveTimer);
+  store();draw();
+  $('#msg').textContent='آخرین ذخیره برگردانده شد.';
+  setTimeout(()=>{if($('#msg').textContent==='آخرین ذخیره برگردانده شد.')$('#msg').textContent=''},3000);
+};
+
+function doSave(useCoords){
+  const d=N('#d'),h=N('#h'),sp=$('#sp').value;
+  if(!sp){$('#msg').textContent='ابتدا گونه را انتخاب کنید.';return}
+  if(!(d>0&&h>0)){$('#msg').textContent='قطر و ارتفاع را وارد کنید.';return}
+
+  let coords=null;
+  if(useCoords){
+    if(!cur){
+      $('#svHint').innerHTML='<span style="color:#d33">⛔ مختصات آماده نیست؛ چند لحظه صبر کنید یا «بدون مختصات» را بزنید.</span>';
+      setTimeout(updateGpsUI,5000);
+      return;
+    }
+    coords={lat:cur.lat,lng:cur.lng,ux:cur.u.E,uy:cur.u.N,uz:cur.u.z,ua:Math.round(cur.acc)};
+  }
+
+  const hz=$('#ty').value==='h';
+  const o={no:hz?'':toEn($('#no').value),sp,g:+$('#gd').value,ty:$('#ty').value,n:hz?Math.max(1,Math.round(N('#nn'))||1):1,d,h,f:ff(),v:volSp(sp,d,h),ds:$('#ds').value};
+  const newId=T.reduce((a,t)=>Math.max(a,t.id),0)+1;
+  T.push(Object.assign({id:newId,...(coords||{lat:null,lng:null,ux:null,uy:null,uz:null,ua:null}),dt:new Date().toISOString().slice(0,10)},o));
+
+  const out=coords&&MAPP.length&&!insideLL(coords.lat,coords.lng);
+  store();
+  addRecent(sp);
+  draw();
+
+  lastSavedId=newId;
+  clearTimeout(saveTimer);
+  $('#msg').innerHTML=(coords?'✓ ذخیره شد':'✓ ذخیره شد (بدون مختصات)')+(out?' <span style="color:#d33">⚠ خارج از محدوده!</span>':'')+' • <a href="#" onclick="undoLast();return false" style="color:var(--ac);font-weight:700">برگرداندن</a>';
+  saveTimer=setTimeout(()=>{if($('#msg').innerHTML.includes('برگرداندن'))$('#msg').textContent=''},10000);
+
+  if(out)alarm(true);
+  clr();
+  if(gpsOn&&!cur){$('#svHint').innerHTML='<span style="color:#b78500">◌ منتظر مختصات بعدی…</span>'}
+}
+
+$('#sv').onclick=()=>doSave(true);
+$('#svNo').onclick=()=>doSave(false);
+
+$('#svEdit').onclick=()=>{
+  const d=N('#d'),h=N('#h'),sp=$('#sp').value;
+  if(!sp){$('#msg').textContent='ابتدا گونه را انتخاب کنید.';return}
+  if(!(d>0&&h>0)){$('#msg').textContent='قطر و ارتفاع را وارد کنید.';return}
+  const t=T.find(x=>x.id==edId);
+  if(t){
+    const hz=$('#ty').value==='h';
+    Object.assign(t,{no:hz?'':toEn($('#no').value),sp,g:+$('#gd').value,ty:$('#ty').value,n:hz?Math.max(1,Math.round(N('#nn'))||1):1,d,h,f:ff(),v:volSp(sp,d,h),ds:$('#ds').value});
+    if(t.d2)t.v2=volSp(sp,t.d2,t.h2);
+    if(cur){t.lat=cur.lat;t.lng=cur.lng;t.ux=cur.u.E;t.uy=cur.u.N;t.uz=cur.u.z;t.ua=Math.round(cur.acc)}
+  }
+  store();endEdit();clr();draw();
+  $('#msg').textContent='ویرایش ذخیره شد.';
+  setTimeout(()=>{if($('#msg').textContent==='ویرایش ذخیره شد.')$('#msg').textContent=''},3000);
+};
+
+$('#ce').onclick=()=>{endEdit();clr();$('#msg').textContent='ویرایش لغو شد.';setTimeout(()=>{if($('#msg').textContent==='ویرایش لغو شد.')$('#msg').textContent=''},3000)};
+
+window.ed=id=>{
+  const t=T.find(x=>x.id==id);if(!t)return;
+  edId=id;
+  $('#sps').value='';fillSp('');$('#sp').value=t.sp;
+  $('#gd').value=t.g;$('#d').value=toFa(t.d);$('#h').value=toFa(t.h);
+  tyM=true;$('#ty').value=t.ty;$('#nn').value=toFa(t.n||1);
+  noM=true;$('#no').value=t.ty==='h'?'':toFa(t.no||'');$('#ds').value=t.ds||'';
+  $('#newSaveBtns').classList.add('hid');
+  $('#svEdit').classList.remove('hid');
+  $('#ce').classList.remove('hid');
+  $('#msg').textContent='در حال ویرایش.';
+  document.querySelector('nav button[data-t=m]').click();
+  calc();scrollTo(0,0);
+};
+
+const cnt=t=>t.n||1,tv=t=>t.v*cnt(t),sv=a=>a.reduce((x,t)=>x+tv(t),0),ct=a=>a.reduce((x,t)=>x+cnt(t),0);
+
+function sumX(){
+  const I=T.filter(t=>t.ty!='h'),H=T.filter(t=>t.ty=='h');
+  const sp=[...new Set(T.map(t=>t.sp))].sort((a,b)=>((SP[a]||[0,3])[1]-(SP[b]||[0,3])[1])||a.localeCompare(b,'fa'));
+  return{r:sp.map(n=>{const i=I.filter(t=>t.sp==n),h=H.filter(t=>t.sp==n);return[n,ct(i),sv(i),ct(h),sv(h)]}),t:['مجموع',ct(I),sv(I),ct(H),sv(H)]};
+}
+function updateNoCoord(){
+  const el=$('#noCoordBanner');if(!el)return;
+  const n=T.filter(t=>!t.lat).length;
+  el.classList.toggle('hid',!n);
+  if(n)el.textContent='⚠ '+toFa(n)+' درخت بدون مختصات — برای تکمیل، ویرایش کنید یا از ابتدا با مختصات ثبت کنید.';
+}
+function updateTotSummary(){
+  const el=$('#totSummary');if(!el)return;
+  const I=T.filter(t=>t.ty!='h'),H=T.filter(t=>t.ty==='h');
+  const tc=ct(I)+ct(H),tvAll=sv(I)+sv(H);
+  if(!T.length){
+    el.innerHTML='تعداد کل درختان نشانه‌گذاری‌شده صنعتی و هیزمی: <b>۰</b> اصله به حجم <b>۰</b> مترمکعب';
+    return;
+  }
+  el.innerHTML='تعداد کل درختان نشانه‌گذاری‌شده صنعتی و هیزمی: <b>'+toFa(tc)+'</b> اصله به حجم <b>'+fa(tvAll,3)+'</b> مترمکعب';
+}
+
+function draw(){
+  bnr();
+  updateNoCoord();
+  updateTotSummary();
+  $('#tb').innerHTML='<tr><th>شماره</th><th>گونه</th><th>دسته</th><th>نوع</th><th>قطر</th><th>ارتفاع</th><th>حجم</th><th>X</th><th>Y</th><th>زون</th><th>توضیحات</th><th></th></tr>'+
+    T.map(t=>`<tr><td>${t.ty==='h'?'—':toFa(t.no||'')}</td><td>${t.sp}</td><td>${G[t.g]}</td><td>${t.ty==='h'?'هیزمی ('+toFa(cnt(t))+')':'صنعتی'}</td><td>${fa(t.d,1)}</td><td>${fa(t.h,1)}</td><td>${fa(tv(t),3)}</td><td>${t.ux?toFa(t.ux):'<span style="color:#d33" title="بدون مختصات">⚠</span>'}</td><td>${t.uy?toFa(t.uy):'—'}</td><td>${t.uz?toFa(t.uz):'—'}</td><td>${t.ds||''}</td><td><button class="o chipbtn" onclick="ed(${t.id})">ویرایش</button> <button class="x" onclick="del(${t.id})">حذف</button></td></tr>`).join('');
+  $('#tot').textContent=fa(sv(T),3);
+  const x=sumX();
+  $('#sm').innerHTML='<tr><th rowspan="2">ردیف</th><th rowspan="2">دسته‌بندی</th><th colspan="2">صنعتی</th><th colspan="2">هیزمی</th></tr><tr><th>تعداد</th><th>حجم</th><th>تعداد</th><th>حجم</th></tr>'+
+    x.r.map((a,i)=>`<tr><td>${fa(i+1)}</td><td>${a[0]}</td><td>${fa(a[1])}</td><td>${fa(a[2],2)}</td><td>${fa(a[3])}</td><td>${fa(a[4],2)}</td></tr>`).join('')+
+    `<tr style="font-weight:700"><td colspan="2">مجموع</td><td>${fa(x.t[1])}</td><td>${fa(x.t[2],2)}</td><td>${fa(x.t[3])}</td><td>${fa(x.t[4],2)}</td></tr>`;
+  const cu=$('#hs2').value;
+  $('#hs2').innerHTML=T.map(t=>`<option value="${t.id}">${t.ty==='h'?'هیزمی':'شماره '+toFa(t.no||t.id)} - ${t.sp} - ${fa(t.d,0)}</option>`).join('');
+  if(cu)$('#hs2').value=cu;
+  $('#tb2').innerHTML='<tr><th>#</th><th>گونه</th><th>حجم اولیه</th><th>حجم تجدید</th><th>تغییر٪</th><th>استحصال</th><th>تاریخ</th></tr>'+
+    T.filter(t=>t.v2||t.hv).map(t=>`<tr><td>${t.ty==='h'?'هیزمی':toFa(t.no||t.id)}</td><td>${t.sp}</td><td>${fa(t.v,3)}</td><td>${fa(t.v2,3)}</td><td>${t.v2?fa((t.v2-t.v)/t.v*100,1):'—'}</td><td>${fa(t.hv,3)}</td><td>${t.hd||'—'}</td></tr>`).join('');
+}
+window.del=id=>{T=T.filter(t=>t.id!==id);store();draw()};
+$('#sh').onclick=()=>{
+  const t=T.find(x=>x.id==$('#hs2').value);if(!t)return;
+  const d2=N('#d2'),h2=N('#h2');
+  if(d2>0&&h2>0){t.d2=d2;t.h2=h2;t.v2=volSp(t.sp,d2,h2)}
+  if(N('#hv')>0){t.hv=N('#hv');t.hd=$('#hd').value;t.hn=$('#hn').value}
+  store();draw();
+};
+
+const DL={save:async({filename,data})=>{const u=URL.createObjectURL(data),a=document.createElement('a');a.href=u;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000)}};
+const R3=x=>+(+x).toFixed(3),say=(m,bad)=>document.querySelectorAll('.xs').forEach(e=>{e.textContent=m;e.style.color=bad?'#d33':''});
+async function mkX(sheets){
+ const wb=new ExcelJS.Workbook(),bd={style:'thin'};
+ sheets.forEach(([n,rows,mg,hr=1,tot])=>{
+  const ws=wb.addWorksheet(n,{views:[{rightToLeft:true}]}),W=rows[0].length;
+  rows.forEach(r=>ws.addRow(r));
+  for(let i=1;i<=W;i++)ws.getColumn(i).width=n==='درختان'?14:18;
+  for(let r=1;r<=rows.length;r++)for(let c=1;c<=W;c++){const x=ws.getCell(r,c);x.alignment={horizontal:'center',vertical:'middle',wrapText:true};x.border={top:bd,left:bd,bottom:bd,right:bd};
+   if(r<=hr){x.font={bold:true};x.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFE3EEDF'}}}else if(tot&&r==rows.length)x.font={bold:true}}
+  (mg||[]).forEach(([a,b,c,d])=>ws.mergeCells(a+1,b+1,c+1,d+1))});
+ return await wb.xlsx.writeBuffer()}
+const MIME='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',msg=e=>String(e&&e.message||e);
+const safe=f=>()=>{try{const r=f();if(r&&r.catch)r.catch(e=>say('خطا: '+msg(e),1))}catch(e){say('خطا: '+msg(e),1)}};
+async function exp(fn,sheets){
+ if(!DL){say('ذخیره ممکن نیست.',1);return}
+ let blob=null,why='';
+ if(window.ExcelJS){try{blob=new Blob([await mkX(sheets)],{type:MIME})}catch(e){why=msg(e)}}
+ if(!blob&&window.XLSX){try{
+   const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};
+   sheets.forEach(([n,rows,mg])=>{const ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=rows[0].map(()=>({wch:16}));if(mg)ws['!merges']=mg.map(([a,b,c,d])=>({s:{r:a,c:b},e:{r:c,c:d}}));XLSX.utils.book_append_sheet(wb,ws,n)});
+   blob=new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})],{type:MIME})}catch(e){why+='|'+msg(e)}}
+ if(blob)fn+='.xlsx';
+ else{blob=new Blob(['\ufeff'+sheets[0][1].map(r=>r.map(c=>'"'+String(c??'').replace(/"/g,'""')+'"').join(',')).join('\r\n')],{type:'text/csv'});fn+='.csv'}
+ try{await DL.save({filename:fn,data:blob});say(why?'ذخیره شد، با قالب ساده ('+why+')':'فایل ذخیره شد.',!!why)}catch(e){say('ذخیره انجام نشد: '+msg(e),1)}}
+
+function sumSheets(){
+ const x=sumX(),n3=a=>a.slice(0,1).concat(a.slice(1).map((v,i)=>i%2?R3(v):v));
+ const A=[['خلاصه وضعیت درختان مورد نشانه‌گذاری شده','','','','',''],['ردیف','دسته‌بندی درختان نشانه‌گذاری شده','درختان صنعتی','','درختان هیزمی',''],['','','تعداد','حجم','تعداد','حجم']].concat(x.r.map((a,i)=>[i+1].concat(n3(a))),[['مجموع',''].concat(n3(x.t).slice(1))]),L=A.length-1;
+ const gs=[1,2,3].map(g=>{const I=T.filter(t=>t.g==g&&t.ty!='h'),H=T.filter(t=>t.g==g&&t.ty==='h');return[G[g],ct(I),R3(sv(I)),ct(H),R3(sv(H))]});
+ const B=[['خلاصه بر اساس دسته','','','',''],['دسته','درختان صنعتی','','درختان هیزمی',''],['','تعداد','حجم','تعداد','حجم']].concat(gs);
+ return[['خلاصه',A,[[0,0,0,5],[1,0,2,0],[1,1,2,1],[1,2,1,3],[1,4,1,5],[L,0,L,1]],3,1],['خلاصه دسته',B,[[0,0,0,4],[1,0,2,0],[1,1,1,2],[1,3,1,4]],3]]}
+
+function buildE1(title){
+ const ind=T.filter(t=>t.ty!='h').sort((a,b)=>(+a.no||a.id)-(+b.no||b.id)),fw=T.filter(t=>t.ty==='h'),gm={};
+ fw.forEach(t=>{const d=Math.round(t.d),h=Math.round(t.h),k=t.sp+'|'+d+'|'+h;gm[k]=gm[k]||{sp:t.sp,d,h,n:0,v:0};gm[k].n+=cnt(t);gm[k].v+=tv(t)});
+ const gr=Object.values(gm),W=12,pad=a=>a.concat(Array(W-a.length).fill(''));
+ const rows=[pad(['سیاهه درختان — '+title]),pad(['درختان صنعتی','','','','','','درختان هیزمی']),pad(['شماره درخت','جنس','ابعاد','','حجم (مترمکعب)','توضیحات','جنس','ابعاد','','حجم یک اصله','تعداد','حجم']),pad(['','','قطر (cm)','طول (m)','','','','قطر (cm)','طول (m)'])];
+ for(let i=0;i<Math.max(ind.length,gr.length);i++){const a=ind[i],g=gr[i];rows.push(pad((a?[a.no||i+1,a.sp,a.d,a.h,R3(a.v),a.ds||'']:Array(6).fill('')).concat(g?[g.sp,g.d,g.h,R3(g.v/g.n),g.n,R3(g.v)]:[])))}
+ rows.push(pad(['جمع','','','',R3(sv(ind)),'','','','','',ct(fw),R3(sv(fw))]));
+ const L=rows.length-1,mg=[[0,0,0,11],[1,0,1,5],[1,6,1,11],[2,0,3,0],[2,1,3,1],[2,2,2,3],[2,4,3,4],[2,5,3,5],[2,6,3,6],[2,7,2,8],[2,9,3,9],[2,10,3,10],[2,11,3,11],[L,0,L,3]];
+ return[['درختان',rows,mg,4,1],['مختصات',[['شماره','گونه','X (UTM)','Y (UTM)','زون','دقت (± متر)','وضعیت']].concat(ind.map((t,i)=>[t.no||i+1,t.sp,t.ux||'',t.uy||'',t.uz||'',t.ua||'',t.ux?'✓':'⚠ بدون مختصات']))],...sumSheets()];
+}
+function fnm(){return String(getActiveSheet().name).replace(/[\\\/:*?"<>|]/g,'-').trim()+'-'+new Date().toISOString().slice(0,10)}
+function shn(n,used){const b=String(n).replace(/[\\\/\?\*\[\]:]/g,'-').slice(0,28)||'برگه';let x=b,k=2;while(used.has(x))x=b+' ('+(k++)+')';used.add(x);return x}
+$('#e1').onclick=safe(()=>exp(fnm(),buildE1(getActiveSheet().name)));
+$('#e3').onclick=safe(()=>{
+  saveActive();
+  const used=new Set(),out=[],all=[],o=T;
+  try{
+    SHEETS.forEach(sh=>{T=sh.trees||[];norm();const b=buildE1(sh.name)[0];b[0]=shn(sh.name,used);out.push(b);all.push(...T)});
+    T=all;const s2=sumSheets()[0];s2[0]='خلاصه کل';s2[1][0][0]='خلاصه وضعیت درختان مورد نشانه‌گذاری شده (همهٔ زمین‌ها)';out.push(s2)
+  }finally{T=o}
+  return exp('all-lands-'+new Date().toISOString().slice(0,10),out)
+});
+$('#e2').onclick=safe(()=>exp('harvest-'+fnm(),[['تجدید و استحصال',[['شماره','گونه','دسته','حجم اولیه (مترمکعب)','قطر جدید','ارتفاع جدید','حجم تجدید (مترمکعب)','تغییر %','حجم استحصال (مترمکعب)','تاریخ استحصال','یادداشت']].concat(T.filter(t=>t.v2||t.hv).map(t=>[t.ty==='h'?'هیزمی':(t.no||''),t.sp,G[t.g],R3(t.v),t.d2||'',t.h2||'',t.v2?R3(t.v2):'',t.v2?+((t.v2-t.v)/t.v*100).toFixed(1):'',t.hv||'',t.hd||'',t.hn||'']))]]));
+
+let SNAPS=[];try{SNAPS=JSON.parse(localStorage.getItem('snaps')||'[]')}catch(e){}
+function saveSnaps(){try{localStorage.setItem('snaps',JSON.stringify(SNAPS));stWarn(false)}catch(e){stWarn(true)}}
+function snapMsgFn(m,bad){const el=$('#snapMsg');if(!el)return;el.textContent=m;el.style.color=bad?'#d33':'';clearTimeout(snapMsgFn.t);snapMsgFn.t=setTimeout(()=>{el.textContent=''},5000)}
+function renderSnaps(){
+  const el=$('#savedList');if(!el)return;
+  if(!SNAPS.length){el.innerHTML='<div class="m">هنوز موردی ذخیره نشده است.</div>';return}
+  el.innerHTML=SNAPS.slice().reverse().map(s=>`<div class="sitem"><div class="sinfo"><b>${esc(s.name)}</b><small>${toFa((s.trees||[]).length)} درخت${s.map?' • نقشه':''}${s.date?' • '+s.date:''}</small></div><button class="o" style="padding:4px 10px;font-size:12px" data-load="${s.id}">باز کردن</button><button class="x" data-del="${s.id}">×</button></div>`).join('');
+  el.querySelectorAll('[data-load]').forEach(b=>b.onclick=()=>loadSnap(+b.dataset.load));
+  el.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const id=+b.dataset.del;if(!confirm('حذف شود؟'))return;SNAPS=SNAPS.filter(s=>s.id!==id);saveSnaps();renderSnaps()});
+}
+$('#saveSnap').onclick=()=>{
+  if(!T.length&&!MAPP.length){snapMsgFn('سربرگ خالی است.',1);return}
+  const sh=getActiveSheet(),currentName=sh.name;
+  const name=prompt('نام ذخیره (هم‌نام با سربرگ می‌شود):',currentName);
+  if(name===null)return;
+  const nm=name.trim()||currentName;
+  const otherSheet=SHEETS.find(s=>s.id!==activeId&&s.name===nm);
+  if(otherSheet){if(!confirm('سربرگ دیگری با نام «'+nm+'» وجود دارد. ادامه می‌دهید؟'))return}
+  const existing=SNAPS.find(s=>s.name===nm);
+  if(existing){
+    if(!confirm('موردی با نام «'+nm+'» قبلاً ذخیره شده. جایگزین شود؟'))return;
+    existing.date=new Date().toLocaleDateString('fa-IR');
+    existing.trees=JSON.parse(JSON.stringify(T));
+    existing.map=MAPP.length?JSON.parse(JSON.stringify({p:MAPP,z:MAPZ,nm:MAPNM})):null;
+    saveSnaps();renderSnaps();snapMsgFn('جایگزین شد: '+nm);
+  }else{
+    const id=SNAPS.reduce((a,s)=>Math.max(a,s.id),0)+1;
+    SNAPS.push({id,name:nm,date:new Date().toLocaleDateString('fa-IR'),trees:JSON.parse(JSON.stringify(T)),map:MAPP.length?JSON.parse(JSON.stringify({p:MAPP,z:MAPZ,nm:MAPNM})):null});
+    saveSnaps();renderSnaps();snapMsgFn('ذخیره شد: '+nm);
+  }
+  if(nm!==currentName){sh.name=nm;saveActive();renderTabs()}
+};
+function loadSnap(id){
+  const s=SNAPS.find(x=>x.id===id);if(!s)return;
+  const existingSheet=SHEETS.find(sh=>sh.name===s.name);
+  if(existingSheet){
+    if(!confirm('سربرگی با نام «'+s.name+'» وجود دارد. جایگزین شود؟'))return;
+    saveActive();
+    existingSheet.trees=JSON.parse(JSON.stringify(s.trees||[]));
+    existingSheet.map=s.map?JSON.parse(JSON.stringify(s.map)):null;
+    switchSheet(existingSheet.id,true);
+    snapMsgFn('جایگزین شد: '+s.name);return;
+  }
+  if(!confirm('«'+s.name+'» به عنوان سربرگ جدید باز شود؟'))return;
+  const nid=SHEETS.reduce((a,x)=>Math.max(a,x.id),0)+1;
+  SHEETS.push({id:nid,name:s.name,trees:JSON.parse(JSON.stringify(s.trees||[])),map:s.map?JSON.parse(JSON.stringify(s.map)):null});
+  switchSheet(nid);snapMsgFn('باز شد: '+s.name);
+}
+
+$('#bk').onclick=async()=>{
+  if(!DL){say('ذخیره ممکن نیست.');return}
+  try{
+    const dt=new Date().toISOString().slice(0,10);
+    saveActive();
+    const payload={app:'hyrcanian',v:3,sheets:SHEETS,activeId,trees:T,snaps:SNAPS};
+    await DL.save({filename:'backup-'+dt+'.json',data:new Blob([JSON.stringify(payload)],{type:'application/json'})});
+    BK={n:tot(),dt};try{localStorage.setItem('bk',JSON.stringify(BK))}catch(e){};bnr();say('پشتیبان ذخیره شد.')
+  }catch(e){say('پشتیبان‌گیری انجام نشد.')}
+};
+$('#rb').onclick=()=>$('#rf').click();
+$('#rf').onchange=async e=>{
+  const f=e.target.files[0];if(!f)return;
+  try{
+    const j=JSON.parse(await f.text());
+    const sheetsArr=Array.isArray(j.sheets)?j.sheets:null;
+    const treesArr=Array.isArray(j)?j:(Array.isArray(j.trees)?j.trees:null);
+    if(sheetsArr){
+      if($('#rm').value==='r'){
+        if(!confirm('تمام سربرگ‌ها جایگزین شوند؟')){e.target.value='';return}
+        SHEETS=sheetsArr;activeId=SHEETS[0]?.id||1;
+      }else{
+        let m=SHEETS.reduce((a,s)=>Math.max(a,s.id),0);
+        sheetsArr.forEach(s=>{m++;let nm=s.name,k=2;while(SHEETS.some(x=>x.name===nm))nm=s.name+' ('+toFa(k++)+')';SHEETS.push(Object.assign({},s,{id:m,name:nm}))})
+      }
+      loadActive();norm();saveActive();
+      if(Array.isArray(j.snaps)){if($('#rm').value==='r')SNAPS=j.snaps;else{let m2=SNAPS.reduce((a,x)=>Math.max(a,x.id||0),0);j.snaps.forEach(x=>{m2++;SNAPS.push(Object.assign({},x,{id:m2}))})}saveSnaps();renderSnaps()}
+    }else if(treesArr){
+      if(!treesArr.every(t=>t&&typeof t.d==='number'&&t.sp))throw 0;
+      if($('#rm').value==='r'){T=treesArr}
+      else{let m=T.reduce((x,t)=>Math.max(x,t.id),0);T=T.concat(treesArr.map(t=>Object.assign({},t,{id:++m})))}
+      norm();saveActive();
+    }else throw 0;
+    renderTabs();updateMapInfo();draw();mapCheck();say('بازیابی انجام شد.')
+  }catch(x){say('فایل معتبر نیست.')}
+  e.target.value='';
+};
+
+renderTabs();updateMapInfo();renderSnaps();updSimBtn();renderRecent();
+$('#refType').value=refType;
+if(refType==='custom')$('#refSize').classList.remove('hid');
+updateModeUI();
+act=getDef()[0][0];
+setStep(1);
+$('#sp').onchange();draw();mapCheck();updateGpsUI();
+updateTotSummary();
+$('#ga').textContent='نمایش مختصات';
+$('#ga').classList.add('o');
+
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script>
+
+<script>
+/* ===== همگام‌سازی ابری (Supabase) ===== */
+(function(){
+const SB_URL='https://hgzdghjkwzufdhmjcfaz.supabase.co'.trim();
+const SB_KEY='sb_publishable_fyx5I2qUxDUXEW86i8KUsw_xBGRbye7'.trim();
+const A=document.getElementById('acct');
+if(!A)return;
+
+if(SB_URL.includes('PASTE_')||SB_KEY.includes('PASTE_')){
+  console.warn('[sync] SB_URL/SB_KEY پر نشده — همگام‌سازی غیرفعال است. مقادیر را از Supabase → Settings → API بردارید.');
+  A.remove();return;
+}
+if(!SB_URL.startsWith('https://')){
+  console.warn('[sync] SB_URL باید با https:// شروع شود. مقدار فعلی:',SB_URL);
+  A.remove();return;
+}
+if(SB_KEY.length<30){
+  console.warn('[sync] SB_KEY خیلی کوتاه است.');
+  A.remove();return;
+}
+
+const LS=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
+let S=null;try{S=JSON.parse(LS('sbs')||'null')}catch(e){}
+let busy=false,tm=null,msg='';
+const em=u=>u.trim().toLowerCase()+'@hirkani.app';
+const rid=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36);
+const hs=s=>{let h=5381;for(let i=0;i<s.length;i++)h=(h*33^s.charCodeAt(i))>>>0;return h+':'+s.length};
+const shash=s=>hs(JSON.stringify([s.name,s.trees||[],s.map||null]));
+
+async function api(p,m,b,x){
+  const au=p.startsWith('/auth/')||!S?SB_KEY:S.access_token;
+  const r=await fetch(SB_URL+p,{method:m||'GET',headers:Object.assign({apikey:SB_KEY,'Content-Type':'application/json',Authorization:'Bearer '+au},x||{}),body:b?JSON.stringify(b):undefined});
+  const t=await r.text();let j=null;try{j=t?JSON.parse(t):null}catch(e){}
+  if(!r.ok)throw Object.assign(new Error((j&&(j.msg||j.error_description||j.message))||('HTTP '+r.status)),{st:r.status});
+  return j}
+
+function setS(j,name){
+  const oldUid=S&&S.uid;
+  S={
+    name,
+    access_token:j.access_token,
+    refresh_token:j.refresh_token,
+    exp:Date.now()+(j.expires_in||3600)*1000-60000,
+    uid:(j.user&&j.user.id)||oldUid||null
+  };
+  LS('sbs',JSON.stringify(S));
+}
+
+async function fresh(){
+  if(S&&Date.now()>S.exp){
+    try{
+      const j=await api('/auth/v1/token?grant_type=refresh_token','POST',{refresh_token:S.refresh_token});
+      setS(j,S.name);
+    }catch(e){
+      if(e.st>=400&&e.st<500){S=null;LS('sbs',null);ui()}
+      throw e;
+    }
+  }
+}
+
+const fe=e=>{
+  const m=e.message||'';
+  if(/Invalid login/i.test(m))return 'نام کاربری یا رمز عبور اشتباه است.';
+  if(/already/i.test(m))return 'این نام کاربری قبلاً ثبت شده. اگر خودتان ثبت‌نام کرده‌اید، همین حالا «ورود» بزنید.';
+  if(/Failed to fetch|NetworkError|Load failed/i.test(m))return 'اتصال به سرور برقرار نشد.';
+  if(/Confirm/i.test(m))return 'در Supabase گزینهٔ Confirm email را خاموش کنید (Authentication → Providers → Email).';
+  if(/permission denied/i.test(m))return 'دسترسی جدول رد شد — بند GRANT در schema.sql را اجرا کنید.';
+  if(/JWT/i.test(m))return 'نشست منقضی شده — دوباره وارد شوید.';
+  return m;
+};
+
+const row=s=>({user_id:S.uid,uid:s.uid,name:s.name,data:{trees:s.trees||[],map:s.map||null},ua:s.ua,deleted:false});
+
+async function sync(){
+  if(!S||busy||!navigator.onLine)return false;
+  busy=true;msg='در حال همگام‌سازی…';ui();
+  try{
+    await fresh();saveActive();
+    const now=Date.now(),seen=new Set();
+    SHEETS.forEach(s=>{if(!s.uid||seen.has(s.uid))s.uid=rid();seen.add(s.uid);const h=shash(s);if(h!==s.h){s.h=h;s.ua=now}});
+    const rows=await api('/rest/v1/sheets?select=*');
+    const prevU=LS('sbu');
+    if(prevU&&prevU!==S.uid)SHEETS=[];
+    else if(!prevU&&rows.some(r=>!r.deleted)&&SHEETS.length===1&&!(SHEETS[0].trees||[]).length&&!SHEETS[0].map)SHEETS=[];
+    const del=prevU===S.uid?JSON.parse(LS('sbk')||'[]').filter(u=>!SHEETS.some(s=>s.uid===u)):[];
+    const out=new Map();let chg=false;
+    del.forEach(u=>out.set(u,{user_id:S.uid,uid:u,name:'',data:null,ua:now,deleted:true}));
+    for(const r of rows){
+      if(del.includes(r.uid))continue;
+      const l=SHEETS.find(s=>s.uid===r.uid);
+      if(r.deleted){if(l){SHEETS=SHEETS.filter(s=>s!==l);chg=true}continue}
+      const d=r.data||{},tr=d.trees||[];
+      if(!l){
+        let nm=r.name;while(SHEETS.some(x=>x.name===nm))nm+=' (حساب)';
+        const o={id:SHEETS.reduce((a,x)=>Math.max(a,x.id),0)+1,uid:r.uid,name:nm,trees:tr,ua:r.ua};
+        if(d.map)o.map=d.map;o.h=shash(o);SHEETS.push(o);chg=true;
+      }else if(r.ua>l.ua){
+        l.name=r.name;l.trees=tr;if(d.map)l.map=d.map;else delete l.map;l.ua=r.ua;l.h=shash(l);chg=true;
+      }else if(l.ua>r.ua)out.set(l.uid,row(l));
+    }
+    const known=new Set(rows.map(r=>r.uid));
+    SHEETS.forEach(s=>{if(!known.has(s.uid))out.set(s.uid,row(s))});
+    if(!SHEETS.length)SHEETS.push({id:1,name:'زمین ۱',trees:[],uid:rid(),ua:now});
+    if(out.size)await api('/rest/v1/sheets?on_conflict=user_id,uid','POST',[...out.values()],{Prefer:'resolution=merge-duplicates,return=minimal'});
+    if(!SHEETS.some(s=>s.id===activeId))activeId=SHEETS[0].id;
+    LS('sheets',JSON.stringify(SHEETS));LS('sbu',S.uid);LS('sbk',JSON.stringify(SHEETS.map(s=>s.uid)));
+    if(chg)switchSheet(activeId,true);
+    msg='همگام شد ✓ '+new Date().toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'});
+    return true;
+  }catch(e){msg='⚠️ '+fe(e);return false}
+  finally{busy=false;ui()}
+}
+
+function ui(){
+  if(!S){
+    A.innerHTML='<button id="aIn" class="o">☁️ ورود / ثبت‌نام برای همگام‌سازی</button>';
+    A.querySelector('#aIn').onclick=login;return;
+  }
+  A.innerHTML='<span>☁️ '+esc(S.name)+' · '+msg+'</span><button id="aSy" class="o">همگام‌سازی</button><button id="aOut" class="o">خروج</button>';
+  A.querySelector('#aSy').onclick=sync;
+  A.querySelector('#aOut').onclick=logout;
+}
+
+function login(){
+  const o=document.createElement('div');o.id='aov';
+  o.innerHTML='<div class="bx"><b>حساب کاربری</b><label>نام کاربری (حروف کوچک انگلیسی)</label><input id="aU" autocomplete="username" placeholder="مثلا: ali"><label>رمز عبور (حداقل ۶ نویسه)</label><input id="aP" type="password" autocomplete="current-password"><div id="aer"></div><div class="r"><button id="aL">ورود</button><button id="aR" class="o">ثبت‌نام</button><button id="aC" class="o">انصراف</button></div></div>';
+  document.body.append(o);
+  const go=async su=>{
+    const uRaw=o.querySelector('#aU').value.trim();
+    const u=uRaw.toLowerCase();
+    const p=o.querySelector('#aP').value,er=o.querySelector('#aer');
+    if(!/^[a-z0-9._-]{3,30}$/.test(u)){er.textContent='نام کاربری: ۳ تا ۳۰ نویسهٔ انگلیسی (a-z، 0-9، . _ -)';return}
+    if(p.length<6){er.textContent='رمز عبور کوتاه است.';return}
+    er.textContent='…';
+    try{
+      const j=await api(su?'/auth/v1/signup':'/auth/v1/token?grant_type=password','POST',{email:em(u),password:p});
+      if(!j.access_token)throw new Error('در Supabase گزینهٔ Confirm email را خاموش کنید.');
+      setS(j,u);o.remove();msg='';ui();sync();
+    }catch(e){er.textContent=fe(e)}
+  };
+  o.querySelector('#aL').onclick=()=>go(false);
+  o.querySelector('#aR').onclick=()=>go(true);
+  o.querySelector('#aC').onclick=()=>o.remove();
+}
+
+async function logout(){
+  const ok=await sync();
+  if(!confirm(ok?'خروج از حساب؟ داده‌های این دستگاه پاک می‌شوند و نسخهٔ ابری باقی می‌ماند.':'همگام‌سازی انجام نشد! با خروج، تغییرات همگام‌نشده از بین می‌روند. ادامه می‌دهید؟'))return;
+  S=null;['sbs','sbu','sbk'].forEach(k=>LS(k,null));
+  SHEETS=[{id:1,name:'زمین ۱',trees:[]}];activeId=1;LS('sheets',JSON.stringify(SHEETS));
+  switchSheet(1,true);msg='';ui();
+}
+
+window.syncSoon=()=>{if(S){clearTimeout(tm);tm=setTimeout(sync,4000)}};
+addEventListener('online',sync);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync()});
+setInterval(sync,90000);
+ui();
+setTimeout(sync,1500);
+})();
+</script>
+
+</body>
+</html>
