@@ -1340,9 +1340,36 @@ setTimeout(sync,1500);
 })();
 </script>
 
-<!-- سیستم ورود هوشمند (اکسل، ورد، عکس) -->
+  <!-- سیستم ورود هوشمند (اکسل، ورد، عکس) -->
 <script>
 document.getElementById('btnSmartImport').onclick = () => document.getElementById('smartImportFile').click();
+
+// تابع کمکی برای بهبود کیفیت عکس قبل از خواندن
+function preprocessImage(file) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const scale = 2; // بزرگ‌نمایی برای دقت بیشتر
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+      for (let i = 0; i < data.length; i += 4) {
+        const gray = 0.3 * data[i] + 0.59 * data[i + 1] + 0.11 * data[i + 2];
+        // سیاه و سفید کردن (آستانه گذاری)
+        const val = gray > 130 ? 255 : 0; 
+        data[i] = data[i+1] = data[i+2] = val;
+      }
+      ctx.putImageData(imageData, 0, 0);
+      resolve(canvas.toDataURL('image/png'));
+    };
+    img.src = URL.createObjectURL(file);
+  });
+}
 
 document.getElementById('smartImportFile').onchange = async (e) => {
   const file = e.target.files[0];
@@ -1355,22 +1382,57 @@ document.getElementById('smartImportFile').onchange = async (e) => {
   try {
     let extractedData = []; 
 
+    // ۱. پردازش اکسل (Excel/CSV)
     if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls') || file.name.endsWith('.csv')) {
       btn.innerHTML = '⏳ در حال خواندن اکسل...';
       const data = await file.arrayBuffer();
       const workbook = XLSX.read(data, { type: 'array' });
       const sheet = workbook.Sheets[workbook.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
       
-      for (let i = 1; i < rows.length; i++) {
-        const row = rows[i];
-        if (!row || row.length === 0) continue;
-        const nums = row.map(v => parseFloat(v)).filter(n => !isNaN(n));
-        if (nums.length >= 2) {
-          extractedData.push({ sp: 'نامشخص', d: nums[0], h: nums[1] });
+      let headerRowIdx = -1;
+      let colNo = -1, colSp = -1, colD = -1, colH = -1, colDs = -1;
+
+      for (let i = 0; i < Math.min(15, rows.length); i++) {
+        const r = rows[i];
+        if (!r || r.length === 0) continue;
+        
+        let dIdx = r.findIndex(c => String(c).includes('قطر') || String(c).toUpperCase() === 'D');
+        let hIdx = r.findIndex(c => String(c).includes('طول') || String(c).includes('ارتفاع') || String(c).toUpperCase() === 'H');
+        
+        if (dIdx !== -1 && hIdx !== -1) {
+          headerRowIdx = i;
+          colD = dIdx; 
+          colH = hIdx;
+          colNo = r.findIndex(c => String(c).includes('شماره') || String(c).includes('ردیف') || String(c).toUpperCase() === 'NO');
+          colSp = r.findIndex(c => String(c).includes('گونه') || String(c).includes('جنس') || String(c).toUpperCase() === 'SP');
+          colDs = r.findIndex(c => String(c).includes('توضیح') || String(c).includes('ملاحظات'));
+          break;
+        }
+      }
+
+      if (headerRowIdx !== -1) {
+        for (let i = headerRowIdx + 1; i < rows.length; i++) {
+          const r = rows[i];
+          if (!r || r.length === 0) continue;
+          if (String(r[colD]).includes('قطر') || String(r[colNo]).includes('جدول')) continue;
+
+          const d = parseFloat(String(r[colD]).replace(/[^0-9.]/g, ''));
+          const h = parseFloat(String(r[colH]).replace(/[^0-9.]/g, '')) || 0;
+
+          if (d > 0) {
+            extractedData.push({
+              no: colNo !== -1 && r[colNo] ? String(r[colNo]).trim() : '',
+              sp: colSp !== -1 && r[colSp] ? String(r[colSp]).trim() : '', // خالی اگر پیدا نشد
+              d: d,
+              h: h,
+              ds: colDs !== -1 && r[colDs] ? String(r[colDs]).trim() : ''
+            });
+          }
         }
       }
     } 
+    // ۲. پردازش ورد (Word)
     else if (file.name.endsWith('.docx')) {
       btn.innerHTML = '⏳ در حال خواندن ورد...';
       const zip = await JSZip.loadAsync(await file.arrayBuffer());
@@ -1379,19 +1441,37 @@ document.getElementById('smartImportFile').onchange = async (e) => {
       const matches = text.match(/\d+(\.\d+)?\s+\d+(\.\d+)?/g) || [];
       matches.forEach(m => {
         const nums = m.trim().split(/\s+/).map(Number);
-        if (nums.length >= 2) extractedData.push({ sp: 'نامشخص', d: nums[0], h: nums[1] });
+        if (nums.length >= 2) extractedData.push({ no:'', sp: '', d: nums[0], h: nums[1], ds: '' });
       });
     }
+    // ۳. پردازش عکس با بهبود کیفیت
     else if (file.type.startsWith('image/')) {
-      btn.innerHTML = '⏳ در حال خواندن عکس (ممکن است زمان‌بر باشد)...';
-      const result = await Tesseract.recognize(file, 'fas+eng', { logger: m => console.log(m) });
+      btn.innerHTML = '⏳ در حال بهینه‌سازی عکس...';
+      const processedImage = await preprocessImage(file); // بهینه‌سازی عکس
+      
+      btn.innerHTML = '⏳ در حال خواندن اعداد (OCR)...';
+      const result = await Tesseract.recognize(processedImage, 'eng+fas', { logger: m => console.log(m) });
       const text = result.data.text;
       const lines = text.split('\n');
       
       lines.forEach(line => {
-        const matches = line.match(/\d+(\.\d+)?/g);
+        // استخراج تمام اعداد از خط
+        const matches = line.match(/\d+(?:\.\d+)?/g);
         if (matches && matches.length >= 2) {
-          extractedData.push({ sp: 'نامشخص', d: parseFloat(matches[0]), h: parseFloat(matches[1]) });
+          // اگر ۳ عدد بود، عدد اول شماره است، دومی قطر و سومی طول
+          let no = '', d = 0, h = 0;
+          if (matches.length >= 3) {
+            no = matches[0];
+            d = parseFloat(matches[1]);
+            h = parseFloat(matches[2]);
+          } else {
+            d = parseFloat(matches[0]);
+            h = parseFloat(matches[1]);
+          }
+          
+          if (d > 0) {
+            extractedData.push({ no: no, sp: '', d: d, h: h, ds: 'عکس' });
+          }
         }
       });
     }
@@ -1399,7 +1479,7 @@ document.getElementById('smartImportFile').onchange = async (e) => {
     btn.innerHTML = originalText;
 
     if (extractedData.length === 0) {
-      alert('هیچ داده معتبری پیدا نشد. لطفاً از فایل یا عکس واضح‌تری استفاده کنید یا فیلدها را دستی وارد کنید.');
+      alert('داده‌ای پیدا نشد. لطفاً از فایل یا عکس واضح‌تری استفاده کنید.');
       return;
     }
 
@@ -1412,32 +1492,35 @@ document.getElementById('smartImportFile').onchange = async (e) => {
   }
 };
 
+// تابع نمایش جدول بازبینی دوزبانه
 function showImportPreview(data) {
   const ov = document.createElement('div');
-  ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#0009;display:flex;flex-direction:column;padding:16px;';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#0009;display:flex;flex-direction:column;padding:12px;';
   ov.innerHTML = `
-    <div style="background:var(--sf);border-radius:14px;padding:16px;flex:1;display:flex;flex-direction:column;max-height:90vh;">
+    <div style="background:var(--sf);border-radius:14px;padding:16px;flex:1;display:flex;flex-direction:column;max-height:95vh;">
       <h3 style="margin:0 0 10px 0;color:var(--ac)">بازبینی داده‌های خوانده شده</h3>
-      <p class="m" style="margin:0 0 10px 0;color:#d33;font-size:12px;">⚠️ اعداد زیر توسط هوش مصنوعی خوانده شده‌اند. اگر فیلدی خالی یا اشتباه است، همین‌جا اصلاح کنید.</p>
+      <p class="m" style="margin:0 0 10px 0;color:#d33;font-size:12px;">⚠️ فیلدهای خالی را می‌توانید همین‌جا پر کنید. (D = قطر، H = ارتفاع، Sp = گونه)</p>
       
       <div style="flex:1;overflow:auto;border:1px solid var(--bd);border-radius:8px;">
-        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap;">
           <thead style="position:sticky;top:0;background:var(--bg);z-index:2;">
             <tr>
-              <th style="padding:6px;">#</th>
-              <th style="padding:6px;">گونه</th>
-              <th style="padding:6px;">قطر (cm)</th>
-              <th style="padding:6px;">ارتفاع (m)</th>
-              <th style="padding:6px;">حذف</th>
+              <th style="padding:6px;border-bottom:1px solid var(--bd);">شماره (No)</th>
+              <th style="padding:6px;border-bottom:1px solid var(--bd);">گونه (Sp)</th>
+              <th style="padding:6px;border-bottom:1px solid var(--bd);">قطر (D - cm)</th>
+              <th style="padding:6px;border-bottom:1px solid var(--bd);">ارتفاع (H - m)</th>
+              <th style="padding:6px;border-bottom:1px solid var(--bd);">توضیحات (Notes)</th>
+              <th style="padding:6px;border-bottom:1px solid var(--bd);">حذف</th>
             </tr>
           </thead>
           <tbody id="impTbBody">
             ${data.map((item, i) => `
               <tr style="border-bottom:1px solid var(--bd);">
-                <td style="padding:4px;text-align:center;">${i+1}</td>
-                <td style="padding:4px;"><input type="text" class="imp-sp" value="${item.sp}" style="padding:4px;text-align:center;width:80px;"></td>
-                <td style="padding:4px;"><input type="number" class="imp-d" value="${item.d || ''}" style="padding:4px;text-align:center;width:70px;"></td>
-                <td style="padding:4px;"><input type="number" class="imp-h" value="${item.h || ''}" style="padding:4px;text-align:center;width:70px;"></td>
+                <td style="padding:4px;"><input type="text" class="imp-no" value="${item.no || ''}" placeholder="—" style="padding:4px;text-align:center;width:50px;"></td>
+                <td style="padding:4px;"><input type="text" class="imp-sp" value="${item.sp || ''}" placeholder="—" style="padding:4px;text-align:center;width:70px;"></td>
+                <td style="padding:4px;"><input type="number" class="imp-d" value="${item.d || ''}" placeholder="—" style="padding:4px;text-align:center;width:60px;"></td>
+                <td style="padding:4px;"><input type="number" class="imp-h" value="${item.h || ''}" placeholder="—" style="padding:4px;text-align:center;width:60px;"></td>
+                <td style="padding:4px;"><input type="text" class="imp-ds" value="${item.ds || ''}" placeholder="—" style="padding:4px;text-align:center;width:100px;"></td>
                 <td style="padding:4px;text-align:center;"><button class="x" onclick="this.closest('tr').remove()">×</button></td>
               </tr>
             `).join('')}
@@ -1447,7 +1530,7 @@ function showImportPreview(data) {
       
       <div class="r" style="margin-top:12px;">
         <button id="impCancel" class="o">انصراف</button>
-        <button id="impConfirm" style="background:#2e9d4f;">تایید و افزودن به سیاهه</button>
+        <button id="impConfirm" style="background:#2e9d4f;font-weight:bold;">تایید و افزودن به سیاهه</button>
       </div>
     </div>
   `;
@@ -1460,15 +1543,20 @@ function showImportPreview(data) {
     let added = 0;
     
     rows.forEach(tr => {
-      const sp = tr.querySelector('.imp-sp').value.trim() || 'نامشخص';
+      const no = tr.querySelector('.imp-no').value.trim();
+      let sp = tr.querySelector('.imp-sp').value.trim();
       const d = parseFloat(tr.querySelector('.imp-d').value);
-      const h = parseFloat(tr.querySelector('.imp-h').value);
+      const h = parseFloat(tr.querySelector('.imp-h').value) || 0;
+      const ds = tr.querySelector('.imp-ds').value.trim();
       
-      if (d > 0 && h > 0) {
+      if (d > 0) {
+        // اگر گونه خالی بود، پیش‌فرض بگذاریم نامشخص تا محاسبه حجم کار کند
+        if (!sp) sp = 'نامشخص'; 
+        
         const newId = T.reduce((a, t) => Math.max(a, t.id), 0) + 1;
         const newTree = {
-          id: newId, no: '', sp: sp, g: (SP[sp] || [0,3])[1], ty: d < 20 ? 'h' : 'i', n: 1,
-          d: d, h: h, f: 0.5, v: volSp(sp, d, h), ds: 'ورود از فایل',
+          id: newId, no: no, sp: sp, g: (SP[sp] || [0,3])[1], ty: d < 20 ? 'h' : 'i', n: 1,
+          d: d, h: h, f: 0.5, v: volSp(sp, d, h), ds: ds,
           lat: null, lng: null, ux: null, uy: null, uz: null, ua: null, dt: new Date().toISOString().slice(0,10)
         };
         T.push(newTree);
@@ -1481,12 +1569,9 @@ function showImportPreview(data) {
       draw();  
       alert(`تعداد ${toFa(added)} درخت با موفقیت به سیاهه اضافه شد.`);
     } else {
-      alert('هیچ سطر معتبری برای افزودن پیدا نشد.');
+      alert('هیچ سطر معتبری (با قطر بزرگتر از صفر) برای افزودن پیدا نشد.');
     }
     ov.remove();
   };
 }
 </script>
-
-</body>
-</html>
