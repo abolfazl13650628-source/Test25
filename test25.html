@@ -22,12 +22,12 @@ body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.7 Vazirmatn,Tahom
 /* Splash / Auth */
 #splash{position:fixed;inset:0;z-index:999;background:linear-gradient(135deg,#1d3b2a,#101a13);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;overflow-y:auto}
 .splash-title{text-align:center;color:#d4c88a;margin-bottom:20px;text-shadow:0 2px 4px rgba(0,0,0,0.5)}
-.splash-title h2{margin:0;font-size:20px;font-weight:700}
+.splash-title h2{margin:0;font-size:18px;font-weight:700}
 .splash-title p{margin:6px 0 0;font-size:14px;color:#f4ebc8}
 .auth-box{background:var(--sf);width:100%;max-width:360px;border-radius:16px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,.3);text-align:center}
 .auth-box h3{margin:0 0 16px;color:var(--ac);font-size:18px}
 .auth-box input{width:100%;padding:12px;margin-bottom:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);text-align:left;direction:ltr;font-family:sans-serif}
-.auth-box button{width:100%;padding:12px;margin-bottom:10px;font-size:15px;font-weight:700}
+.auth-box button{width:100%;padding:12px;margin-bottom:10px;font-size:15px;font-weight:700;cursor:pointer}
 .auth-box .err{color:#d33;font-size:13px;margin-bottom:10px;min-height:18px;text-align:right}
 .auth-box .divider{display:flex;align-items:center;margin:15px 0;color:var(--mu);font-size:12px}
 .auth-box .divider::before,.auth-box .divider::after{content:'';flex:1;height:1px;background:var(--bd);margin:0 10px}
@@ -35,7 +35,7 @@ body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.7 Vazirmatn,Tahom
 button{font:inherit;background:var(--ac);color:var(--ac2);border:0;border-radius:10px;padding:10px 16px;cursor:pointer}
 button.o{background:none;color:var(--ac);border:1px solid var(--ac)}button.x{background:#b3402f;color:#fff;padding:2px 8px}
 
-#app{max-width:640px;margin:auto;padding:12px 12px 80px;display:none} /* مخفی تا زمان ورود */
+#app{max-width:640px;margin:auto;padding:12px 12px 80px;display:none}
 #topbar{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:2}
 #sheetbar{display:flex;gap:4px;overflow-x:auto;padding:4px 0 6px;align-items:center;scrollbar-width:none}
 #sheetbar::-webkit-scrollbar{display:none}
@@ -108,19 +108,23 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
 #aov input{width:100%;margin:4px 0 10px;direction:ltr;text-align:left}
 #aer{color:#b3261e;min-height:20px;font-size:13px}
 
-/* Manual Coords */
 #manualCoordArea{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:10px;margin-top:8px;display:flex;flex-direction:column;gap:6px}
 .mc-row{display:flex;gap:6px;align-items:center}
 .mc-row input{padding:6px;font-size:13px;text-align:center}
 </style>
-<!-- کتابخانه‌ها -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-<script>
-  if (typeof pdfjsLib !== 'undefined') pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+<!-- استفاده از defer برای اینکه لود شدن کتابخانه‌ها باعث قفل شدن دکمه‌های ورود نشود -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js" defer></script>
+<script defer>
+  window.addEventListener('DOMContentLoaded', () => {
+    if (typeof pdfjsLib !== 'undefined') {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    }
+  });
 </script>
 </head>
 <body>
@@ -136,15 +140,19 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
     <p>تنظیم هادی آقاجانی</p>
   </div>
   <div class="auth-box">
-    <h3>ورود به حساب کاربری</h3>
+    <h3>ورود به برنامه</h3>
     <input id="splashUser" placeholder="نام کاربری (انگلیسی)" autocomplete="username">
     <input id="splashPass" type="password" placeholder="رمز عبور" autocomplete="current-password">
     <div id="splashErr" class="err"></div>
-    <button id="splashLogin">ورود</button>
-    <button id="splashSignup" class="o">ثبت‌نام</button>
+    
+    <!-- دکمه‌ها مستقیماً به توابع متصل شدند تا در هر شرایطی کار کنند -->
+    <button type="button" id="splashLogin" onclick="window.doSplashAuth(false)">ورود آنلاین</button>
+    <button type="button" id="splashSignup" class="o" onclick="window.doSplashAuth(true)">ثبت‌نام آنلاین</button>
+    
     <div class="divider">یا</div>
-    <button id="splashGuest" style="background:#5c6b5f">ورود مهمان (آفلاین)</button>
-    <div class="m" style="margin-top:10px">با ورود مهمان، داده‌ها فقط روی گوشی ذخیره می‌شوند. بعداً می‌توانید از بالای برنامه وارد حساب شوید.</div>
+    
+    <button type="button" id="splashGuest" style="background:#5c6b5f" onclick="window.doGuestLogin()">ورود مهمان (آفلاین)</button>
+    <div class="m" style="margin-top:10px">با ورود مهمان، داده‌ها فقط روی گوشی ذخیره می‌شوند. بعداً می‌توانید از بالای برنامه وارد حساب آنلاین شوید.</div>
   </div>
 </div>
 
@@ -153,7 +161,6 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
 <div id="sheetbar"></div>
 <nav><button data-t="m" class="on">نشانه‌گذاری</button><button data-t="l">دریافت سیاهه</button><button data-t="h">تجدید و استحصال</button></nav>
 
-<!-- قطب‌نما -->
 <div id="compassWrap">
   <div style="flex:1;display:flex;align-items:center;gap:10px">
     <div class="compass">
@@ -312,6 +319,7 @@ input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--bd);bord
 <div class="c"><div class="tw"><table id="tb2"></table></div><br><button id="e2">خروجی اکسل</button><div class="m xs"></div></div></section>
 </div>
 
+<!-- اسکریپت‌های اصلی برنامه -->
 <script>
 const $=s=>document.querySelector(s),fa=(n,m=2)=>(n!==null&&n!==undefined&&n!==''&&isFinite(n))?Number(n).toLocaleString('fa-IR',{maximumFractionDigits:m}):'—';
 const toFa=s=>String(s).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]).replace(/\./g,'٫'),toEn=s=>String(s).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٫،,]/g,'.');
@@ -940,7 +948,6 @@ const autoTy=()=>{if(!tyM)$('#ty').value=(N('#d')>0&&N('#d')<20)?'h':'i';autoNo(
 $('#no').addEventListener('input',()=>{noM=true});
 const ff=()=>(SP[$('#sp').value]||[.5])[0];
 
-// ورود داده‌ها
 document.getElementById('btnSmartImport').onclick = () => document.getElementById('smartImportFile').click();
 document.getElementById('smartImportFile').onchange = async (e) => {
   const file = e.target.files[0]; if (!file) return; e.target.value = ''; 
@@ -1107,7 +1114,6 @@ if(refType==='custom')$('#refSize').classList.remove('hid');
 updateModeUI();act=getDef()[0][0];setStep(1);$('#sp').onchange();draw();mapCheck();updateGpsUI();updateTotSummary();
 $('#ga').textContent='نمایش مختصات';$('#ga').classList.add('o');
 
-// بکاپ و SNAPS
 let SNAPS=[];try{SNAPS=JSON.parse(localStorage.getItem('snaps')||'[]')}catch(e){}
 function saveSnaps(){try{localStorage.setItem('snaps',JSON.stringify(SNAPS));stWarn(false)}catch(e){stWarn(true)}}
 function renderSnaps(){const el=$('#savedList');if(!el)return;if(!SNAPS.length){el.innerHTML='<div class="m">هنوز موردی ذخیره نشده است.</div>';return}el.innerHTML=SNAPS.slice().reverse().map(s=>`<div class="sitem"><div class="sinfo"><b>${esc(s.name)}</b><small>${toFa((s.trees||[]).length)} درخت</small></div><button class="o" style="padding:4px 10px;font-size:12px" data-load="${s.id}">باز کردن</button><button class="x" data-del="${s.id}">×</button></div>`).join('');el.querySelectorAll('[data-load]').forEach(b=>b.onclick=()=>loadSnap(+b.dataset.load));el.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const id=+b.dataset.del;if(!confirm('حذف شود؟'))return;SNAPS=SNAPS.filter(s=>s.id!==id);saveSnaps();renderSnaps()});}
@@ -1143,7 +1149,7 @@ $('#e3').onclick=safe(()=>{ saveActive(); const used=new Set(),out=[],all=[],o=T
 $('#e2').onclick=safe(()=>exp('harvest-'+fnm(),[['تجدید و استحصال',[['شماره','گونه','دسته','حجم اولیه (مترمکعب)','قطر جدید','ارتفاع جدید','حجم تجدید (مترمکعب)','تغییر %','حجم استحصال (مترمکعب)','تاریخ استحصال','یادداشت']].concat(T.filter(t=>t.v2||t.hv).map(t=>[t.ty==='h'?'هیزمی':(t.no||''),t.sp,G[t.g],R3(t.v),t.d2||'',t.h2||'',t.v2?R3(t.v2):'',t.v2?+((t.v2-t.v)/t.v*100).toFixed(1):'',t.hv||'',t.hd||'',t.hn||'']))]]));
 </script>
 
-<!-- همگام‌سازی Supabase و مدیریت اسپلش -->
+<!-- همگام‌سازی Supabase و احراز هویت -->
 <script>
 (function(){
 const SB_URL='https://hgzdghjkwzufdhmjcfaz.supabase.co'.trim();
@@ -1232,7 +1238,7 @@ const row=s=>({user_id:S.uid,uid:s.uid,name:s.name,data:{trees:s.trees||[],map:s
 
 function ui(){
   if(!S){
-    A.innerHTML='<button id="aIn" class="o">☁️ ورود / ثبت‌نام</button>';
+    A.innerHTML='<button id="aIn" class="o">☁️ ورود / ثبت‌نام آنلاین</button>';
     A.querySelector('#aIn').onclick=login;return;
   }
   A.innerHTML='<span>☁️ '+esc(S.name)+' · '+msg+'</span><button id="aSy" class="o">همگام‌سازی</button><button id="aOut" class="o">خروج</button>';
@@ -1242,24 +1248,54 @@ function ui(){
 
 function login(){
   const o=document.createElement('div');o.id='aov';
-  o.innerHTML='<div class="bx"><b>حساب کاربری</b><input id="aU" placeholder="نام کاربری" autocomplete="username"><input id="aP" type="password" placeholder="رمز عبور"><div id="aer"></div><div class="r"><button id="aL">ورود</button><button id="aR" class="o">ثبت‌نام</button><button id="aC" class="o">انصراف</button></div></div>';
+  o.innerHTML='<div class="bx"><b>حساب کاربری</b><input id="aU" placeholder="نام کاربری" autocomplete="username"><input id="aP" type="password" placeholder="رمز عبور"><div id="aer"></div><div class="r"><button id="aL" onclick="window.doAuthAction(false)">ورود</button><button id="aR" class="o" onclick="window.doAuthAction(true)">ثبت‌نام</button><button class="o" onclick="this.closest(\'#aov\').remove()">انصراف</button></div></div>';
   document.body.append(o);
-  const go=async su=>{
-    const u=o.querySelector('#aU').value.trim().toLowerCase();
-    const p=o.querySelector('#aP').value,er=o.querySelector('#aer');
-    if(!/^[a-z0-9._-]{3,30}$/.test(u)){er.textContent='نام کاربری انگلیسی ۳-۳۰ حرف';return}
-    if(p.length<6){er.textContent='رمز کوتاه است.';return}
-    er.textContent='…';
-    try{
-      const j=await api(su?'/auth/v1/signup':'/auth/v1/token?grant_type=password','POST',{email:em(u),password:p});
-      if(!j.access_token)throw new Error('تایید ایمیل خاموش نیست.');
-      setS(j,u);o.remove();msg='';ui();sync();
-    }catch(e){er.textContent=fe(e)}
-  };
-  o.querySelector('#aL').onclick=()=>go(false);
-  o.querySelector('#aR').onclick=()=>go(true);
-  o.querySelector('#aC').onclick=()=>o.remove();
 }
+
+// توابع سراسری که مستقیماً توسط دکمه‌های HTML فراخوانی می‌شوند
+window.doGuestLogin = function() {
+  document.getElementById('splash').style.display='none';
+  document.getElementById('app').style.display='block';
+};
+
+window.doSplashAuth = async function(isSignup) {
+  const u = document.getElementById('splashUser').value.trim().toLowerCase();
+  const p = document.getElementById('splashPass').value;
+  const er = document.getElementById('splashErr');
+  
+  if(!/^[a-z0-9._-]{3,30}$/.test(u)){er.textContent='نام کاربری انگلیسی ۳-۳۰ حرف';return}
+  if(p.length<6){er.textContent='رمز کوتاه است.';return}
+  
+  er.textContent='در حال اتصال...';
+  try{
+    const j=await api(isSignup?'/auth/v1/signup':'/auth/v1/token?grant_type=password','POST',{email:em(u),password:p});
+    if(!j.access_token)throw new Error('تایید ایمیل خاموش نیست.');
+    setS(j,u);
+    er.textContent='';
+    document.getElementById('splash').style.display='none';
+    document.getElementById('app').style.display='block';
+    ui(); sync();
+  }catch(e){er.textContent=fe(e)}
+};
+
+window.doAuthAction = async function(isSignup) {
+  const u = document.getElementById('aU').value.trim().toLowerCase();
+  const p = document.getElementById('aP').value;
+  const er = document.getElementById('aer');
+  
+  if(!/^[a-z0-9._-]{3,30}$/.test(u)){er.textContent='نام کاربری انگلیسی ۳-۳۰ حرف';return}
+  if(p.length<6){er.textContent='رمز کوتاه است.';return}
+  
+  er.textContent='در حال اتصال...';
+  try{
+    const j=await api(isSignup?'/auth/v1/signup':'/auth/v1/token?grant_type=password','POST',{email:em(u),password:p});
+    if(!j.access_token)throw new Error('تایید ایمیل خاموش نیست.');
+    setS(j,u);
+    er.textContent='';
+    document.getElementById('aov').remove();
+    ui(); sync();
+  }catch(e){er.textContent=fe(e)}
+};
 
 async function logout(){
   const ok=await sync();
@@ -1275,29 +1311,6 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync()});
 setInterval(sync,90000);
 ui();
 
-// مدیریت صفحه Splash و دکمه‌ها
-window.splashGo = async (su) => {
-  const u = document.getElementById('splashUser').value.trim().toLowerCase();
-  const p = document.getElementById('splashPass').value;
-  const er = document.getElementById('splashErr');
-  if(!/^[a-z0-9._-]{3,30}$/.test(u)){er.textContent='نام کاربری انگلیسی ۳-۳۰ حرف';return}
-  if(p.length<6){er.textContent='رمز کوتاه است.';return}
-  er.textContent='…';
-  try{
-    const j=await api(su?'/auth/v1/signup':'/auth/v1/token?grant_type=password','POST',{email:em(u),password:p});
-    if(!j.access_token)throw new Error('تایید ایمیل خاموش نیست.');
-    setS(j,u);
-    document.getElementById('splash').style.display='none';
-    document.getElementById('app').style.display='block';
-    ui(); sync();
-  }catch(e){er.textContent=fe(e)}
-};
-
-window.splashGuest = () => {
-  document.getElementById('splash').style.display='none';
-  document.getElementById('app').style.display='block';
-};
-
 // باز کردن خودکار برنامه اگر از قبل لاگین بوده
 if(S) {
   document.getElementById('splash').style.display='none';
@@ -1305,11 +1318,6 @@ if(S) {
   sync();
 }
 })();
-
-// اتصال دکمه‌های HTML به توابع (مستقل از دیتابیس تا هرگز از کار نیفتد)
-document.getElementById('splashLogin').onclick = () => window.splashGo(false);
-document.getElementById('splashSignup').onclick = () => window.splashGo(true);
-document.getElementById('splashGuest').onclick = () => window.splashGuest();
 </script>
 
 </body>
