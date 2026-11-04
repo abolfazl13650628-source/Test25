@@ -14,7 +14,50 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101a13;--sf:#18251c;--tx:#e8f0e9;--mu:#9fb2a3;--ac:#5fb374;--ac2:#08140b;--bd:#2b3d30;color-scheme:dark}}
 :root[data-theme="dark"]{--bg:#101a13;--sf:#18251c;--tx:#e8f0e9;--mu:#9fb2a3;--ac:#5fb374;--ac2:#08140b;--bd:#2b3d30;color-scheme:dark}
 *{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.7 Vazirmatn,Tahoma,sans-serif}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.7 Vazirmatn,Tahoma,sans-serif;transition:background 0.3s ease}
+
+/* --- BACKGROUND MODE --- */
+body.home-mode {
+  background: linear-gradient(rgba(16,26,19,.45), rgba(16,26,19,.65)), url('forest.jpg') center/cover no-repeat fixed;
+}
+body.home-mode #app-header, body.home-mode .top-bar-actions, body.home-mode nav, body.home-mode #gpsStrip {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  border-radius: 16px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) body.home-mode #app-header,
+  :root:not([data-theme="light"]) body.home-mode .top-bar-actions,
+  :root:not([data-theme="light"]) body.home-mode nav,
+  :root:not([data-theme="light"]) body.home-mode #gpsStrip {
+    background: rgba(24, 37, 28, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+}
+:root[data-theme="dark"] body.home-mode #app-header,
+:root[data-theme="dark"] body.home-mode .top-bar-actions,
+:root[data-theme="dark"] body.home-mode nav,
+:root[data-theme="dark"] body.home-mode #gpsStrip {
+  background: rgba(24, 37, 28, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+body.home-mode nav { padding: 8px; }
+body.home-mode nav button { border: none; }
+body.home-mode #app-header h1, body.home-mode #app-header .meta span, body.home-mode #app-header .dhikr { color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.5); }
+body.home-mode #app-header .meta span { background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.2); }
+body.home-mode .mode-toggle { background: rgba(0,0,0,0.2); border-color: rgba(255,255,255,0.2); }
+body.home-mode .mode-toggle button { color: #fff; }
+body.home-mode .mode-toggle button.on { background: var(--ac); color: #fff; }
+body.home-mode #acct { color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.5); }
+body.home-mode #acct button { border-color: rgba(255,255,255,0.5); color: #fff; background: rgba(0,0,0,0.3); }
+body.home-mode #gpsStrip { flex-wrap: wrap; }
+body.home-mode #gpsStripTxt { color: #fff; }
+body.home-mode .sbtn { border-color: rgba(255,255,255,0.5); color: #fff; background: rgba(0,0,0,0.3); }
 
 /* Splash (Login) */
 #splash{position:fixed;inset:0;z-index:999;background:linear-gradient(135deg,#1d3b2a,#101a13);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;overflow-y:auto}
@@ -30,7 +73,7 @@ button{font:inherit;background:var(--ac);color:var(--ac2);border:0;border-radius
 button.o{background:none;color:var(--ac);border:1px solid var(--ac)}button.x{background:#b3402f;color:#fff;padding:2px 8px}
 
 /* App Layout */
-#app{max-width:640px;margin:auto;padding:12px 12px 150px;display:none}
+#app{max-width:640px;margin:auto;padding:12px 12px 150px;display:none;min-height:100vh}
 #app-header{text-align:center;margin-bottom:10px}
 #app-header h1{font-family:'Amiri',serif;font-size:22px;color:var(--ac);margin:0 0 4px}
 #app-header .meta{font-size:12px;color:var(--mu);display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
@@ -43,8 +86,6 @@ button.o{background:none;color:var(--ac);border:1px solid var(--ac)}button.x{bac
 .mode-toggle button.on{background:var(--ac);color:var(--ac2)}
 .mode-toggle.locked{opacity:0.7;cursor:not-allowed}
 .mode-toggle.locked::after{content:'🔒';position:absolute;top:-6px;right:-6px;font-size:14px;background:var(--sf);border-radius:50%;padding:2px;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-
-#forestBanner{height:180px;border-radius:14px;margin:12px 0;background:linear-gradient(rgba(16,26,19,.3),rgba(16,26,19,.5)),url('forest.jpg') center/cover no-repeat,#2f6b3c;position:relative;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;text-shadow:0 1px 3px rgba(0,0,0,.8)}
 
 #topbar{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:2}
 #sheetbar{display:flex;gap:4px;overflow-x:auto;padding:4px 0 6px;align-items:center;scrollbar-width:none}
@@ -251,8 +292,6 @@ input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:3
     <button id="gTog" class="o sbtn hid" type="button" title="مخفی کردن مختصات">▴</button>
     <button id="cmpTog" class="o sbtn" type="button" title="نمایش قطب‌نما و قبله‌نما">🧭 قطب‌نما</button>
   </div>
-
-  <div id="forestBanner"></div>
 
   <div id="bn" class="hid"></div>
   <div id="sw" class="hid" style="background:#f8d7da;color:#58151c;border-radius:10px;padding:8px 10px;margin:8px 0"></div>
@@ -1806,6 +1845,8 @@ $('#refType').value=refType;
 if(refType==='custom')$('#refSize').classList.remove('hid');
 updateModeUI();act=getDef()[0][0];setStep(1);$('#sp').onchange();draw();mapCheck();updateGpsUI();updateTotSummary();
 updateModeLock(); // Lock if there are trees in initial load
+document.body.classList.add('home-mode'); // Start in Home Mode with BG
+
 $('#ga').textContent='📍 مختصات';$('#ga').classList.add('o');
 
 const DL={save:async({filename,data})=>{const u=URL.createObjectURL(data),a=document.createElement('a');a.href=u;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000)}};
@@ -2019,9 +2060,9 @@ $('#e2s').onclick=safe(()=>exp('harvest-'+fnm(),harvestSheets(),true));
 
 document.querySelectorAll('nav button').forEach(b=>{
   b.onclick=()=>{
+    document.body.classList.remove('home-mode'); // Remove background
     document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
     ['m','l','h'].forEach(k=>{const s=document.getElementById('sec-'+k);if(s)s.classList.toggle('hid',k!==b.dataset.t)});
-    document.getElementById('forestBanner').classList.toggle('hid', b.dataset.t !== null); // Hide image when any tab is selected
   };
 });
 
@@ -2194,6 +2235,7 @@ window.splashGo = async (su) => {
     setS(j,u);
     document.getElementById('splash').style.display='none';
     document.getElementById('app').style.display='block';
+    document.body.classList.add('home-mode');
     ui(); sync();
   }catch(e){er.textContent=fe(e)}
 };
@@ -2201,11 +2243,13 @@ window.splashGo = async (su) => {
 window.splashGuest = () => {
   document.getElementById('splash').style.display='none';
   document.getElementById('app').style.display='block';
+  document.body.classList.add('home-mode');
 };
 
 if(S) {
   document.getElementById('splash').style.display='none';
   document.getElementById('app').style.display='block';
+  document.body.classList.add('home-mode');
   sync();
 }
 })();
