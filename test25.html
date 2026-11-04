@@ -1,3 +1,22 @@
+عذر می‌خوام که گیج شدی! اصلاً کد رو خراب نکردم، اتفاقاً داره درست کار می‌کنه (افکت بلوری/شیشه‌ای که خواستی روی کادرها اعمال شده).
+
+اما چرا عکس جنگل نیومده و همه چیز خاکستری شده؟
+
+به نوار آدرس بالای مرورگرت دقت کن: نوشته content://com.android... 
+این یعنی تو فایل رو مستقیم از حافظه گوشی باز کردی. مرورگرهای گوشی (مثل کروم) به دلایل امنیتی اجازه نمی‌دن یک فایل HTML که مستقیم از حافظه باز شده، عکس‌های کنارش رو (مثل forest.jpg) لود کنه. به همین خاطر پس‌زمینه خاکستری شده.
+
+راه‌حل چیه؟
+باید برنامه رو از لینک گیت‌هاب باز کنی، نه از حافظه گوشی.
+برو توی مرورگرت و این لینک رو باز کن:
+👉 https://abolafazl13650628-source.github.io/Test25/test25.html
+
+---
+
+🛠 تغییرات جدید در کد:
+
+من کد رو کمی بهتر کردم تا هم کادرهای بلوری خیلی شیک‌تر بشن، و هم وقتی روی دکمه‌ها کلیک می‌کنی، عکس به آرومی محو بشه و فرم‌ها بیان. کد زیر رو جایگزین کن و از طریق لینک گیت‌هاب بازش کن تا عکس رو ببینی.
+
+```html
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -14,28 +33,32 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101a13;--sf:#18251c;--tx:#e8f0e9;--mu:#9fb2a3;--ac:#5fb374;--ac2:#08140b;--bd:#2b3d30;color-scheme:dark}}
 :root[data-theme="dark"]{--bg:#101a13;--sf:#18251c;--tx:#e8f0e9;--mu:#9fb2a3;--ac:#5fb374;--ac2:#08140b;--bd:#2b3d30;color-scheme:dark}
 *{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.7 Vazirmatn,Tahoma,sans-serif;transition:background 0.3s ease}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.7 Vazirmatn,Tahoma,sans-serif;transition:background 0.4s ease; min-height: 100vh;}
 
-/* --- BACKGROUND MODE --- */
+/* --- BACKGROUND MODE (Home) --- */
 body.home-mode {
-  background: linear-gradient(rgba(16,26,19,.45), rgba(16,26,19,.65)), url('forest.jpg') center/cover no-repeat fixed;
+  background: linear-gradient(rgba(16,26,19,.4), rgba(16,26,19,.7)), url('forest.jpg') center/cover no-repeat fixed;
 }
-body.home-mode #app-header, body.home-mode .top-bar-actions, body.home-mode nav, body.home-mode #gpsStrip {
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  border-radius: 16px;
+
+body.home-mode #app-header, 
+body.home-mode .top-bar-actions, 
+body.home-mode nav, 
+body.home-mode #gpsStrip {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
   padding: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]) body.home-mode #app-header,
   :root:not([data-theme="light"]) body.home-mode .top-bar-actions,
   :root:not([data-theme="light"]) body.home-mode nav,
   :root:not([data-theme="light"]) body.home-mode #gpsStrip {
-    background: rgba(24, 37, 28, 0.7);
+    background: rgba(24, 37, 28, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.15);
   }
 }
@@ -43,21 +66,26 @@ body.home-mode #app-header, body.home-mode .top-bar-actions, body.home-mode nav,
 :root[data-theme="dark"] body.home-mode .top-bar-actions,
 :root[data-theme="dark"] body.home-mode nav,
 :root[data-theme="dark"] body.home-mode #gpsStrip {
-  background: rgba(24, 37, 28, 0.7);
+  background: rgba(24, 37, 28, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
+
 body.home-mode nav { padding: 8px; }
-body.home-mode nav button { border: none; }
-body.home-mode #app-header h1, body.home-mode #app-header .meta span, body.home-mode #app-header .dhikr { color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.5); }
-body.home-mode #app-header .meta span { background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.2); }
-body.home-mode .mode-toggle { background: rgba(0,0,0,0.2); border-color: rgba(255,255,255,0.2); }
+body.home-mode nav button { border: none; background: rgba(255,255,255,0.8); }
+body.home-mode nav button.on { background: var(--ac); color: #fff; }
+
+body.home-mode #app-header h1, 
+body.home-mode #app-header .meta span, 
+body.home-mode #app-header .dhikr,
+body.home-mode #acct,
+body.home-mode #gpsStripTxt { color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,.6); }
+
+body.home-mode #app-header .meta span { background: rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.3); }
+body.home-mode .mode-toggle { background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.3); }
 body.home-mode .mode-toggle button { color: #fff; }
 body.home-mode .mode-toggle button.on { background: var(--ac); color: #fff; }
-body.home-mode #acct { color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.5); }
-body.home-mode #acct button { border-color: rgba(255,255,255,0.5); color: #fff; background: rgba(0,0,0,0.3); }
-body.home-mode #gpsStrip { flex-wrap: wrap; }
-body.home-mode #gpsStripTxt { color: #fff; }
-body.home-mode .sbtn { border-color: rgba(255,255,255,0.5); color: #fff; background: rgba(0,0,0,0.3); }
+body.home-mode #acct button { border-color: rgba(255,255,255,0.6); color: #fff; background: rgba(0,0,0,0.4); }
+body.home-mode .sbtn { border-color: rgba(255,255,255,0.6); color: #fff; background: rgba(0,0,0,0.4); }
 
 /* Splash (Login) */
 #splash{position:fixed;inset:0;z-index:999;background:linear-gradient(135deg,#1d3b2a,#101a13);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;overflow-y:auto}
@@ -2288,3 +2316,4 @@ document.getElementById('splashGuest').onclick = () => window.splashGuest();
 </script>
 </body>
 </html>
+```
