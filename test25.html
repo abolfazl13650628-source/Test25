@@ -16,13 +16,8 @@
 *{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.7 Vazirmatn,Tahoma,sans-serif}
 
-#bismillah{background:linear-gradient(135deg,#2f6b3c 0%,#1d3b2a 55%,#152a1e 100%);padding:20px 16px 18px;display:flex;align-items:center;justify-content:center;position:relative;border-bottom:2px solid #d4c88a;box-shadow:0 2px 14px rgba(0,0,0,.18);overflow:hidden}
-#bismillah .bism{font-family:'Amiri',serif;font-size:26px;font-weight:700;color:#f4ebc8;text-shadow:0 2px 10px rgba(0,0,0,.55);line-height:1.7}
-
+/* Splash (Login) */
 #splash{position:fixed;inset:0;z-index:999;background:linear-gradient(135deg,#1d3b2a,#101a13);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;overflow-y:auto}
-.splash-title{text-align:center;color:#d4c88a;margin-bottom:20px;text-shadow:0 2px 4px rgba(0,0,0,0.5)}
-.splash-title h2{margin:0;font-size:20px;font-weight:700}
-.splash-title p{margin:6px 0 0;font-size:14px;color:#f4ebc8}
 .auth-box{background:var(--sf);width:100%;max-width:360px;border-radius:16px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,.3);text-align:center}
 .auth-box h3{margin:0 0 16px;color:var(--ac);font-size:18px}
 .auth-box input{width:100%;padding:12px;margin-bottom:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);text-align:left;direction:ltr;font-family:sans-serif}
@@ -34,7 +29,23 @@ body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.7 Vazirmatn,Tahom
 button{font:inherit;background:var(--ac);color:var(--ac2);border:0;border-radius:10px;padding:10px 16px;cursor:pointer}
 button.o{background:none;color:var(--ac);border:1px solid var(--ac)}button.x{background:#b3402f;color:#fff;padding:2px 8px}
 
+/* App Layout */
 #app{max-width:640px;margin:auto;padding:12px 12px 150px;display:none}
+#app-header{text-align:center;margin-bottom:10px}
+#app-header h1{font-family:'Amiri',serif;font-size:22px;color:var(--ac);margin:0 0 4px}
+#app-header .meta{font-size:12px;color:var(--mu);display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+#app-header .meta span{background:var(--sf);padding:2px 8px;border-radius:10px;border:1px solid var(--bd)}
+#app-header .dhikr{font-size:13px;font-weight:700;color:var(--ac);margin-top:4px}
+
+.top-bar-actions{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.mode-toggle{display:flex;background:var(--sf);border:1px solid var(--bd);border-radius:20px;overflow:hidden;position:relative;transition:all 0.3s}
+.mode-toggle button{background:none;color:var(--mu);padding:6px 12px;font-size:12px;border-radius:0}
+.mode-toggle button.on{background:var(--ac);color:var(--ac2)}
+.mode-toggle.locked{opacity:0.7;cursor:not-allowed}
+.mode-toggle.locked::after{content:'🔒';position:absolute;top:-6px;right:-6px;font-size:14px;background:var(--sf);border-radius:50%;padding:2px;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+
+#forestBanner{height:180px;border-radius:14px;margin:12px 0;background:linear-gradient(rgba(16,26,19,.3),rgba(16,26,19,.5)),url('forest.jpg') center/cover no-repeat,#2f6b3c;position:relative;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+
 #topbar{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:2}
 #sheetbar{display:flex;gap:4px;overflow-x:auto;padding:4px 0 6px;align-items:center;scrollbar-width:none}
 #sheetbar::-webkit-scrollbar{display:none}
@@ -48,7 +59,6 @@ nav{display:flex;gap:6px;background:var(--bg);padding:8px 0}
 nav button{flex:1;background:var(--sf);color:var(--tx);border:1px solid var(--bd)}nav button.on{background:var(--ac);color:var(--ac2)}
 
 #gpsStrip{padding:4px 8px;font-size:12px;text-align:center;border-top:1px solid var(--bd);background:var(--sf);border-radius:8px;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:4px}
-
 #compassWrap{display:flex;align-items:center;justify-content:space-between;background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:6px 10px;margin-bottom:6px;font-size:12px}
 .compass{width:36px;height:36px;border-radius:50%;border:2px solid var(--bd);position:relative;display:flex;align-items:center;justify-content:center;background:var(--bg)}
 .compass-needle{position:absolute;width:2px;height:28px;background:linear-gradient(to bottom, #d33 50%, #333 50%);transition:transform 0.1s linear;transform-origin:center}
@@ -158,6 +168,33 @@ input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:3
 #walkBox .gx{gap:4px!important}
 #walkBox b{font-size:16px!important}
 #walkBox small{font-size:10px!important}
+
+#saveTypeModal{position:fixed;inset:0;z-index:1001;background:#0009;display:flex;align-items:center;justify-content:center;padding:16px}
+#saveTypeModal .bx{background:var(--sf);color:var(--tx);border-radius:16px;padding:20px;width:100%;max-width:340px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+#saveTypeModal .bx h3{margin:0 0 8px;color:var(--ac);font-size:17px}
+#saveTypeModal .bx .sub{font-size:12px;color:var(--mu);margin-bottom:14px}
+#saveTypeModal .mbtn{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+#saveTypeModal .mbtn button{padding:16px;font-size:15px;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:4px}
+#saveTypeModal .mbtn button small{font-size:11px;opacity:.8;font-weight:400}
+#saveTypeModal .cancel{width:100%;padding:10px;font-size:13px}
+
+#newSheetModal{position:fixed;inset:0;z-index:1002;background:#0009;display:flex;align-items:center;justify-content:center;padding:16px}
+#newSheetModal .bx{background:var(--sf);color:var(--tx);border-radius:16px;padding:20px;width:100%;max-width:340px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+#newSheetModal .bx h3{margin:0 0 8px;color:var(--ac);font-size:17px}
+#newSheetModal .bx .sub{font-size:12px;color:var(--mu);margin-bottom:14px}
+#newSheetModal .mbtn{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+#newSheetModal .mbtn button{padding:16px;font-size:15px;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:4px}
+#newSheetModal .mbtn button small{font-size:11px;opacity:.8;font-weight:400}
+#newSheetModal .cancel{width:100%;padding:10px;font-size:13px}
+
+#volClassRow{margin-top:6px}
+#volClassRow select{font-size:13px}
+
+.taxCol{color:#b3261e;font-weight:700}
+.taxTotal{background:#fff3cd;border:1px solid #e0c56b;border-radius:10px;padding:10px;margin-top:8px;font-size:13px}
+.taxTotal table{font-size:12px}
+.taxTotal th{background:#f5e7b5}
+.plantedNote{background:#e3eef9;color:#1a4d7a;border-radius:8px;padding:6px 10px;margin-top:6px;font-size:12px;text-align:center}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
@@ -170,15 +207,7 @@ input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:3
 </head>
 <body>
 
-<div id="bismillah">
-  <div class="bism">بسم الله الرحمن الرحیم</div>
-</div>
-
 <div id="splash">
-  <div class="splash-title">
-    <h2>نسخه آزمایشی برآورد چوب آلات و درختان جنگلی</h2>
-    <p>تنظیم هادی آقاجانی</p>
-  </div>
   <div class="auth-box">
     <h3>ورود به حساب کاربری</h3>
     <input id="splashUser" placeholder="نام کاربری (انگلیسی)" autocomplete="username">
@@ -193,232 +222,357 @@ input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:3
 </div>
 
 <div id="app">
-<div id="acct"></div>
-<div id="topbar">
-<div id="sheetbar"></div>
-<nav><button data-t="m" class="on">نشانه‌گذاری</button><button data-t="l">دریافت سیاهه</button><button data-t="h">تجدید و استحصال</button></nav>
-<div id="gpsStrip">
-  <span id="gpsStripTxt"><span style="color:var(--mu)">◌ مختصات خاموش</span></span>
-  <button id="ga" class="o sbtn" type="button">📍 مختصات</button>
-  <button id="gTog" class="o sbtn hid" type="button" title="مخفی کردن مختصات">▴</button>
-  <button id="cmpTog" class="o sbtn" type="button" title="نمایش قطب‌نما و قبله‌نما">🧭 قطب‌نما</button>
-</div>
-</div>
-
-<div id="bn" class="hid"></div>
-<div id="sw" class="hid" style="background:#f8d7da;color:#58151c;border-radius:10px;padding:8px 10px;margin:8px 0"></div>
-
-<div id="sensors">
-  <div id="gb" class="gbox hid"><div class="gx"><div><small>X</small><b id="gX"></b></div><div><small>Y</small><b id="gY"></b></div><div><small>زون</small><b id="gZ"></b></div></div><div class="ac" id="gA"></div></div>
-  <div class="m hid" id="gs" style="margin-top:4px"></div>
-  <div id="compassWrap" class="hid">
-    <div class="cblk">
-      <div class="compass"><div class="compass-n">N</div><div id="compassNeedle" class="compass-needle"></div></div>
-      <div><div id="compassDeg">زاویه: --°</div></div>
+  <div id="app-header">
+    <h1>بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِیم</h1>
+    <div class="meta">
+      <span id="splashDate">تاریخ: ...</span>
+      <span id="splashDay">روز: ...</span>
     </div>
-    <div class="cblk" id="qiblaBlk" title="برای به‌روزرسانی موقعیت لمس کنید">
-      <div class="compass"><div id="qiblaNeedle" class="compass-needle qn"></div></div>
-      <div><div id="qiblaDeg">قبله: --°</div><div class="m" id="qiblaHint" style="font-size:10px"></div></div>
-    </div>
-    <div class="m" style="font-size:10px;flex:0 0 100%;text-align:center">برای دقت، گوشی را به شکل ۸ حرکت دهید • برای قبله، دایرهٔ قبله را لمس کنید</div>
+    <div class="dhikr" id="splashDhikr">ذکر روز: ...</div>
   </div>
-</div>
 
-<details class="c" id="mapDetails">
-  <summary>🗺️ نقشه، محدوده و مرز</summary>
-  <div class="sec" id="mp">
-    <b>نقشهٔ محدوده</b> <span class="m">(KMZ، KML، DXF یا دستی)</span>
-    <div class="r" style="margin-top:6px">
-      <button id="mb" class="o">انتخاب فایل نقشه</button>
-      <button id="btnManualCoord" class="o">ورود دستی</button>
+  <div class="top-bar-actions">
+    <div class="mode-toggle" id="modeToggleContainer">
+      <button id="btnModeGarden" class="on">🌳 باغی/جنگلی</button>
+      <button id="btnModeForest">🌲 جنگل</button>
     </div>
-    <input type="file" id="mf" accept=".kmz,.kml,.dxf,.dwg" class="hid">
-    <div id="manualCoordArea" class="hid">
-      <div id="manualCoordList"></div>
-      <div class="r">
-        <button id="addManualRow" class="o" style="flex:1">+ افزودن نقطه</button>
-        <button id="applyManualCoord" style="flex:1">رسم روی نقشه</button>
+    <div id="acct"></div>
+  </div>
+
+  <nav>
+    <button data-t="m">📍 نشانه‌گذاری</button>
+    <button data-t="l">📋 دریافت سیاهه</button>
+    <button data-t="h">🪓 تجدید و استحصال</button>
+  </nav>
+
+  <div id="gpsStrip">
+    <span id="gpsStripTxt"><span style="color:var(--mu)">◌ مختصات خاموش</span></span>
+    <button id="ga" class="o sbtn" type="button">📍 مختصات</button>
+    <button id="gTog" class="o sbtn hid" type="button" title="مخفی کردن مختصات">▴</button>
+    <button id="cmpTog" class="o sbtn" type="button" title="نمایش قطب‌نما و قبله‌نما">🧭 قطب‌نما</button>
+  </div>
+
+  <div id="forestBanner"></div>
+
+  <div id="bn" class="hid"></div>
+  <div id="sw" class="hid" style="background:#f8d7da;color:#58151c;border-radius:10px;padding:8px 10px;margin:8px 0"></div>
+
+  <div id="sensors">
+    <div id="gb" class="gbox hid"><div class="gx"><div><small>X</small><b id="gX"></b></div><div><small>Y</small><b id="gY"></b></div><div><small>زون</small><b id="gZ"></b></div></div><div class="ac" id="gA"></div></div>
+    <div class="m hid" id="gs" style="margin-top:4px"></div>
+    <div id="compassWrap" class="hid">
+      <div class="cblk">
+        <div class="compass"><div class="compass-n">N</div><div id="compassNeedle" class="compass-needle"></div></div>
+        <div><div id="compassDeg">زاویه: --°</div></div>
+      </div>
+      <div class="cblk" id="qiblaBlk" title="برای به‌روزرسانی موقعیت لمس کنید">
+        <div class="compass"><div id="qiblaNeedle" class="compass-needle qn"></div></div>
+        <div><div id="qiblaDeg">قبله: --°</div></div>
+        <div class="m" id="qiblaHint" style="font-size:10px"></div>
+      </div>
+      <div class="m" style="font-size:10px;flex:0 0 100%;text-align:center">برای دقت، گوشی را به شکل ۸ حرکت دهید • برای قبله، دایرهٔ قبله را لمس کنید</div>
+    </div>
+  </div>
+
+  <!-- Tab Content: Neshanegozari -->
+  <section id="sec-m" class="hid">
+    <div id="sheetbar"></div>
+    
+    <details class="c" id="mapDetails">
+      <summary>🗺️ نقشه، محدوده و مرز</summary>
+      <div class="sec" id="mp">
+        <b>نقشهٔ محدوده</b> <span class="m">(KMZ، KML، DXF یا دستی)</span>
+        <div class="r" style="margin-top:6px">
+          <button id="mb" class="o">انتخاب فایل نقشه</button>
+          <button id="btnManualCoord" class="o">ورود دستی</button>
+        </div>
+        <input type="file" id="mf" accept=".kmz,.kml,.dxf,.dwg" class="hid">
+        <div id="manualCoordArea" class="hid">
+          <div id="manualCoordList"></div>
+          <div class="r">
+            <button id="addManualRow" class="o" style="flex:1">+ افزودن نقطه</button>
+            <button id="applyManualCoord" style="flex:1">رسم روی نقشه</button>
+          </div>
+        </div>
+        <div class="m" id="mi" style="margin-top:6px">نقشه‌ای بارگذاری نشده است.</div><div class="m" style="margin-top:4px;font-size:10px">نکته: DXF باید مختصات واقعی UTM یا طول/عرض جغرافیایی داشته باشد.</div>
+        <canvas id="mc2" width="640" height="400" class="hid"></canvas>
+        <div id="mapLegend" class="m hid" style="margin-top:4px;font-size:10px">● <span style="color:#1b7a34">صنعتی</span> ● <span style="color:#e08a00">هیزمی</span> ● <span style="color:#d33">خارج از محدوده</span> ● <span style="color:#2196f3">مسیر پیمایش</span></div>
+        <div id="ms" class="gbox hid"><b id="mst"></b><div class="ac" id="msd"></div></div>
+        <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="mal" checked style="width:auto"> هشدار صوتی هنگام خروج از محدوده</label>
+      </div>
+    
+      <div class="map-actions">
+        <button type="button" class="o" id="openEarth" style="flex:2">🌍 خروجی KMZ</button>
+        <button type="button" class="o" id="resetWalk" style="flex:1">↺ ریست مسیر</button>
+      </div>
+      <div class="map-hint">برای مشاهده در Google Earth: فایل KMZ را در Google Earth → Projects → Import کنید.</div>
+    
+      <div class="gbox" id="walkBox">
+        <div class="gx">
+          <div><small>مسافت</small><b id="walkDistance">۰ متر</b></div>
+          <div><small>قدم</small><b id="walkSteps">۰</b></div>
+          <div><small>نقاط مسیر</small><b id="walkPoints">۰</b></div>
+        </div>
+        <small>مسیر واقعی روی نقشه و در فایل KMZ نمایش داده می‌شود.</small>
+      </div>
+    </details>
+    
+    <details class="c" id="cameraDetails">
+      <summary>📷 اندازه‌گیری تقریبی با دوربین</summary>
+      <div class="sec">
+        <p class="m" style="margin:0 0 8px;color:#b78500">⚠️ این روش فقط برآورد تصویری و تقریبی است.</p>
+        <div id="cm">
+      <label class="m">روش اندازه‌گیری</label>
+      <div class="seg">
+        <button id="mref" class="on" type="button">📏 با شیء مرجع</button>
+        <button id="mdist" type="button">📐 با فاصله</button>
+      </div>
+      <div id="refBox">
+        <label>شیء مرجع</label>
+        <select id="refType">
+          <option value="a4">کاغذ A4 (۲۹٫۷ سانتی‌متر)</option>
+          <option value="card">کارت بانکی (۸٫۵۶ سانتی‌متر)</option>
+          <option value="person">قد یک شخص (۱۷۰ سانتی‌متر)</option>
+          <option value="custom">اندازه دلخواه</option>
+        </select>
+        <input id="refSize" type="text" inputmode="decimal" placeholder="اندازه دلخواه (سانتی‌متر)" class="hid" style="margin-top:6px">
+      </div>
+      <div id="distBox" class="hid">
+        <label id="distLabel">فاصله دوربین تا تنه (متر)</label>
+        <input id="D1" type="text" inputmode="decimal" value="1">
+        <label>فاصله کانونی معادل ۳۵mm (میلی‌متر)</label>
+        <input id="fl" type="text" inputmode="decimal" value="26">
+      </div>
+      <label class="m">هدف اندازه‌گیری</label>
+      <div class="seg">
+        <button id="s1" class="on" type="button">قطر درخت</button>
+        <button id="s2" type="button">ارتفاع درخت</button>
+      </div>
+      <button id="ph" style="width:100%;padding:14px;font-size:16px;margin-top:10px">📷 عکس‌برداری</button>
+      <input type="file" id="fi" accept="image/*" capture="environment" class="hid">
+      <p id="gd1" class="m"></p>
+      <div id="photoArea" class="hid">
+        <div id="pw"><img id="im" alt=""><div id="ov"></div></div>
+        <div id="chips"></div>
+        <div id="rd" class="big" style="margin-top:8px"></div>
+        <div class="m" id="st"></div>
+        <div class="r" style="margin-top:8px">
+          <button id="clrMarkers" class="o" style="font-size:13px">🔄 تنظیم مجدد</button>
+          <button id="ph2" class="o" style="font-size:13px">📷 عکس جدید</button>
+        </div>
       </div>
     </div>
-    <div class="m" id="mi" style="margin-top:6px">نقشه‌ای بارگذاری نشده است.</div><div class="m" style="margin-top:4px;font-size:10px">نکته: DXF باید مختصات واقعی UTM یا طول/عرض جغرافیایی داشته باشد.</div>
-    <canvas id="mc2" width="640" height="400" class="hid"></canvas>
-    <div id="mapLegend" class="m hid" style="margin-top:4px;font-size:10px">● <span style="color:#1b7a34">صنعتی</span> ● <span style="color:#e08a00">هیزمی</span> ● <span style="color:#d33">خارج از محدوده</span> ● <span style="color:#2196f3">مسیر پیمایش</span></div>
-    <div id="ms" class="gbox hid"><b id="mst"></b><div class="ac" id="msd"></div></div>
-    <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="mal" checked style="width:auto"> هشدار صوتی هنگام خروج از محدوده</label>
-  </div>
+      </div>
+    </details>
 
-  <div class="map-actions">
-    <button type="button" class="o" id="openEarth" style="flex:2">🌍 خروجی KMZ</button>
-    <button type="button" class="o" id="resetWalk" style="flex:1">↺ ریست مسیر</button>
-  </div>
-  <div class="map-hint">برای مشاهده در Google Earth: فایل KMZ را در Google Earth → Projects → Import کنید.</div>
+    <div class="c">
+      <div class="m" style="margin:4px 2px 8px">برای ورود دستی، فیلدهای زیر را تکمیل کنید.</div>
+      
+      <div id="volClassRow" class="hid">
+        <label>کلاسه حجم</label>
+        <select id="volClass">
+          <option value="general">حجم عمومی</option>
+          <option value="tala" disabled>کلاسه درختان حوزه تالار (به‌زودی)</option>
+          <option value="karsang" disabled>کلاسه درختان کارسنگ (به‌زودی)</option>
+          <option value="babolak" disabled>کلاسه درختان بابلک (به‌زودی)</option>
+        </select>
+      </div>
 
-  <div class="gbox" id="walkBox">
-    <div class="gx">
-      <div><small>مسافت</small><b id="walkDistance">۰ متر</b></div>
-      <div><small>قدم</small><b id="walkSteps">۰</b></div>
-      <div><small>نقاط مسیر</small><b id="walkPoints">۰</b></div>
+      <label>گونه</label>
+      <div id="recentSp"></div>
+      <div class="r" style="align-items:stretch; margin-top:4px;">
+        <input id="sps" placeholder="جستجو..." autocomplete="off" style="flex:1.2">
+        <select id="sp" style="flex:1.5; margin-top:0; padding:4px; min-height:36px; font-size:13px;"></select>
+        <button id="simBtn" class="o" type="button" title="پس از ذخیره، گونه تغییر نکند" style="flex:0.5; padding:0; font-size:11px; white-space:nowrap;">🔁 مشابه</button>
+      </div>
+      <div id="spSug" class="hid"></div>
+
+      <div class="r" style="margin-top:6px;">
+        <div><label>قطر سینه (cm)</label><input id="d" type="text" inputmode="decimal"></div>
+        <div><label>طول / ارتفاع (m)</label><input id="h" type="text" inputmode="decimal"></div>
+        <div><label>دور تنه (cm)</label><input id="gi" type="text" inputmode="decimal" placeholder="اختیاری"></div>
+      </div>
+
+      <div class="r">
+        <div style="flex:0.5"><label>تعداد</label><input id="nn" type="text" inputmode="decimal" value="1"></div>
+        <div style="flex:1"><label>شماره درخت</label><input id="no"></div>
+        <div style="flex:1.5"><label>توضیحات</label><input id="ds" placeholder="مثلاً وضعیت تنه…"></div>
+      </div>
+
+      <div class="r">
+        <div><label>نوع</label><select id="ty"><option value="i">صنعتی</option><option value="h">هیزمی</option></select></div>
+        <div><label>دسته (تشخیص خودکار)</label><select id="gd"><option value="1">دسته اول</option><option value="2">دسته دوم</option><option value="3">دسته سوم</option></select></div>
+      </div>
+
+      <div id="saveBar">
+        <div class="sbIn">
+          <div id="svHint"></div>
+          <div class="m" id="msg"></div>
+          <div class="sbRow">
+            <div id="newSaveBtns" class="r"><button id="sv">📌 ذخیره با مختصات</button><button id="svNo" class="o">بدون مختصات</button></div>
+            <button id="svEdit" class="hid" style="flex:1">💾 ذخیرهٔ ویرایش</button>
+            <button id="ce" class="o hid">لغو</button>
+            <div class="vb">حجم<b id="vBar">—</b></div>
+          </div>
+        </div>
+      </div>
+      <div id="totSummary">—</div>
     </div>
-    <small>مسیر واقعی روی نقشه و در فایل KMZ نمایش داده می‌شود.</small>
-  </div>
-</details>
 
-<details class="c" id="cameraDetails">
-  <summary>📷 اندازه‌گیری تقریبی با دوربین</summary>
-  <div class="sec">
-    <p class="m" style="margin:0 0 8px;color:#b78500">⚠️ این روش فقط برآورد تصویری و تقریبی است.</p>
-    <div id="cm">
-  <label class="m">روش اندازه‌گیری</label>
-  <div class="seg">
-    <button id="mref" class="on" type="button">📏 با شیء مرجع</button>
-    <button id="mdist" type="button">📐 با فاصله</button>
-  </div>
-  <div id="refBox">
-    <label>شیء مرجع</label>
-    <select id="refType">
-      <option value="a4">کاغذ A4 (۲۹٫۷ سانتی‌متر)</option>
-      <option value="card">کارت بانکی (۸٫۵۶ سانتی‌متر)</option>
-      <option value="person">قد یک شخص (۱۷۰ سانتی‌متر)</option>
-      <option value="custom">اندازه دلخواه</option>
-    </select>
-    <input id="refSize" type="text" inputmode="decimal" placeholder="اندازه دلخواه (سانتی‌متر)" class="hid" style="margin-top:6px">
-  </div>
-  <div id="distBox" class="hid">
-    <label id="distLabel">فاصله دوربین تا تنه (متر)</label>
-    <input id="D1" type="text" inputmode="decimal" value="1">
-    <label>فاصله کانونی معادل ۳۵mm (میلی‌متر)</label>
-    <input id="fl" type="text" inputmode="decimal" value="26">
-  </div>
-  <label class="m">هدف اندازه‌گیری</label>
-  <div class="seg">
-    <button id="s1" class="on" type="button">قطر درخت</button>
-    <button id="s2" type="button">ارتفاع درخت</button>
-  </div>
-  <button id="ph" style="width:100%;padding:14px;font-size:16px;margin-top:10px">📷 عکس‌برداری</button>
-  <input type="file" id="fi" accept="image/*" capture="environment" class="hid">
-  <p id="gd1" class="m"></p>
-  <div id="photoArea" class="hid">
-    <div id="pw"><img id="im" alt=""><div id="ov"></div></div>
-    <div id="chips"></div>
-    <div id="rd" class="big" style="margin-top:8px"></div>
-    <div class="m" id="st"></div>
-    <div class="r" style="margin-top:8px">
-      <button id="clrMarkers" class="o" style="font-size:13px">🔄 تنظیم مجدد</button>
-      <button id="ph2" class="o" style="font-size:13px">📷 عکس جدید</button>
+    <section class="c" id="tools">
+      <b>📥 ورود داده‌ها</b>
+      <div class="sec">
+        <div class="m" style="margin-bottom: 8px;">فایل اکسل، ورد، PDF یا عکس را وارد کنید، یا داده‌ها را دستی و سریع تایپ کنید.</div>
+        <input type="file" id="smartImportFile" accept=".xlsx,.xls,.csv,.docx,.doc,.pdf,.jpg,.jpeg,.png,.webp,.gif,.bmp,.heic,.heif,.tif,.tiff" class="hid">
+        <button id="btnSmartImport" style="width:100%; padding: 12px; font-size: 15px; margin-bottom: 6px;">انتخاب فایل (اکسل، ورد، PDF، عکس)</button>
+        <button id="btnQuickEntry" class="o" style="width:100%; padding: 12px; font-size: 15px;">⌨️ ورود سریع دستی (تایپ)</button>
+      </div>
+    </section>
+  </section>
+
+  <!-- Tab Content: Siahhe -->
+  <section id="sec-l" class="hid">
+    <div id="sheetbar"></div>
+    
+    <div id="noCoordBanner" class="hid"></div>
+    <div id="numCheck" class="hid"></div>
+    <div class="c">
+      <div class="tw"><table id="tb"></table></div>
+      <p>جمع حجم: <b id="tot">۰</b> متر مکعب</p>
+      <b>خلاصه وضعیت درختان</b>
+      <div class="tw"><table id="sm"></table></div>
+      <div id="taxTotalBox" class="taxTotal hid"></div>
+      <div id="plantedBox" class="plantedNote hid"></div>
     </div>
-  </div>
-</div>
-  </div>
-</details>
-
-<section id="sec-m">
-<div class="c">
-<div class="m" style="margin:4px 2px 8px">برای ورود دستی، فیلدهای زیر را تکمیل کنید.</div>
-
-<div class="r">
-  <div><label>قطر سینه (cm)</label><input id="d" type="text" inputmode="decimal"></div>
-  <div><label>دور تنه (cm)</label><input id="gi" type="text" inputmode="decimal" placeholder="اختیاری"></div>
-  <div><label>ارتفاع (m)</label><input id="h" type="text" inputmode="decimal"></div>
-</div>
-<label>گونه</label>
-<div id="recentSp"></div>
-<div class="r" style="align-items:stretch">
-<input id="sps" placeholder="جستجو: حرف اول گونه را بزنید" autocomplete="off" style="flex:1">
-<button id="simBtn" class="o" type="button" title="پس از ذخیره، گونه تغییر نکند">🔁 مشابه</button>
-</div>
-<div id="spSug" class="hid"></div>
-<select id="sp" style="margin-top:6px"></select>
-<div class="r"><div><label>دسته (تشخیص خودکار)</label><select id="gd"><option value="1">دسته اول</option><option value="2">دسته دوم</option><option value="3">دسته سوم</option></select></div></div>
-<div class="r"><div><label>نوع درخت</label><select id="ty"><option value="i">صنعتی</option><option value="h">هیزمی</option></select></div><div><label>شماره / پلاک</label><input id="no"></div></div>
-<div id="cw" class="hid"><label>تعداد درختان هیزمی (هم‌گونه)</label><input id="nn" type="text" inputmode="decimal" value="1"></div>
-<label>توضیحات</label><input id="ds" placeholder="مثلاً وضعیت تنه، شیب…">
-<div id="saveBar">
-  <div class="sbIn">
-    <div id="svHint"></div>
-    <div class="m" id="msg"></div>
-    <div class="sbRow">
-      <div id="newSaveBtns" class="r"><button id="sv">📌 ذخیره با مختصات</button><button id="svNo" class="o">بدون مختصات</button></div>
-      <button id="svEdit" class="hid" style="flex:1">💾 ذخیرهٔ ویرایش</button>
-      <button id="ce" class="o hid">لغو</button>
-      <div class="vb">حجم<b id="vBar">—</b></div>
+    <div class="c" id="expCard">
+      <b>خروجی و اشتراک‌گذاری</b>
+      <label>نوع فایل</label>
+      <select id="expType">
+        <option value="x1">اکسل — این زمین</option>
+        <option value="x3">اکسل — همهٔ زمین‌ها</option>
+        <option value="kmz">Google Earth (KMZ) — محدوده، مسیر و درختان</option>
+        <option value="bk">پشتیبان کامل (JSON)</option>
+      </select>
+      <div class="r" style="margin-top:8px"><button id="expSave" class="o">💾 ذخیره روی گوشی</button><button id="expShare">📤 اشتراک‌گذاری</button></div>
+      <div class="m xs"></div>
     </div>
+    <div class="c">
+      <b>موارد ذخیره شده</b><br>
+      <button id="saveSnap" class="o" style="width:100%;margin-top:6px">💾 ذخیرهٔ سربرگ فعلی با نام</button>
+      <div class="m" id="snapMsg" style="min-height:18px"></div>
+      <div id="savedList" style="margin-top:2px"></div>
+    </div>
+    <div class="c">
+      <b>بازیابی از پشتیبان</b><div class="m" id="bks"></div>
+      <div style="margin-top:6px"><button id="rb" class="o" style="width:100%">بازیابی از فایل پشتیبان</button></div>
+      <label>روش بازیابی</label><select id="rm"><option value="a">افزودن به داده‌های فعلی</option><option value="r">جایگزینی کامل</option></select>
+      <input type="file" id="rf" accept=".json,application/json" class="hid">
+    </div>
+  </section>
+
+  <!-- Tab Content: Tajdid -->
+  <section id="sec-h" class="hid">
+    <div id="sheetbar"></div>
+    <div class="c">
+      <label>درخت</label><select id="hs2"></select>
+      <div class="r"><div><label>قطر جدید (cm)</label><input id="d2" type="text" inputmode="decimal"></div><div><label>ارتفاع جدید (m)</label><input id="h2" type="text" inputmode="decimal"></div></div>
+      <div class="r"><div><label>حجم استحصال‌شده (m³)</label><input id="hv" type="text" inputmode="decimal"></div><div><label>تاریخ استحصال</label><input id="hd" type="date"></div></div>
+      <label>یادداشت</label><input id="hn"><br><button id="sh" style="width:100%">ذخیره</button>
+    </div>
+    <div class="c">
+      <div class="tw"><table id="tb2"></table></div><br>
+      <div class="r"><button id="e2">خروجی اکسل</button><button id="e2s" class="o">📤 اشتراک‌گذاری</button></div>
+      <div class="m xs"></div>
+    </div>
+  </section>
+</div>
+
+<!-- Save type modal (garden mode) -->
+<div id="saveTypeModal" class="hid">
+  <div class="bx">
+    <h3>نوع درخت را انتخاب کنید</h3>
+    <div class="sub">درخت مورد نظر را در کدام دسته ذخیره کنیم؟</div>
+    <div class="mbtn">
+      <button data-k="natural" style="background:#2f6b3c">
+        🌿 درختان خودرو
+        <small>در سیاهه و محاسبهٔ عوارض لحاظ می‌شود</small>
+      </button>
+      <button data-k="planted" style="background:#3a7bd5">
+        🌱 درختان دست‌کاشت
+        <small>در لیست می‌آید ولی عوارض آن صفر است</small>
+      </button>
+    </div>
+    <button class="o cancel" id="saveTypeCancel">انصراف</button>
   </div>
 </div>
-<div id="totSummary">—</div>
-</div>
 
-<section class="c" id="tools">
-  <b>📥 ورود داده‌ها</b>
-  <div class="sec">
-    <div class="m" style="margin-bottom: 8px;">فایل اکسل، ورد، PDF یا عکس را وارد کنید، یا داده‌ها را دستی و سریع تایپ کنید.</div>
-    <input type="file" id="smartImportFile" accept=".xlsx,.xls,.csv,.docx,.doc,.pdf,.jpg,.jpeg,.png,.webp,.gif,.bmp,.heic,.heif,.tif,.tiff" class="hid">
-    <button id="btnSmartImport" style="width:100%; padding: 12px; font-size: 15px; margin-bottom: 6px;">انتخاب فایل (اکسل، ورد، PDF، عکس)</button>
-    <button id="btnQuickEntry" class="o" style="width:100%; padding: 12px; font-size: 15px;">⌨️ ورود سریع دستی (تایپ)</button>
-    <div class="m" style="color: #b78500; font-size: 11px; margin-top: 6px;">⚠️ اعداد ناخوانا خالی می‌مانند. OCR عکس برای جدول چاپی بهتر عمل می‌کند؛ دست‌خط فارسی باید بازبینی شود.</div>
+<!-- New sheet modal -->
+<div id="newSheetModal" class="hid">
+  <div class="bx">
+    <h3>سربرگ جدید</h3>
+    <div class="sub">این زمین از چه نوعی است؟</div>
+    <div class="mbtn">
+      <button data-mode="garden" style="background:#2f6b3c">
+        🌳 باغی / جنگلی
+        <small>جهت ثبت عوارض و درختان خودرو/دست‌کاشت</small>
+      </button>
+      <button data-mode="forest" style="background:#5a7d3a">
+        🌲 جنگل
+        <small>جهت محاسبه حجم و موارد جنگلی</small>
+      </button>
+    </div>
+    <button class="o cancel" id="newSheetCancel">انصراف</button>
   </div>
-</section>
-</section>
-
-
-<section id="sec-l" class="hid">
-<div id="noCoordBanner" class="hid"></div>
-<div id="numCheck" class="hid"></div>
-<div class="c"><div class="tw"><table id="tb"></table></div><p>جمع حجم: <b id="tot">۰</b> متر مکعب</p>
-<b>خلاصه وضعیت درختان</b><div class="tw"><table id="sm"></table></div></div>
-<div class="c" id="expCard">
-<b>خروجی و اشتراک‌گذاری</b>
-<label>نوع فایل</label>
-<select id="expType">
-  <option value="x1">اکسل — این زمین</option>
-  <option value="x3">اکسل — همهٔ زمین‌ها</option>
-  <option value="kmz">Google Earth (KMZ) — محدوده، مسیر و درختان</option>
-  <option value="bk">پشتیبان کامل (JSON)</option>
-</select>
-<div class="r" style="margin-top:8px"><button id="expSave" class="o">💾 ذخیره روی گوشی</button><button id="expShare">📤 اشتراک‌گذاری</button></div>
-<div class="m">اشتراک‌گذاری، لیست همهٔ پیام‌رسان‌ها و برنامه‌های نصب‌شده روی گوشی را باز می‌کند.</div>
-<div class="m xs"></div>
-</div>
-<div class="c">
-<b>موارد ذخیره شده</b><br>
-<button id="saveSnap" class="o" style="width:100%;margin-top:6px">💾 ذخیرهٔ سربرگ فعلی با نام</button>
-<div class="m" id="snapMsg" style="min-height:18px"></div>
-<div id="savedList" style="margin-top:2px"></div>
-</div>
-<div class="c">
-<b>بازیابی از پشتیبان</b><div class="m" id="bks"></div>
-<div style="margin-top:6px"><button id="rb" class="o" style="width:100%">بازیابی از فایل پشتیبان</button></div>
-<label>روش بازیابی</label><select id="rm"><option value="a">افزودن به داده‌های فعلی</option><option value="r">جایگزینی کامل</option></select>
-<input type="file" id="rf" accept=".json,application/json" class="hid"></div>
-</section>
-
-<section id="sec-h" class="hid"><div class="c">
-<label>درخت</label><select id="hs2"></select>
-<div class="r"><div><label>قطر جدید (cm)</label><input id="d2" type="text" inputmode="decimal"></div><div><label>ارتفاع جدید (m)</label><input id="h2" type="text" inputmode="decimal"></div></div>
-<div class="r"><div><label>حجم استحصال‌شده (m³)</label><input id="hv" type="text" inputmode="decimal"></div><div><label>تاریخ استحصال</label><input id="hd" type="date"></div></div>
-<label>یادداشت</label><input id="hn"><br><button id="sh" style="width:100%">ذخیره</button></div>
-<div class="c"><div class="tw"><table id="tb2"></table></div><br><div class="r"><button id="e2">خروجی اکسل</button><button id="e2s" class="o">📤 اشتراک‌گذاری</button></div><div class="m xs"></div></div></section>
 </div>
 
 <script>
 const $=s=>document.querySelector(s),fa=(n,m=2)=>(n!==null&&n!==undefined&&n!==''&&isFinite(n))?Number(n).toLocaleString('fa-IR',{maximumFractionDigits:m}):'—';
 const toFa=s=>String(s).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]).replace(/\./g,'٫'),toEn=s=>String(s).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٫،,]/g,'.');
 const N=id=>+toEn($(id).value),rad=x=>x*Math.PI/180,vol=(d,h,f)=>Math.PI/4*(d/100)**2*h*f;
+
 const SP={
   'سرخدار':[.5,1],'زربین':[.5,1],'ارس':[.5,1],'شمشاد':[.5,1],'گردو':[.5,1],'آزاد':[.5,1],
-  'کاج':[.5,3],'سرو':[.5,3],
+  'کاج':[.5,3],'سرو':[.5,3],'صنوبر':[.5,3],'توت':[.5,3],
   'راش':[.52,2],'افرا':[.5,2],'توسکا':[.48,2],'ون':[.5,2],'شیردار':[.5,2],'بلوط':[.5,2],'نمدار':[.5,2],'ملچ':[.5,2],'بارانک':[.5,2],'الوکک':[.5,2],
   'ممرز':[.5,3],'لرگ':[.5,3],'انجیلی':[.5,3],'شب‌خسب':[.5,3],'سپیدار':[.45,3],'کلهو':[.5,3],'اوجا':[.5,3],'ولیک':[.5,3],'ازگیل وحشی':[.5,3],'کرات':[.5,3]
 };
 const G={1:'دسته اول',2:'دسته دوم',3:'دسته سوم'};
-const VT={"10": [0.01, 0.03, 0.05, 0.07], "15": [0.05, 0.09, 0.14, 0.18], "20": [0.09, 0.17, 0.23, 0.29], "25": [0.14, 0.24, 0.33, 0.42], "30": [0.39, 0.57, 0.71, 0.86], "35": [0.55, 0.75, 0.94, 1.06], "40": [0.63, 0.95, 1.22, 1.43], "45": [0.73, 1.23, 1.53, 1.8], "50": [0.92, 1.45, 1.88, 2.21, 2.5], "55": [1.11, 1.75, 2.27, 2.69, 3.06], "60": [1.21, 2.07, 2.71, 3.21, 3.68], "65": [1.52, 2.42, 3.18, 3.79, 4.27], "70": [1.76, 2.81, 3.69, 4.4, 5.09, 5.7], "75": [2.01, 3.22, 4.25, 5.11, 5.89, 6.63], "80": [2.21, 3.68, 4.86, 5.83, 6.74, 7.67], "85": [2.61, 4.19, 5.55, 6.6, 7.64, 8.73], "90": [2.92, 4.67, 6.2, 7.45, 8.63, 9.83], "95": [3.21, 5.21, 6.95, 8.35, 9.71, 11.09], "100": [3.6, 5.7, 7.69, 9.28, 10.7, 11.26]};
-function tbl(d,h){const hi=h/5-1,d0=Math.floor(d/5)*5,i0=Math.floor(hi),c=(a,i)=>(VT[a]&&VT[a][i]!=null)?VT[a][i]:null;
- const a=c(d0,i0),b=c(d0+5,i0),e=c(d0,i0+1),g=c(d0+5,i0+1);
- if(i0>=0&&[a,b,e,g].every(x=>x!==null)){const u=(d-d0)/5,w=hi-i0;return a*(1-u)*(1-w)+b*u*(1-w)+e*(1-u)*w+g*u*w}
- let ff=.5,bd=1e9;for(const k in VT)VT[k].forEach((v,i)=>{const q=((+k-d)/5)**2+(i-hi)**2;if(q<bd){bd=q;ff=v/(Math.PI/4*(k/100)**2*(i+1)*5)}});
- return vol(d,h,ff)}
-const volSp=(sp,d,h)=>(sp=='راش'||sp=='بلوط')?vol(d,h,SP[sp][0]):tbl(d,h);
 
-let manualCoords = []; 
+const VT_GENERAL={
+"10":[0.01,0.03,0.05,0.06],"15":[0.05,0.09,0.14,0.18],"20":[0.09,0.17,0.23,0.29],"25":[0.14,0.24,0.33,0.42],"30":[0.39,0.57,0.71,0.81],"35":[0.5,0.75,0.94,1.09],"40":[0.63,0.95,1.22,1.43],"45":[0.77,1.19,1.53,1.8],"50":[0.93,1.45,1.88,2.22,2.5],"55":[1.11,1.75,2.27,2.69,3.06],"60":[1.31,2.07,2.71,3.21,3.68],"65":[1.53,2.42,3.18,3.79,4.37],"70":[1.76,2.81,3.69,4.4,5.09,5.7],"75":[2.03,3.23,4.25,5.11,5.89,6.63],"80":[2.31,3.68,4.86,5.83,6.74,7.67],"85":[2.61,4.16,5.51,6.6,7.64,8.73],"90":[2.93,4.67,6.2,7.4,8.63,9.82],"95":[3.26,5.21,6.95,8.35,9.71,11.04],"100":[3.6,5.7,7.69,9.28,10.75,12.26],"105":[3.97,7.67,10.65,12.79,14.33,15.51,16.43],"110":[4.34,8.39,11.59,13.8,15.38,16.58,17.55],"115":[4.72,9.14,12.56,14.88,16.52,17.76,18.74],"120":[5.12,9.91,13.59,16.05,17.76,19.06,20.08],"125":[5.53,10.68,14.63,17.23,19.83,21.18,22.25],"130":[5.96,11.49,15.69,18.44,20.33,21.75,22.87],"135":[6.39,12.25,16.63,19.47,21.41,22.86,24.01],"140":[6.84,13.04,17.61,20.55,22.56,24.06,25.11],"145":[7.31,13.94,18.82,21.96,24.1,25.69,26.95],"150":[7.8,14.85,20.01,23.35,25.62,27.29,28.61],"155":[8.3,15.8,21.32,24.91,27.36,29.14,30.36],"160":[8.85,16.85,22.75,26.64,29.18,31.21,32.7],"165":[9.41,17.91,24.2,28.34,31.17,33.22,34.54],"170":[9.99,19.06,25.82,30.31,33.26,35.56,37.23],"175":[10.6,20.2,27.38,32.16,35.4,37.73,39.48],"180":[11.23,21.41,29.06,34.23,37.74,40.27,41.71],"185":[11.85,22.62,30.77,36.3,40.08,42.79,44.8],"190":[12.49,23.82,32.44,38.31,42.28,45.11,47.19],"195":[13.13,25.07,34.16,40.38,44.62,47.66,49.86],"200":[13.78,26.3,35.92,42.59,47.12,50.34,52.69]};
+const VT_BEECH={
+"10":[0.04,0.07,0.1,0.13],"15":[0.07,0.11,0.16,0.21],"20":[0.13,0.19,0.28,0.35],"25":[0.37,0.49,0.68,0.9],"30":[0.42,0.63,0.8,0.92],"35":[0.54,0.84,1.07,1.25],"40":[0.68,1.07,1.38,1.64],"45":[0.84,1.33,1.74,2.07],"50":[1.03,1.64,2.14,2.55,2.9],"55":[1.22,1.96,2.58,3.09,3.54],"60":[1.44,2.33,3.08,3.68,4.25],"65":[1.67,2.67,3.61,4.34,5.04,5.6],"70":[1.93,3.14,4.19,5.05,5.88,6.62],"75":[2.2,3.6,4.81,5.8,6.78,7.71],"80":[2.49,4.09,5.49,6.65,7.75,8.86],"85":[2.8,4.62,6.21,7.52,8.75,10.08],"90":[3.14,5.18,6.98,8.48,9.91,11.33],"95":[3.49,5.77,7.81,9.48,11.12,12.72],"100":[3.86,6.4,8.65,10,12.32,14.18],"105":[4.22,8.18,11.36,13.67,15.35,16.63,17.62],"110":[4.62,8.93,12.35,14.75,16.47,17.77,18.78],"115":[5.02,9.72,13.39,15.89,17.67,19.01,20.05],"120":[5.44,10.53,14.47,17.12,18.99,20.39,21.47],"125":[5.88,11.36,15.59,18.4,20.36,21.83,23.3],"130":[6.32,12.21,16.71,19.68,21.74,23.27,24.44],"135":[6.79,13.04,17.73,20.81,22.92,24.49,25.71],"140":[7.26,13.87,18.77,21.96,24.14,25.76,27.02],"145":[7.77,14.84,20.07,23.48,25.82,27.54,28.87],"150":[8.3,15.82,21.37,24.99,27.46,29.28,30.68],"155":[8.82,16.82,22.74,26.63,29.29,31.23,33.7],"160":[9.39,17.9,24.23,28.43,31.32,33.41,35],"165":[9.97,19,25.73,30.2,33.25,35.47,37.14],"170":[10.57,20.18,27.4,32.24,35.54,37.93,39.73],"175":[11.18,21.34,28.98,34.11,37.63,40.14,43.02],"180":[11.82,22.58,30.72,36.25,40.05,42.78,44.81],"185":[12.49,23.8,32.51,38.44,42.52,45.45,47.62],"190":[13.15,25.12,34.27,40.56,44.85,47.91,50.17],"195":[13.84,26.43,36.08,42.75,47.31,50.56,53.93],"200":[14.54,27.8,38.05,45.22,50.12,53.63,56.19]};
+const VT_OAK={
+"10":[0.04,0.07,0.1,0.13],"15":[0.06,0.11,0.15,0.2],"20":[0.11,0.18,0.26,0.32],"25":[0.17,0.27,0.37,0.46],"30":[0.4,0.59,0.73,0.84],"35":[0.51,0.78,0.98,1.14],"40":[0.64,0.99,1.27,1.49],"45":[0.79,1.33,1.59,1.88],"50":[0.96,1.52,1.98,2.33,2.63],"55":[1.15,1.82,2.37,2.83,3.22],"60":[1.36,2.17,2.83,3.37,3.87],"65":[1.58,2.53,3.33,3.97,4.58],"70":[1.83,2.93,3.87,4.64,5.36,6],"75":[2.09,3.36,4.44,5.32,6.19,7.01],"80":[2.37,3.82,5.07,6.1,7.6,8.28],"85":[2.66,4.3,5.72,6.89,8.3,9.16],"90":[2.99,4.84,6.45,7.78,9.04,10.31],"95":[3.32,5.38,7.21,8.7,10.15,11.57],"100":[3.67,5.96,7.99,9.68,11.24,12.85],"105":[4.05,7.83,10.87,13.06,14.65,15.86,16.79],"110":[4.44,8.59,11.86,14.14,15.77,17,17.79],"115":[4.82,9.3,12.78,15.76,16.84,18.11,19.38],"120":[5.22,10.2,13.87,16.38,18.14,19.47,20.51],"125":[5.6,10.82,14.82,17.46,19.29,20.67,22.54],"130":[6.08,11.73,16.03,18.86,20.8,22.26,23.4],"135":[6.52,12.5,16.98,19.9,21.89,23.38,24.55],"140":[6.97,13.3,17.97,21,23.06,24.59,26.81],"145":[7.45,14.21,19.19,22.42,24.62,26.35,27.53],"150":[7.94,15.13,20.4,23.82,26.15,27.86,29.2],"155":[8.45,16.11,21.74,25.42,27.92,29.75,31.17],"160":[9.01,17.17,23.2,27.18,29.9,31.87,32.37],"165":[9.59,18.26,24.7,28.94,31.83,33.92,35.52],"170":[10.17,19.4,26.3,30.89,34.2,36.27,37.99],"175":[10.79,20.58,27.91,32.8,36.13,38.52,40.32],"180":[11.4,21.75,29.54,34.81,38.41,40.99,42.92],"185":[12.07,23.04,31.37,37.04,40.92,43.71,45.78],"190":[12.71,24.26,33.05,39.06,43.14,46.05,48.19],"195":[13.36,25.49,34.75,41.12,45.44,48.51,50.76],"200":[14.03,26.81,36.64,43.48,48.14,51.45,53.88]};
+
+const TAX_RATE={1:1400000,2:1172000,3:700000};
+const FIREWOOD_RATE=165000;
+const STER_VOLUME=0.6;
+
+function tblV(VT,d,h){
+  const hi=h/5-1,d0=Math.floor(d/5)*5,i0=Math.floor(hi);
+  const c=(a,i)=>(VT[a]&&VT[a][i]!=null)?VT[a][i]:null;
+  const a=c(d0,i0),b=c(d0+5,i0),e=c(d0,i0+1),g=c(d0+5,i0+1);
+  if(i0>=0&&[a,b,e,g].every(x=>x!==null)){const u=(d-d0)/5,w=hi-i0;return a*(1-u)*(1-w)+b*u*(1-w)+e*(1-u)*w+g*u*w}
+  let ff=.5,bd=1e9;
+  for(const k in VT)VT[k].forEach((v,i)=>{const q=((+k-d)/5)**2+(i-hi)**2;if(q<bd){bd=q;ff=v/(Math.PI/4*(k/100)**2*(i+1)*5)}});
+  return vol(d,h,ff);
+}
+function volSp(sp,d,h){
+  if(!(d>0&&h>0))return 0;
+  if(sp==='راش')return tblV(VT_BEECH,d,h);
+  if(sp==='بلوط')return tblV(VT_OAK,d,h);
+  return tblV(VT_GENERAL,d,h);
+}
+function taxOf(t){
+  if(t.k === 'planted') return 0; // Fix: planted trees have 0 tax
+  const v=tv(t);
+  if(!(v>0))return 0;
+  if(t.ty==='h')return Math.round((v/STER_VOLUME)*FIREWOOD_RATE);
+  const cat=(SP[t.sp]||[0,3])[1];
+  return Math.round(v*(TAX_RATE[cat]||TAX_RATE[3]));
+}
+
 let SHEETS=[];try{SHEETS=JSON.parse(localStorage.getItem('sheets')||'[]')}catch(e){}
 let activeId=null;try{activeId=+localStorage.getItem('activeSheet')||null}catch(e){}
 let T=[],MAPP=[],MAPZ=39,MAPNM='',TRACK=[];
@@ -428,11 +582,35 @@ if(!SHEETS.length){
   let oldT=[],oldMap=null;
   try{oldT=JSON.parse(localStorage.getItem('trees')||'[]')}catch(e){}
   try{oldMap=JSON.parse(localStorage.getItem('map')||'null')}catch(e){}
-  SHEETS=[{id:1,name:'زمین ۱',trees:oldT,map:oldMap?{p:oldMap.p,z:oldMap.z,nm:oldMap.nm}:null}];
+  SHEETS=[{id:1,name:'زمین ۱ (باغی)',mode:'garden',trees:oldT,map:oldMap?{p:oldMap.p,z:oldMap.z,nm:oldMap.nm}:null}];
   activeId=1;
   try{localStorage.setItem('sheets',JSON.stringify(SHEETS));localStorage.setItem('activeSheet','1')}catch(e){}
 }
 function getActiveSheet(){return SHEETS.find(s=>s.id===activeId)||SHEETS[0]}
+
+function updateModeLock() {
+  const isLocked = T.length > 0;
+  const currentMode = getActiveSheet().mode || 'garden';
+  const container = document.querySelector('.mode-toggle');
+  
+  const btnG = document.getElementById('btnModeGarden');
+  const btnF = document.getElementById('btnModeForest');
+  
+  if (currentMode === 'garden') {
+    btnG.classList.add('on');
+    btnF.classList.remove('on');
+  } else {
+    btnF.classList.add('on');
+    btnG.classList.remove('on');
+  }
+  
+  if (isLocked) {
+    container.classList.add('locked');
+  } else {
+    container.classList.remove('locked');
+  }
+}
+
 function loadActive(){
   const sh=getActiveSheet();if(!sh)return;
   activeId=sh.id;
@@ -442,13 +620,14 @@ function loadActive(){
   MAPNM=(sh.map&&sh.map.nm)||'';
   TRACK=sh.track||[];
   walkMeters=0;
-  if(TRACK.length>1){
-    for(let i=1;i<TRACK.length;i++){
-      walkMeters+=gdist(TRACK[i-1].lat,TRACK[i-1].lng,TRACK[i].lat,TRACK[i].lng);
-    }
-  }
+  if(TRACK.length>1){for(let i=1;i<TRACK.length;i++){walkMeters+=gdist(TRACK[i-1].lat,TRACK[i-1].lng,TRACK[i].lat,TRACK[i].lng)}}
   lastWalkFix=TRACK.length?{lat:TRACK[TRACK.length-1].lat,lng:TRACK[TRACK.length-1].lng}:null;
   try{localStorage.setItem('activeSheet',String(activeId))}catch(e){}
+  
+  // Update UI elements based on mode
+  const currentMode = sh.mode || 'garden';
+  document.getElementById('volClassRow').classList.toggle('hid', currentMode!=='forest');
+  const vc=$('#volClass'); if(vc) vc.value=sh.volClass||'general';
 }
 function saveActive(){const sh=getActiveSheet();if(!sh)return;sh.trees=T;if(MAPP.length)sh.map={p:MAPP,z:MAPZ,nm:MAPNM};else delete sh.map;if(TRACK.length>0)sh.track=TRACK;else delete sh.track;try{localStorage.setItem('sheets',JSON.stringify(SHEETS));stWarn(false)}catch(e){stWarn(true)}}
 function stWarn(bad){const e=document.getElementById('sw');if(!e)return;e.classList.toggle('hid',!bad);e.textContent='⛔ ذخیره‌سازی انجام نشد (حافظه پر است). پشتیبان بگیرید.'}
@@ -456,21 +635,56 @@ const norm=()=>T.forEach(t=>{if(t.sp=='زبان‌گنجشک')t.sp='ون';if(!t.
 loadActive();norm();
 const store=()=>{saveActive();bnr();try{if(window.syncSoon)window.syncSoon()}catch(e){}};
 
+/* Global Mode Toggle Logic with Alerts */
+document.getElementById('btnModeGarden').onclick = () => {
+  if (T.length > 0) {
+    const currentModeName = getActiveSheet().mode === 'forest' ? 'جنگل' : 'باغی';
+    alert(`شما در حال ثبت درختان «${currentModeName}» هستید و نمی‌توانید آن را به حالت دیگر تغییر دهید.\n\nلطفاً یک سربرگ جدید (+) باز کنید یا تمام موارد ثبتی این سربرگ را پاک کنید.`);
+    return;
+  }
+  const sh = getActiveSheet();
+  sh.mode = 'garden';
+  saveActive();
+  loadActive();
+  updateModeLock();
+  renderTabs();
+  draw();
+};
+document.getElementById('btnModeForest').onclick = () => {
+  if (T.length > 0) {
+    const currentModeName = getActiveSheet().mode === 'forest' ? 'جنگل' : 'باغی';
+    alert(`شما در حال ثبت درختان «${currentModeName}» هستید و نمی‌توانید آن را به حالت دیگر تغییر دهید.\n\nلطفاً یک سربرگ جدید (+) باز کنید یا تمام موارد ثبتی این سربرگ را پاک کنید.`);
+    return;
+  }
+  const sh = getActiveSheet();
+  sh.mode = 'forest';
+  if(!sh.volClass) sh.volClass = 'general';
+  saveActive();
+  loadActive();
+  updateModeLock();
+  renderTabs();
+  draw();
+};
+
 let trackSaveT=null;
 function trackAutoSave(){if(trackSaveT)clearTimeout(trackSaveT);trackSaveT=setTimeout(()=>{try{saveActive()}catch(e){}},2500)}
 
 let RECENT=[];try{RECENT=JSON.parse(localStorage.getItem('recentSp')||'[]')}catch(e){}
 let SNAPS=[];try{SNAPS=JSON.parse(localStorage.getItem('snaps')||'[]')}catch(e){}
+
 function addRecent(sp){
   if(!sp)return;
-  RECENT=[sp,...RECENT.filter(x=>x!==sp)].slice(0,6);
+  RECENT = RECENT.filter(x=>x!==sp);
+  RECENT.unshift(sp);
+  if(RECENT.length > 6) RECENT = RECENT.slice(0, 6);
   try{localStorage.setItem('recentSp',JSON.stringify(RECENT))}catch(e){}
   renderRecent();
 }
 const DEF_SP=['راش','ممرز','افرا','توسکا','بلوط','ون'];
 function renderRecent(){
   const el=$('#recentSp');if(!el)return;
-  const list=[...RECENT,...DEF_SP.filter(s=>!RECENT.includes(s))].slice(0,6),csel=$('#sp')?$('#sp').value:'';
+  const list = [...RECENT, ...DEF_SP.filter(s=>!RECENT.includes(s))].slice(0, 6);
+  const csel = $('#sp') ? $('#sp').value : '';
   el.innerHTML=list.map(s=>`<button type="button" class="${s===csel?'':'o '}spchip" data-sp="${esc(s)}">${esc(s)}</button>`).join('');
   el.querySelectorAll('button').forEach(b=>{
     b.onclick=()=>{$('#sps').value='';fillSp('');$('#sp').value=b.dataset.sp;$('#sp').onchange();};
@@ -572,7 +786,7 @@ function startGPS(){
   updateGpsUI();
   wid=navigator.geolocation.watchPosition(
     p=>{gpsFix(p.coords.latitude,p.coords.longitude,p.coords.accuracy)},
-    err=>{gpsOn=false;cur=null;if($('#ga')){$('#ga').textContent='📍 مختصات';$('#ga').classList.add('o')}let msg='خطا در مختصات';if(err.code===1)msg='دسترسی رد شد. «بدون مختصات» بزنید.';if($('#gs')){$('#gs').textContent=msg;$('#gs').classList.remove('hid')}const gb0=$('#gb');if(gb0)gb0.classList.add('hid');const tg0=$('#gTog');if(tg0)tg0.classList.add('hid');updateGpsUI();},
+    err=>{if(wid!==null){try{navigator.geolocation.clearWatch(wid)}catch(e){};wid=null}gpsOn=false;cur=null;if($('#ga')){$('#ga').textContent='📍 مختصات';$('#ga').classList.add('o')}let msg='خطا در مختصات';if(err.code===1)msg='دسترسی رد شد. «بدون مختصات» بزنید.';if($('#gs')){$('#gs').textContent=msg;$('#gs').classList.remove('hid')}const gb0=$('#gb');if(gb0)gb0.classList.add('hid');const tg0=$('#gTog');if(tg0)tg0.classList.add('hid');updateGpsUI();},
     {enableHighAccuracy:true,maximumAge:2000,timeout:30000}
   );
 }
@@ -692,26 +906,55 @@ function mapCheck(quiet){
 
 function renderTabs(){
   const bar=document.getElementById('sheetbar');if(!bar)return;
-  bar.innerHTML=SHEETS.map(s=>{
+  // We now have 3 sheetbars (one for each tab). We render to all of them.
+  const html = SHEETS.map(s=>{
     const on=s.id===activeId;
-    return `<button class="tab ${on?'on':''}" data-id="${s.id}" data-act="switch"><span class="tname">${esc(s.name)}</span>${on?`<i class="del" data-act="rename" title="تغییر نام">✏️</i>${SHEETS.length>1?`<i class="del" data-act="delete" title="حذف">×</i>`:''}`:''}</button>`;
+    let badge='';
+    if(on){
+      if(s.mode==='garden')badge=' 🌳';
+      else if(s.mode==='forest')badge=' 🌲';
+    }
+    return `<button class="tab ${on?'on':''}" data-id="${s.id}" data-act="switch"><span class="tname">${esc(s.name)}${badge}</span>${on?`<i class="del" data-act="rename" title="تغییر نام">✏️</i>${SHEETS.length>1?`<i class="del" data-act="delete" title="حذف">×</i>`:''}`:''}</button>`;
   }).join('')+`<button class="add" data-act="add" title="سربرگ جدید">+</button>`;
-  bar.querySelectorAll('button').forEach(b=>{
-    b.onclick=e=>{
-      e.stopPropagation();
-      const t=e.target,act=t.dataset.act||b.dataset.act,id=+(b.dataset.id||0);
-      if(act==='add')addSheet(); else if(act==='rename')renameSheet(id); else if(act==='delete')deleteSheet(id); else if(act==='switch'&&id!==activeId)switchSheet(id);
-    };
+  
+  document.querySelectorAll('#sheetbar').forEach(b=>{
+    b.innerHTML = html;
+    b.querySelectorAll('button').forEach(btn=>{
+      btn.onclick=e=>{
+        e.stopPropagation();
+        const t=e.target,act=t.dataset.act||btn.dataset.act,id=+(btn.dataset.id||0);
+        if(act==='add')addSheet(); else if(act==='rename')renameSheet(id); else if(act==='delete')deleteSheet(id); else if(act==='switch'&&id!==activeId)switchSheet(id);
+      };
+    });
   });
 }
 function addSheet(){
-  const def='زمین '+(SHEETS.length+1);
-  const name=prompt('نام سربرگ جدید (نام زمین):',def);
-  if(name===null)return;
-  const nm=name.trim()||def;
-  if(SHEETS.some(s=>s.name===nm)){alert('سربرگی با نام «'+nm+'» از قبل وجود دارد.');return}
-  const id=SHEETS.reduce((a,s)=>Math.max(a,s.id),0)+1;
-  SHEETS.push({id,name:nm,trees:[]}); switchSheet(id); store();
+  const modal = document.getElementById('newSheetModal');
+  modal.classList.remove('hid');
+  
+  modal.querySelectorAll('[data-mode]').forEach(b => {
+    b.onclick = () => {
+      modal.classList.add('hid');
+      const isForest = b.dataset.mode === 'forest';
+      const mode = isForest ? 'forest' : 'garden';
+      const modeName = isForest ? 'جنگل' : 'باغی';
+      
+      const def = 'زمین ' + (SHEETS.length + 1) + ' (' + modeName + ')';
+      const name = prompt('نام سربرگ جدید (نام زمین):', def);
+      if (name === null) return;
+      const nm = name.trim() || def;
+      if (SHEETS.some(s => s.name === nm)) {
+        alert('سربرگی با نام «' + nm + '» از قبل وجود دارد.');
+        return;
+      }
+      const id = SHEETS.reduce((a, s) => Math.max(a, s.id), 0) + 1;
+      SHEETS.push({ id, name: nm, mode, trees: [] });
+      switchSheet(id);
+      store();
+    };
+  });
+  
+  document.getElementById('newSheetCancel').onclick = () => modal.classList.add('hid');
 }
 function renameSheet(id){
   const sh=SHEETS.find(s=>s.id===id);if(!sh)return;
@@ -732,11 +975,13 @@ function deleteSheet(id){
 function switchSheet(id,skipSave){
   if(!skipSave)saveActive();
   if(typeof endEdit==='function')endEdit();
+  lastSavedId=null;
   activeId=id; loadActive();norm();
   const oldSIM=SIM;SIM=false;clr();SIM=oldSIM;updSimBtn();
   cur=null; manualCoords = [];
   updateWalkUI();
   renderTabs();updateMapInfo();draw();mapCheck();updateGpsUI();
+  updateModeLock();
 }
 
 let BK={n:0,dt:''};try{BK=JSON.parse(localStorage.getItem('bk')||'{"n":0,"dt":""}')}catch(e){}
@@ -978,7 +1223,8 @@ $('#cameraDetails').addEventListener('toggle',()=>{if($('#cameraDetails').open){
 
 function clr(){
   tyM=false;noM=false;
-  $('#nn').value='۱';$('#ds').value='';$('#d').value='';$('#gi').value='';$('#h').value='';
+  $('#nn').value='1'; // Reset quantity
+  $('#ds').value='';$('#d').value='';$('#gi').value='';$('#h').value='';
   if(!SIM){$('#sps').value='';fillSp('');$('#sp').value=''}
   IMG={1:null,2:null};MK={1:{},2:{}};
   $('#fi').value='';$('#im').removeAttribute('src');
@@ -987,9 +1233,28 @@ function clr(){
 }
 
 let edId=null,lastSavedId=null,saveTimer=null;
-window.undoLast=()=>{ if(lastSavedId===null)return; T=T.filter(t=>t.id!==lastSavedId); lastSavedId=null; clearTimeout(saveTimer); store();draw(); };
+window.undoLast=()=>{
+  if(lastSavedId === null) return;
+  T = T.filter(t => t.id < lastSavedId); // Remove all trees added in the last batch
+  lastSavedId = null;
+  clearTimeout(saveTimer);
+  store(); draw(); updateModeLock();
+};
 
-function doSave(useCoords){
+let pendingSave=null;
+function askSaveType(callback){
+  const m=$('#saveTypeModal');
+  m.classList.remove('hid');
+  m.querySelectorAll('[data-k]').forEach(b=>{
+    b.onclick=()=>{
+      m.classList.add('hid');
+      callback(b.dataset.k);
+    };
+  });
+  $('#saveTypeCancel').onclick=()=>m.classList.add('hid');
+}
+
+function doSave(useCoords, forcedK){
   const d=N('#d'),h=N('#h'),sp=$('#sp').value;
   if(!sp){$('#msg').textContent='ابتدا گونه را انتخاب کنید.';return}
   if(!(d>0&&h>0)){$('#msg').textContent='قطر و ارتفاع را وارد کنید.';return}
@@ -998,24 +1263,57 @@ function doSave(useCoords){
     if(!cur){ $('#svHint').innerHTML='<span style="color:#d33">⛔ مختصات آماده نیست.</span>'; setTimeout(updateGpsUI,5000); return; }
     coords={lat:cur.lat,lng:cur.lng,ux:cur.u.E,uy:cur.u.N,uz:cur.u.z,ua:Math.round(cur.acc)};
   }
-  {const w=saveWarnings(d,h,$('#ty').value==='h',toEn($('#no').value),null);
+  
+  const count = Math.max(1, Math.round(N('#nn')) || 1);
+  const hz = $('#ty').value==='h';
+  
+  {const w=saveWarnings(d,h,hz,toEn($('#no').value),null);
    if(coords&&cur&&cur.acc>10)w.push('دقت مختصات ±'+fa(cur.acc,0)+' متر است (بدتر از ۱۰ متر).');
    if(w.length&&!confirm('⚠ '+w.join('\n⚠ ')+'\n\nبا همین مقادیر ذخیره شود؟'))return;}
-  const hz=$('#ty').value==='h';
-  const o={no:hz?'':toEn($('#no').value),sp,g:+$('#gd').value,ty:$('#ty').value,n:hz?Math.max(1,Math.round(N('#nn'))||1):1,d,h,f:ff(),v:volSp(sp,d,h),ds:$('#ds').value};
-  const newId=T.reduce((a,t)=>Math.max(a,t.id),0)+1;
-  T.push(Object.assign({id:newId,...(coords||{lat:null,lng:null,ux:null,uy:null,uz:null,ua:null}),dt:new Date().toISOString().slice(0,10)},o));
+   
   const out=coords&&MAPP.length&&!insideLL(coords.lat,coords.lng);
+  const startId = T.reduce((a,t)=>Math.max(a,t.id),0)+1;
+  lastSavedId = startId; // For batch undo
+  
+  if (hz) {
+    const o={no:'',sp,g:+$('#gd').value,ty:'h',n:count,d,h,f:ff(),v:volSp(sp,d,h),ds:$('#ds').value};
+    if(forcedK) o.k = forcedK;
+    T.push(Object.assign({id:startId,...(coords||{lat:null,lng:null,ux:null,uy:null,uz:null,ua:null}),dt:new Date().toISOString().slice(0,10)},o));
+  } else {
+    const startNo = parseInt(toEn($('#no').value)) || 0;
+    for (let c = 0; c < count; c++) {
+      const o={no:(startNo + c).toString(),sp,g:+$('#gd').value,ty:'i',n:1,d,h,f:ff(),v:volSp(sp,d,h),ds:$('#ds').value};
+      if(forcedK) o.k = forcedK;
+      T.push(Object.assign({id:startId+c, ...(coords||{lat:null,lng:null,ux:null,uy:null,uz:null,ua:null}), dt:new Date().toISOString().slice(0,10)},o));
+    }
+  }
+  
   store(); addRecent(sp); draw();
-  lastSavedId=newId; clearTimeout(saveTimer);
+  updateModeLock();
+  clearTimeout(saveTimer);
   $('#msg').innerHTML=(coords?'✓ ذخیره شد':'✓ ذخیره بدون مختصات')+(out?' <span style="color:#d33">⚠ خارج از محدوده!</span>':'')+gapHtml()+' • <a href="#" onclick="undoLast();return false" style="color:var(--ac);font-weight:700">برگرداندن</a>';
   saveTimer=setTimeout(()=>{if($('#msg').innerHTML.includes('برگرداندن'))$('#msg').textContent=''},10000);
   if(out)alarm(true);
   clr();
 }
 
-$('#sv').onclick=()=>doSave(true);
-$('#svNo').onclick=()=>doSave(false);
+$('#sv').onclick=()=>{
+  const m=getActiveSheet().mode;
+  if(m==='garden'){
+    askSaveType(k=>doSave(true,k));
+  } else {
+    doSave(true);
+  }
+};
+$('#svNo').onclick=()=>{
+  const m=getActiveSheet().mode;
+  if(m==='garden'){
+    askSaveType(k=>doSave(false,k));
+  } else {
+    doSave(false);
+  }
+};
+
 $('#svEdit').onclick=()=>{
   const d=N('#d'),h=N('#h'),sp=$('#sp').value;
   if(!sp){$('#msg').textContent='ابتدا گونه را انتخاب کنید.';return}
@@ -1026,7 +1324,7 @@ $('#svEdit').onclick=()=>{
     const hz=$('#ty').value==='h';
     Object.assign(t,{no:hz?'':toEn($('#no').value),sp,g:+$('#gd').value,ty:$('#ty').value,n:hz?Math.max(1,Math.round(N('#nn'))||1):1,d,h,f:ff(),v:volSp(sp,d,h),ds:$('#ds').value});
     if(t.d2)t.v2=volSp(sp,t.d2,t.h2);
-    if(cur){t.lat=cur.lat;t.lng=cur.lng;t.ux=cur.u.E;t.uy=cur.u.N;t.uz=cur.u.z;t.ua=Math.round(cur.acc)}
+    if(cur && t.lat==null){t.lat=cur.lat;t.lng=cur.lng;t.ux=cur.u.E;t.uy=cur.u.N;t.uz=cur.u.z;t.ua=Math.round(cur.acc)}
   }
   store();endEdit();clr();draw();
   $('#msg').textContent='ویرایش ذخیره شد.';
@@ -1046,11 +1344,17 @@ window.ed=id=>{
 };
 
 const cnt=t=>t.n||1,tv=t=>t.v*cnt(t),sv=a=>a.reduce((x,t)=>x+tv(t),0),ct=a=>a.reduce((x,t)=>x+cnt(t),0);
+
 function sumX(){
-  const I=T.filter(t=>t.ty!='h'),H=T.filter(t=>t.ty=='h');
+  const I=T.filter(t=>t.ty!='h'&&t.k!=='planted'),H=T.filter(t=>t.ty=='h'&&t.k!=='planted');
   const sp=[...new Set(T.map(t=>t.sp))].sort((a,b)=>((SP[a]||[0,3])[1]-(SP[b]||[0,3])[1])||a.localeCompare(b,'fa'));
   return{r:sp.map(n=>{const i=I.filter(t=>t.sp==n),h=H.filter(t=>t.sp==n);return[n,ct(i),sv(i),ct(h),sv(h)]}),t:['مجموع',ct(I),sv(I),ct(H),sv(H)]};
 }
+
+function invTrees(){
+  return T; // Show all trees, including planted
+}
+
 function updateNoCoord(){
   const el=$('#noCoordBanner');if(!el)return;
   const n=T.filter(t=>!t.lat).length;
@@ -1058,7 +1362,7 @@ function updateNoCoord(){
   if(n)el.textContent='⚠ '+toFa(n)+' درخت بدون مختصات — برای تکمیل، ویرایش کنید.';
 }
 function numIssues(){
-  const nums=T.filter(t=>t.ty!='h'&&t.no!==''&&t.no!=null).map(t=>parseInt(t.no)).filter(n=>n>0);
+  const nums=invTrees().filter(t=>t.ty!='h'&&t.no!==''&&t.no!=null).map(t=>parseInt(t.no)).filter(n=>n>0);
   const seen={},dup=[];nums.forEach(n=>{if(seen[n]===1)dup.push(n);seen[n]=(seen[n]||0)+1});
   const max=nums.reduce((a,b)=>Math.max(a,b),0),miss=[];for(let i=1;i<=max;i++)if(!seen[i])miss.push(i);
   return{dup:[...new Set(dup)],miss};
@@ -1079,9 +1383,23 @@ function saveWarnings(d,h,hz,no,exId){
   if(h>60)w.push('ارتفاع '+fa(h,1)+' متر خیلی زیاد است.');
   if(h>0&&h<2)w.push('ارتفاع کمتر از ۲ متر است.');
   if(d>0&&h>0){const r=h/(d/100);if(r>150)w.push('ارتفاع نسبت به قطر غیرعادی زیاد است.');else if(r<20)w.push('ارتفاع نسبت به قطر غیرعادی کم است.')}
-  if(!hz&&no){const k=String(no).trim();if(k&&T.some(t=>t.id!=exId&&t.ty!='h'&&String(t.no)===k))w.push('شمارهٔ '+toFa(k)+' قبلاً ثبت شده است.')}
+  
+  if(!hz && no){
+    const k = parseInt(no);
+    if(k > 0){
+      const conflict = T.some(t=>{
+        if(t.id == exId || t.ty == 'h') return false;
+        const start = parseInt(t.no) || 0;
+        const count = t.n || 1;
+        const end = start + count - 1;
+        return k >= start && k <= end;
+      });
+      if(conflict) w.push('شمارهٔ ' + toFa(k) + ' با محدودهٔ شماره درختان ثبت‌شده تداخل دارد.');
+    }
+  }
   return w;
 }
+
 function updateTotSummary(){
   const el=$('#totSummary');if(!el)return;
   const I=T.filter(t=>t.ty!='h'),H=T.filter(t=>t.ty==='h');
@@ -1089,23 +1407,87 @@ function updateTotSummary(){
   if(!T.length){el.innerHTML='تعداد کل: <b>۰</b> اصله به حجم <b>۰</b> مترمکعب';return;}
   el.innerHTML='تعداد کل: <b>'+toFa(tc)+'</b> اصله به حجم <b>'+fa(tvAll,3)+'</b> مترمکعب';
 }
+
+function updateTaxBox(){
+  const box=$('#taxTotalBox');if(!box)return;
+  const trees=invTrees();
+  if(!trees.length){box.classList.add('hid');return}
+  const byCat={1:{n:0,v:0,t:0},2:{n:0,v:0,t:0},3:{n:0,v:0,t:0},fw:{n:0,v:0,t:0}};
+  let totalTax=0,totalV=0;
+  trees.forEach(t=>{
+    if(t.k === 'planted') return; // Skip planted for tax box
+    const c=cnt(t),v=tv(t),tax=taxOf(t);
+    totalTax+=tax;totalV+=v;
+    if(t.ty==='h'){byCat.fw.n+=c;byCat.fw.v+=v;byCat.fw.t+=tax;}
+    else{
+      const cat=(SP[t.sp]||[0,3])[1];
+      const cc=byCat[cat]||byCat[3];
+      cc.n+=c;cc.v+=v;cc.t+=tax;
+    }
+  });
+  const rows=[
+    ['دسته اول',byCat[1],'۱٬۴۰۰٬۰۰۰'],
+    ['دسته دوم',byCat[2],'۱٬۱۷۲٬۰۰۰'],
+    ['دسته سوم',byCat[3],'۷۰۰٬۰۰۰'],
+    ['درختان هیزمی (استر)',byCat.fw,'۱۶۵٬۰۰۰/استر'],
+  ];
+  let html='<b>💰 محاسبهٔ عوارض (ماده ۱۵)</b><table style="margin-top:6px">';
+  html+='<tr><th>دسته</th><th>تعداد</th><th>حجم (m³)</th><th>نرخ (ریال)</th><th>مبلغ عوارض (ریال)</th></tr>';
+  rows.forEach(([name,o,rate])=>{
+    html+=`<tr><td style="text-align:right;padding-right:8px">${name}</td><td>${toFa(o.n)}</td><td>${fa(o.v,3)}</td><td class="m" style="font-size:11px">${rate}</td><td class="taxCol">${o.t?fa(o.t,0):'—'}</td></tr>`;
+  });
+  html+=`<tr style="font-weight:700;background:#f5e7b5"><td style="text-align:right;padding-right:8px">جمع کل</td><td>${toFa(byCat[1].n+byCat[2].n+byCat[3].n+byCat.fw.n)}</td><td>${fa(totalV,3)}</td><td></td><td class="taxCol">${fa(totalTax,0)}</td></tr>`;
+  html+='</table>';
+  box.innerHTML=html;
+  box.classList.remove('hid');
+}
+
+function updatePlantedBox(){
+  const el=$('#plantedBox');if(!el)return;
+  const m=getActiveSheet().mode;
+  if(m!=='garden'){el.classList.add('hid');return}
+  const planted=T.filter(t=>t.k==='planted');
+  if(!planted.length){el.classList.add('hid');return}
+  const n=planted.reduce((a,t)=>a+cnt(t),0), v=planted.reduce((a,t)=>a+tv(t),0);
+  el.textContent='🌱 درختان دست‌کاشت (در سیاهه با عوارض صفر): '+toFa(n)+' اصله — حجم '+fa(v,3)+' مترمکعب';
+  el.classList.remove('hid');
+}
+
 function draw(){
-  bnr();updateNoCoord();updateNumCheck();updateTotSummary();
-  $('#tb').innerHTML='<tr><th>شماره</th><th>گونه</th><th>دسته</th><th>نوع</th><th>قطر</th><th>ارتفاع</th><th>حجم</th><th>X</th><th>Y</th><th>زون</th><th>توضیحات</th><th></th></tr>'+
-    T.map(t=>`<tr><td>${t.ty==='h'?'—':esc(toFa(t.no||''))}</td><td>${esc(t.sp)}</td><td>${G[t.g]}</td><td>${t.ty==='h'?'هیزمی ('+toFa(cnt(t))+')':'صنعتی'}</td><td>${fa(t.d,1)}</td><td>${fa(t.h,1)}</td><td>${fa(tv(t),3)}</td><td${t.ua>10?' style="color:#b78500" title="دقت ضعیف"':''}>${t.ux?toFa(t.ux):'<span style="color:#d33">⚠</span>'}</td><td>${t.uy?toFa(t.uy):'—'}</td><td>${t.uz?toFa(t.uz):'—'}</td><td>${esc(t.ds||'')}</td><td><button class="o chipbtn" onclick="ed(${t.id})">ویرایش</button> <button class="x" onclick="del(${t.id})">حذف</button></td></tr>`).join('');
-  $('#tot').textContent=fa(sv(T),3);
+  bnr();updateNoCoord();updateNumCheck();updateTotSummary();updateTaxBox();updatePlantedBox();
+  const showTax = getActiveSheet().mode==='garden' || getActiveSheet().mode==='forest';
+  const list=invTrees();
+  
+  // Sort trees: numbered trees first (by number), unnumbered (like firewood) at the end
+  list.sort((a,b) => {
+    const noA = (a.ty==='h' || a.no==='' || a.no==null) ? 999999 : parseInt(a.no);
+    const noB = (b.ty==='h' || b.no==='' || b.no==null) ? 999999 : parseInt(b.no);
+    if(noA === noB) return a.id - b.id;
+    return noA - noB;
+  });
+
+  const taxHeader = showTax ? '<th>عوارض (ریال)</th>' : '';
+  $('#tb').innerHTML='<tr><th>شماره</th><th>گونه</th><th>دسته</th><th>نوع</th><th>قطر</th><th>ارتفاع</th><th>حجم</th>'+taxHeader+'<th>X</th><th>Y</th><th>زون</th><th>توضیحات</th><th></th></tr>'+
+    list.map(t=>{
+      const isPlanted = t.k === 'planted';
+      const taxCell = showTax ? `<td class="taxCol">${isPlanted ? '۰' : fa(taxOf(t),0)}</td>` : '';
+      return `<tr><td>${t.ty==='h'?'—':esc(toFa(t.no||''))}</td><td>${esc(t.sp)}</td><td>${G[t.g]}</td><td>${t.ty==='h'?'هیزمی ('+toFa(cnt(t))+')':(isPlanted?'دست‌کاشت':'صنعتی')}</td><td>${fa(t.d,1)}</td><td>${fa(t.h,1)}</td><td>${fa(tv(t),3)}</td>${taxCell}<td${t.ua>10?' style="color:#b78500" title="دقت ضعیف"':''}>${t.ux?toFa(t.ux):'<span style="color:#d33">⚠</span>'}</td><td>${t.uy?toFa(t.uy):'—'}</td><td>${t.uz?toFa(t.uz):'—'}</td><td>${esc(t.ds||'')}</td><td><button class="o chipbtn" onclick="ed(${t.id})">ویرایش</button> <button class="x" onclick="del(${t.id})">حذف</button></td></tr>`;
+    }).join('');
+  $('#tot').textContent=fa(sv(list),3);
   const x=sumX();
   $('#sm').innerHTML='<tr><th rowspan="2">ردیف</th><th rowspan="2">دسته‌بندی</th><th colspan="2">صنعتی</th><th colspan="2">هیزمی</th></tr><tr><th>تعداد</th><th>حجم</th><th>تعداد</th><th>حجم</th></tr>'+
     x.r.map((a,i)=>`<tr><td>${fa(i+1)}</td><td>${esc(a[0])}</td><td>${fa(a[1])}</td><td>${fa(a[2],2)}</td><td>${fa(a[3])}</td><td>${fa(a[4],2)}</td></tr>`).join('')+
     `<tr style="font-weight:700"><td colspan="2">مجموع</td><td>${fa(x.t[1])}</td><td>${fa(x.t[2],2)}</td><td>${fa(x.t[3])}</td><td>${fa(x.t[4],2)}</td></tr>`;
   const cu=$('#hs2').value;
-  $('#hs2').innerHTML=T.map(t=>`<option value="${t.id}">${t.ty==='h'?'هیزمی':'شماره '+esc(toFa(t.no||t.id))} - ${esc(t.sp)} - ${fa(t.d,0)}</option>`).join('');
+  $('#hs2').innerHTML=T.map(t=>`<option value="${t.id}">${t.ty==='h'?'هیزمی':(t.k==='planted'?'دست‌کاشت':'شماره '+esc(toFa(t.no||t.id)))} - ${esc(t.sp)} - ${fa(t.d,0)}</option>`).join('');
   if(cu)$('#hs2').value=cu;
   $('#tb2').innerHTML='<tr><th>#</th><th>گونه</th><th>حجم اولیه</th><th>حجم تجدید</th><th>تغییر٪</th><th>استحصال</th><th>تاریخ</th></tr>'+
     T.filter(t=>t.v2||t.hv).map(t=>`<tr><td>${t.ty==='h'?'هیزمی':esc(toFa(t.no||t.id))}</td><td>${esc(t.sp)}</td><td>${fa(t.v,3)}</td><td>${fa(t.v2,3)}</td><td>${t.v2?fa((t.v2-t.v)/t.v*100,1):'—'}</td><td>${fa(t.hv,3)}</td><td>${esc(t.hd||'—')}</td></tr>`).join('');
+  
+  updateModeLock(); // Lock if T.length > 0
   try{mapCheck(true)}catch(e){}
 }
-window.del=id=>{T=T.filter(t=>t.id!==id);store();draw()};
+window.del=id=>{if(!confirm('این درخت حذف شود؟'))return;T=T.filter(t=>t.id!==id);store();draw();updateModeLock();};
 $('#sh').onclick=()=>{
   const t=T.find(x=>x.id==$('#hs2').value);if(!t)return;
   const d2=N('#d2'),h2=N('#h2');
@@ -1117,8 +1499,8 @@ $('#sh').onclick=()=>{
 function fillSp(q){
   q=nz(q||'');
   const a=q?NAMES.filter(n=>nz(n).startsWith(q)).concat(NAMES.filter(n=>!nz(n).startsWith(q)&&nz(n).includes(q))):NAMES;
-  $('#sp').innerHTML='<option value="">— گونه را انتخاب کنید —</option>'+a.map(k=>`<option>${esc(k)}</option>`).join('');
-  $('#sp').size=q?Math.min(7,a.length+1):1;
+  $('#sp').innerHTML='<option value="">— انتخاب —</option>'+a.map(k=>`<option>${esc(k)}</option>`).join('');
+  // Removed size logic to keep it a normal dropdown
   const sug=$('#spSug');
   if(sug){
     if(q&&a.length){
@@ -1132,7 +1514,13 @@ function fillSp(q){
 const nz=x=>String(x).replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/آ/g,'ا').replace(/[\u200c\s]/g,''),NAMES=Object.keys(SP).sort((a,b)=>a.localeCompare(b,'fa'));
 $('#sps').addEventListener('input',()=>{fillSp($('#sps').value)});
 fillSp('');
-$('#sp').onchange=()=>{const v=$('#sp').value;if($('#sps').value){$('#sps').value='';fillSp('');$('#sp').value=v}const x=SP[v];if(x)$('#gd').value=x[1];calc();renderRecent()};
+$('#sp').onchange=()=>{
+  const v=$('#sp').value;
+  if($('#sps').value){$('#sps').value='';fillSp('');$('#sp').value=v}
+  const x=SP[v];if(x)$('#gd').value=x[1];
+  if(v) addRecent(v);
+  calc();renderRecent();
+};
 $('#simBtn').onclick=()=>{SIM=!SIM;try{localStorage.setItem('simSp',SIM?'1':'0')}catch(e){}updSimBtn()};
 $('#gTog').onclick=()=>{gbHidden=!gbHidden;$('#gb').classList.toggle('hid',gbHidden);$('#gTog').textContent=gbHidden?'▾':'▴';$('#gTog').title=gbHidden?'نمایش مختصات':'مخفی کردن مختصات'};
 $('#cmpTog').onclick=()=>{const w=$('#compassWrap');w.classList.toggle('hid');const off=w.classList.contains('hid');$('#cmpTog').className=off?'o sbtn':'sbtn';try{localStorage.setItem('cmpOn',off?'0':'1')}catch(e){}};
@@ -1146,12 +1534,41 @@ $('#resetWalk').onclick=()=>{
 updateWalkUI();
 $('#ga').onclick=e=>{if(e){e.preventDefault();e.stopPropagation()}if(gpsOn)stopGPS();else startGPS();};
 
-function calc(){autoTy();const v=($('#sp').value?volSp($('#sp').value,N('#d'),N('#h')):0)*($('#ty').value=='h'?Math.max(1,Math.round(N('#nn'))||1):1);{const t=v>0?fa(v,3):'—';const e=$('#vBar');if(e)e.textContent=t}}
-['#d','#h'].forEach(i=>$(i).addEventListener('input',calc));
+$('#volClass').addEventListener('change',()=>{
+  const sh=getActiveSheet();
+  sh.volClass=$('#volClass').value;
+  saveActive();
+  T.forEach(t=>{t.v=volSp(t.sp,t.d,t.h);if(t.d2)t.v2=volSp(t.sp,t.d2,t.h2)});
+  store();draw();
+});
+
+function calc(){
+  autoTy();
+  const v=($('#sp').value?volSp($('#sp').value,N('#d'),N('#h')):0)*(Math.max(1,Math.round(N('#nn'))||1));
+  const t=v>0?fa(v,3):'—';const e=$('#vBar');if(e)e.textContent=t;
+}
+['#d','#h','#nn'].forEach(i=>$(i).addEventListener('input',calc));
 $('#gi').addEventListener('input',()=>{const g=N('#gi');if(g>0)$('#d').value=toFa((g/Math.PI).toFixed(1));calc()});
 $('#d').addEventListener('input',()=>{$('#gi').value=''});
-const autoNo=()=>{$('#cw').classList.toggle('hid',$('#ty').value!='h');if(noM)return;if($('#ty').value=='h'){$('#no').value=''}else{$('#no').value=toFa(T.filter(t=>t.ty!='h').reduce((a,t)=>Math.max(a,+t.no||0),0)+1)}};
+
+/* Fix 1: Smart Auto-Numbering based on quantity */
+const autoNo=()=>{
+  if(noM)return;
+  if($('#ty').value=='h'){
+    $('#no').value='';
+  }else{
+    let maxNo = 0;
+    T.filter(t=>t.ty!='h').forEach(t=>{
+      const start = parseInt(t.no) || 0;
+      const count = t.n || 1;
+      const end = start + count - 1;
+      if(end > maxNo) maxNo = end;
+    });
+    $('#no').value = toFa(maxNo + 1);
+  }
+};
 let tyM=false, noM=false;
+$('#ty').addEventListener('change',()=>{tyM=true});
 const autoTy=()=>{if(!tyM)$('#ty').value=(N('#d')>0&&N('#d')<20)?'h':'i';autoNo()};
 $('#no').addEventListener('input',()=>{noM=true});
 const ff=()=>(SP[$('#sp').value]||[.5])[0];
@@ -1179,6 +1596,18 @@ async function prepareOcrImage(file){
   const blob=await new Promise(resolve=>c.toBlob(resolve,'image/png'));
   img.close&&img.close();return blob||file;
 }
+
+const parseNum = s => {
+  if(s==null) return NaN;
+  let t = String(s)
+    .replace(/[۰-۹]/g, d => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))
+    .replace(/[٠-٩]/g, d => String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)))
+    .replace(/[٫،,]/g, '.')
+    .replace(/[^0-9.\-]/g, '');
+  const p = t.split('.');
+  if(p.length>2) t = p[0]+'.'+p.slice(1).join('');
+  return parseFloat(t);
+};
 
 document.getElementById('btnSmartImport').onclick = () => document.getElementById('smartImportFile').click();
 document.getElementById('smartImportFile').onchange = async (e) => {
@@ -1209,9 +1638,9 @@ document.getElementById('smartImportFile').onchange = async (e) => {
         for (let i = headerRowIdx + 1; i < rows.length; i++) {
           const r = rows[i]; if (!r || r.length === 0) continue;
           if (String(r[colD]).includes('قطر')) continue;
-          const d = parseFloat(String(r[colD]).replace(/[^0-9.]/g, ''));
-          const h = parseFloat(String(r[colH]).replace(/[^0-9.]/g, '')) || 0;
-          if (d > 0) { extractedData.push({ no: colNo !== -1 && r[colNo] ? String(r[colNo]).trim() : '', sp: colSp !== -1 && r[colSp] ? String(r[colSp]).trim() : '', d: d, h: h, ds: colDs !== -1 && r[colDs] ? String(r[colDs]).trim() : '' }); }
+          const d = parseNum(r[colD]);
+          const h = parseNum(r[colH]) || 0;
+          if (d > 0) { extractedData.push({ no: colNo !== -1 && r[colNo] ? toEn(String(r[colNo]).trim()) : '', sp: colSp !== -1 && r[colSp] ? String(r[colSp]).trim() : '', d: d, h: h, ds: colDs !== -1 && r[colDs] ? String(r[colDs]).trim() : '' }); }
         }
       }
     } else if (fext === 'docx') {
@@ -1291,13 +1720,16 @@ function showImportPreview(data) {
     let currentMaxNo = T.filter(t=>t.ty!='h').reduce((max, t) => Math.max(max, parseInt(t.no) || 0), 0);
     rows.forEach(tr => {
       const no = tr.querySelector('.imp-no').value.trim(); let sp = tr.querySelector('.imp-sp').value.trim();
-      const d = parseFloat(toEn(tr.querySelector('.imp-d').value)); const h = parseFloat(toEn(tr.querySelector('.imp-h').value)) || 0; const ds = tr.querySelector('.imp-ds').value.trim();
+      const d = parseNum(tr.querySelector('.imp-d').value); const h = parseNum(tr.querySelector('.imp-h').value) || 0; const ds = tr.querySelector('.imp-ds').value.trim();
       if (d > 0) {
         if (!sp) sp = 'نامشخص';
         let finalNo = no;
-        if(!finalNo) { currentMaxNo++; finalNo = currentMaxNo.toString(); } else { currentMaxNo = Math.max(currentMaxNo, parseInt(finalNo) || 0); }
+        const isFw = d < 20;
+        if(isFw) { finalNo = ''; }
+        else if(!finalNo) { currentMaxNo++; finalNo = currentMaxNo.toString(); }
+        else { currentMaxNo = Math.max(currentMaxNo, parseInt(finalNo) || 0); }
         const newId = T.reduce((a, t) => Math.max(a, t.id), 0) + 1;
-        T.push({ id: newId, no: finalNo, sp: sp, g: (SP[sp] || [0,3])[1], ty: d < 20 ? 'h' : 'i', n: 1, d: d, h: h, f: 0.5, v: volSp(sp, d, h), ds: ds, lat: null, lng: null, ux: null, uy: null, uz: null, ua: null, dt: new Date().toISOString().slice(0,10) });
+        T.push({ id: newId, no: finalNo, sp: sp, g: (SP[sp] || [0,3])[1], ty: isFw ? 'h' : 'i', n: 1, d: d, h: h, f: 0.5, v: volSp(sp, d, h), ds: ds, lat: null, lng: null, ux: null, uy: null, uz: null, ua: null, dt: new Date().toISOString().slice(0,10) });
         added++;
       }
     });
@@ -1331,14 +1763,21 @@ document.getElementById('btnQuickEntry').onclick = () => {
     const rows = tbody.querySelectorAll('tr'); let added = 0;
     let currentMaxNo = T.filter(t=>t.ty!='h').reduce((max, t) => Math.max(max, parseInt(t.no) || 0), 0);
     rows.forEach(tr => {
-      let sp = tr.querySelector('.q-sp').value.trim(); const d = parseFloat(toEn(tr.querySelector('.q-d').value)); const h = parseFloat(toEn(tr.querySelector('.q-h').value)) || 0; const count = parseInt(toEn(tr.querySelector('.q-count').value)) || 1;
+      let sp = tr.querySelector('.q-sp').value.trim(); const d = parseNum(tr.querySelector('.q-d').value); const h = parseNum(tr.querySelector('.q-h').value) || 0; const count = parseInt(toEn(tr.querySelector('.q-count').value)) || 1;
       if (d > 0) {
         if (!sp) sp = 'نامشخص';
-        for(let i=0; i<count; i++){
-           currentMaxNo++;
-           const newId = T.reduce((a, t) => Math.max(a, t.id), 0) + 1;
-           T.push({ id: newId, no: currentMaxNo.toString(), sp: sp, g: (SP[sp] || [0,3])[1], ty: d < 20 ? 'h' : 'i', n: 1, d: d, h: h, f: 0.5, v: volSp(sp, d, h), ds: '', lat: null, lng: null, ux: null, uy: null, uz: null, ua: null, dt: new Date().toISOString().slice(0,10) });
-           added++;
+        const isFw = d < 20;
+        if (isFw) {
+          const newId = T.reduce((a, t) => Math.max(a, t.id), 0) + 1;
+          T.push({ id: newId, no: '', sp: sp, g: (SP[sp] || [0,3])[1], ty: 'h', n: count, d: d, h: h, f: 0.5, v: volSp(sp, d, h), ds: '', lat: null, lng: null, ux: null, uy: null, uz: null, ua: null, dt: new Date().toISOString().slice(0,10) });
+          added += count;
+        } else {
+          for (let i = 0; i < count; i++) {
+            currentMaxNo++;
+            const newId = T.reduce((a, t) => Math.max(a, t.id), 0) + 1;
+            T.push({ id: newId, no: currentMaxNo.toString(), sp: sp, g: (SP[sp] || [0,3])[1], ty: 'i', n: 1, d: d, h: h, f: 0.5, v: volSp(sp, d, h), ds: '', lat: null, lng: null, ux: null, uy: null, uz: null, ua: null, dt: new Date().toISOString().slice(0,10) });
+            added++;
+          }
         }
       }
     });
@@ -1366,21 +1805,99 @@ renderTabs();updateMapInfo();renderSnaps();updSimBtn();renderRecent();
 $('#refType').value=refType;
 if(refType==='custom')$('#refSize').classList.remove('hid');
 updateModeUI();act=getDef()[0][0];setStep(1);$('#sp').onchange();draw();mapCheck();updateGpsUI();updateTotSummary();
+updateModeLock(); // Lock if there are trees in initial load
 $('#ga').textContent='📍 مختصات';$('#ga').classList.add('o');
 
 const DL={save:async({filename,data})=>{const u=URL.createObjectURL(data),a=document.createElement('a');a.href=u;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000)}};
 $('#rb').onclick=()=>$('#rf').click();
-$('#rf').onchange=async e=>{ const f=e.target.files[0];if(!f)return; try{ const j=JSON.parse(await f.text()); const sheetsArr=Array.isArray(j.sheets)?j.sheets:null; const treesArr=Array.isArray(j)?j:(Array.isArray(j.trees)?j.trees:null); if(sheetsArr){ if($('#rm').value==='r'){SHEETS=sheetsArr;activeId=SHEETS[0]?.id||1;}else{let m=SHEETS.reduce((a,s)=>Math.max(a,s.id),0);sheetsArr.forEach(s=>{m++;let nm=s.name,k=2;while(SHEETS.some(x=>x.name===nm))nm=s.name+' ('+(k++)+')';SHEETS.push(Object.assign({},s,{id:m,name:nm}))})} loadActive();norm();saveActive(); if(Array.isArray(j.snaps)){if($('#rm').value==='r')SNAPS=j.snaps;else{let m2=SNAPS.reduce((a,x)=>Math.max(a,x.id||0),0);j.snaps.forEach(x=>{m2++;SNAPS.push(Object.assign({},x,{id:m2}))})}saveSnaps();renderSnaps()} }else if(treesArr){ if($('#rm').value==='r'){T=treesArr}else{let m=T.reduce((x,t)=>Math.max(x,t.id),0);T=T.concat(treesArr.map(t=>Object.assign({},t,{id:++m})))} norm();saveActive(); }else throw 0; renderTabs();updateMapInfo();draw();mapCheck();alert('بازیابی شد.'); }catch(x){alert('فایل معتبر نیست.')} e.target.value=''; };
+$('#rf').onchange=async e=>{ const f=e.target.files[0];if(!f)return; try{ const j=JSON.parse(await f.text()); const sheetsArr=Array.isArray(j.sheets)?j.sheets:null; const treesArr=Array.isArray(j)?j:(Array.isArray(j.trees)?j.trees:null); if(sheetsArr){ if($('#rm').value==='r'){if(!confirm('همهٔ داده‌های فعلی حذف و با فایل پشتیبان جایگزین شوند؟'))return;SHEETS=sheetsArr;activeId=SHEETS[0]?.id||1;}else{let m=SHEETS.reduce((a,s)=>Math.max(a,s.id),0);sheetsArr.forEach(s=>{m++;let nm=s.name,k=2;while(SHEETS.some(x=>x.name===nm))nm=s.name+' ('+(k++)+')';SHEETS.push(Object.assign({},s,{id:m,name:nm}))})} loadActive();norm();saveActive(); if(Array.isArray(j.snaps)){if($('#rm').value==='r')SNAPS=j.snaps;else{let m2=SNAPS.reduce((a,x)=>Math.max(a,x.id||0),0);j.snaps.forEach(x=>{m2++;SNAPS.push(Object.assign({},x,{id:m2}))})}saveSnaps();renderSnaps()} }else if(treesArr){ if($('#rm').value==='r'){if(!confirm('همهٔ داده‌های فعلی حذف و با فایل پشتیبان جایگزین شوند؟'))return;T=treesArr}else{let m=T.reduce((x,t)=>Math.max(x,t.id),0);T=T.concat(treesArr.map(t=>Object.assign({},t,{id:++m})))} norm();saveActive(); }else throw 0; renderTabs();updateMapInfo();draw();mapCheck();updateModeLock();alert('بازیابی شد.'); }catch(x){alert('فایل معتبر نیست.')} e.target.value=''; };
 
 const R3=x=>+(+x).toFixed(3),say=(m,bad)=>document.querySelectorAll('.xs').forEach(e=>{e.textContent=m;e.style.color=bad?'#d33':''});
-async function mkX(sheets){ const wb=new ExcelJS.Workbook(),bd={style:'thin'}; sheets.forEach(([n,rows,mg,hr=1,tot])=>{ const ws=wb.addWorksheet(n,{views:[{rightToLeft:true}]}),W=rows[0].length; rows.forEach(r=>ws.addRow(r)); for(let i=1;i<=W;i++)ws.getColumn(i).width=n==='درختان'?14:18; for(let r=1;r<=rows.length;r++)for(let c=1;c<=W;c++){const x=ws.getCell(r,c);x.alignment={horizontal:'center',vertical:'middle',wrapText:true};x.border={top:bd,left:bd,bottom:bd,right:bd}; if(r<=hr){x.font={bold:true};x.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFE3EEDF'}}}else if(tot&&r==rows.length)x.font={bold:true}} (mg||[]).forEach(([a,b,c,d])=>ws.mergeCells(a+1,b+1,c+1,d+1))}); return await wb.xlsx.writeBuffer()}
+async function mkX(sheets){ const wb=new ExcelJS.Workbook(),bd={style:'thin'}; sheets.forEach(([n,rows,mg,hr=1,tot])=>{ const ws=wb.addWorksheet(n,{views:[{rightToLeft:true}]}),W=rows[0].length; rows.forEach(r=>ws.addRow(r)); for(let i=1;i<=W;i++)ws.getColumn(i).width=n==='سیاهه'?14:18; for(let r=1;r<=rows.length;r++)for(let c=1;c<=W;c++){const x=ws.getCell(r,c);x.alignment={horizontal:'center',vertical:'middle',wrapText:true};x.border={top:bd,left:bd,bottom:bd,right:bd}; if(r<=hr){x.font={bold:true};x.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFE3EEDF'}}}else if(tot&&r==rows.length)x.font={bold:true}} (mg||[]).forEach(([a,b,c,d])=>ws.mergeCells(a+1,b+1,c+1,d+1))}); return await wb.xlsx.writeBuffer()}
 const MIME='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',msg=e=>String(e&&e.message||e);
 const safe=f=>()=>{try{const r=f();if(r&&r.catch)r.catch(e=>say('خطا: '+msg(e),1))}catch(e){say('خطا: '+msg(e),1)}};
 
-function sumSheets(){ const x=sumX(),n3=a=>a.slice(0,1).concat(a.slice(1).map((v,i)=>i%2?R3(v):v)); const A=[['خلاصه وضعیت درختان مورد نشانه‌گذاری شده','','','','',''],['ردیف','دسته‌بندی درختان نشانه‌گذاری شده','درختان صنعتی','','درختان هیزمی',''],['','','تعداد','حجم','تعداد','حجم']].concat(x.r.map((a,i)=>[i+1].concat(n3(a))),[['مجموع',''].concat(n3(x.t).slice(1))]),L=A.length-1; const gs=[1,2,3].map(g=>{const I=T.filter(t=>t.g==g&&t.ty!='h'),H=T.filter(t=>t.g==g&&t.ty==='h');return[G[g],ct(I),R3(sv(I)),ct(H),R3(sv(H))]}); const B=[['خلاصه بر اساس دسته','','','',''],['دسته','درختان صنعتی','','درختان هیزمی',''],['','تعداد','حجم','تعداد','حجم']].concat(gs); return[['خلاصه',A,[[0,0,0,5],[1,0,2,0],[1,1,2,1],[1,2,1,3],[1,4,1,5],[L,0,L,1]],3,1],['خلاصه دسته',B,[[0,0,0,4],[1,0,2,0],[1,1,1,2],[1,3,1,4]],3]]}
-function buildE1(title){ const ind=T.filter(t=>t.ty!='h').sort((a,b)=>(+a.no||a.id)-(+b.no||b.id)),fw=T.filter(t=>t.ty==='h'),gm={}; fw.forEach(t=>{const d=Math.round(t.d),h=Math.round(t.h),k=t.sp+'|'+d+'|'+h;gm[k]=gm[k]||{sp:t.sp,d,h,n:0,v:0};gm[k].n+=cnt(t);gm[k].v+=tv(t)}); const gr=Object.values(gm),W=12,pad=a=>a.concat(Array(W-a.length).fill('')); const rows=[pad(['سیاهه درختان — '+title]),pad(['درختان صنعتی','','','','','','درختان هیزمی']),pad(['شماره درخت','جنس','ابعاد','','حجم (مترمکعب)','توضیحات','جنس','ابعاد','','حجم یک اصله','تعداد','حجم']),pad(['','','قطر (cm)','طول (m)','','','','قطر (cm)','طول (m)'])]; for(let i=0;i<Math.max(ind.length,gr.length);i++){const a=ind[i],g=gr[i];rows.push(pad((a?[a.no||i+1,a.sp,a.d,a.h,R3(a.v),a.ds||'']:Array(6).fill('')).concat(g?[g.sp,g.d,g.h,R3(g.v/g.n),g.n,R3(g.v)]:[])))} rows.push(pad(['جمع','','','',R3(sv(ind)),'','','','','',ct(fw),R3(sv(fw))])); const L=rows.length-1,mg=[[0,0,0,11],[1,0,1,5],[1,6,1,11],[2,0,3,0],[2,1,3,1],[2,2,2,3],[2,4,3,4],[2,5,3,5],[2,6,3,6],[2,7,2,8],[2,9,3,9],[2,10,3,10],[2,11,3,11],[L,0,L,3]]; return[['درختان',rows,mg,4,1],['مختصات',[['شماره','گونه','X (UTM)','Y (UTM)','زون','دقت (± متر)','وضعیت']].concat(ind.map((t,i)=>[t.no||i+1,t.sp,t.ux||'',t.uy||'',t.uz||'',t.ua||'',t.ux?'✓':'⚠ بدون مختصات']))],...sumSheets()];}
+function buildInventorySheet(title, allTrees){
+  const list = allTrees || invTrees();
+  list.sort((a,b) => {
+    const noA = (a.ty==='h' || a.no==='' || a.no==null) ? 999999 : parseInt(a.no);
+    const noB = (b.ty==='h' || b.no==='' || b.no==null) ? 999999 : parseInt(b.no);
+    if(noA === noB) return a.id - b.id;
+    return noA - noB;
+  });
+
+  const isGarden = getActiveSheet().mode === 'garden';
+  const headers = ['ردیف','شماره','گونه','دسته','نوع','قطر (cm)','ارتفاع (m)','حجم (m³)','X','Y','زون','توضیحات'];
+  if(isGarden) headers.push('عوارض (ریال)');
+
+  const rows = [['سیاهه درختان — '+title, ...Array(headers.length-1).fill('')]];
+  rows.push(headers);
+
+  let i=1;
+  list.forEach(t=>{
+    const isPlanted = t.k === 'planted';
+    const rowV = tv(t);
+    const rowTax = isPlanted ? 0 : taxOf(t);
+    
+    const row = [
+      i++, 
+      t.ty==='h'?'':(t.no||''), 
+      t.sp, 
+      G[t.g], 
+      t.ty==='h'?'هیزمی ('+toFa(t.n||1)+')':(isPlanted?'دست‌کاشت':'صنعتی'), 
+      t.d, 
+      t.h, 
+      R3(rowV), 
+      t.ux||'', 
+      t.uy||'', 
+      t.uz||'', 
+      t.ds||''
+    ];
+    if(isGarden) row.push(rowTax);
+    rows.push(row);
+  });
+
+  rows.push([]); 
+  
+  const x=sumX();
+  rows.push(['خلاصه وضعیت', '']);
+  rows.push(['ردیف','دسته‌بندی','تعداد صنعتی','حجم صنعتی','تعداد هیزمی','حجم هیزمی']);
+  x.r.forEach((a, idx)=>{
+    rows.push([idx+1, a[0], a[1], R3(a[2]), a[3], R3(a[4])]);
+  });
+  rows.push(['مجموع', '', x.t[1], R3(x.t[2]), x.t[3], R3(x.t[4])]);
+
+  const mg = [];
+  return ['سیاهه', rows, mg, 2]; 
+}
+
+function buildTaxSheet(){
+  const trees=invTrees();
+  const byCat={1:{n:0,v:0,t:0,rate:1400000},2:{n:0,v:0,t:0,rate:1172000},3:{n:0,v:0,t:0,rate:700000},fw:{n:0,v:0,t:0,rate:165000}};
+  let totalTax=0,totalV=0;
+  trees.forEach(t=>{
+    if(t.k === 'planted') return; // Skip planted
+    const c=cnt(t),v=tv(t),tax=taxOf(t);
+    totalTax+=tax;totalV+=v;
+    if(t.ty==='h'){byCat.fw.n+=c;byCat.fw.v+=v;byCat.fw.t+=tax;}
+    else{const cat=(SP[t.sp]||[0,3])[1];const cc=byCat[cat]||byCat[3];cc.n+=c;cc.v+=v;cc.t+=tax;}
+  });
+  const rows=[
+    ['محاسبهٔ عوارض بر اساس ماده ۱۵ قانون حفاظت و بهره‌برداری از جنگل‌ها و مراتع','','','','',''],
+    ['ردیف','دسته','تعداد','حجم (m³)','نرخ (ریال/متر مکعب یا استر)','مبلغ عوارض (ریال)'],
+    [1,'دسته اول',byCat[1].n,R3(byCat[1].v),1400000,byCat[1].t],
+    [2,'دسته دوم',byCat[2].n,R3(byCat[2].v),1172000,byCat[2].t],
+    [3,'دسته سوم',byCat[3].n,R3(byCat[3].v),700000,byCat[3].t],
+    [4,'درختان هیزمی',byCat.fw.n,R3(byCat.fw.v),'۱۶۵٬۰۰۰ ریال/استر',byCat.fw.t],
+    ['','جمع کل',byCat[1].n+byCat[2].n+byCat[3].n+byCat.fw.n,R3(totalV),'',totalTax],
+    ['','','','','',''],
+    ['','','','','شماره شبا:','IR 0501 0000 4001 0385 0200 4170'],
+    ['','','','','شناسه واریز:','3560 3855 3130 4160 2053 0070 2000 00'],
+  ];
+  return ['عوارض',rows,[[0,0,0,5],[1,0,1,1],[1,1,1,1],[1,2,1,2],[1,3,1,2],[1,4,1,4],[1,5,1,5],[6,0,6,1],[6,2,6,3],[6,4,6,5]],2];
+}
+
 function fnm(){return String(getActiveSheet().name).replace(/[\\\/:*?"<>|]/g,'-').trim()+'-'+new Date().toISOString().slice(0,10)}
-function shn(n,used){const b=String(n).replace(/[\\\/\?\*\[\]:]/g,'-').slice(0,28)||'برگه';let x=b,k=2;while(used.has(x))x=b+' ('+(k++)+')';used.add(x);return x}
 const today=()=>new Date().toISOString().slice(0,10);
 async function shareBlob(fn,blob){
   try{
@@ -1402,9 +1919,44 @@ async function outBlob(fn,blob,share,why){
   say(why?'ذخیره شد، با قالب ساده ('+why+')':'✓ فایل ذخیره شد.',!!why);return true;
 }
 async function exp(fn,sheets,share){ let blob=null,why=''; if(window.ExcelJS){try{blob=new Blob([await mkX(sheets)],{type:MIME})}catch(e){why=msg(e)}} if(!blob&&window.XLSX){try{ const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]}; sheets.forEach(([n,rows,mg])=>{const ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=rows[0].map(()=>({wch:16}));if(mg)ws['!merges']=mg.map(([a,b,c,d])=>({s:{r:a,c:b},e:{r:c,c:d}}));XLSX.utils.book_append_sheet(wb,ws,n)}); blob=new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})],{type:MIME})}catch(e){why+='|'+msg(e)}} if(blob)fn+='.xlsx'; else{blob=new Blob(['\ufeff'+sheets[0][1].map(r=>r.map(c=>'"'+String(c??'').replace(/"/g,'""')+'"').join(',')).join('\r\n')],{type:'text/csv'});fn+='.csv'} return outBlob(fn,blob,share,why)}
-function allSheets(){ saveActive(); const used=new Set(),out=[],all=[],o=T; try{ SHEETS.forEach(sh=>{T=sh.trees||[];norm();const b=buildE1(sh.name)[0];b[0]=shn(sh.name,used);out.push(b);all.push(...T)}); T=all;const s2=sumSheets()[0];s2[0]='خلاصه کل';s2[1][0][0]='خلاصه وضعیت درختان مورد نشانه‌گذاری شده (همهٔ زمین‌ها)';out.push(s2) }finally{T=o} return out }
+
+function allSheets(){ 
+  saveActive(); 
+  const out=[], all=[]; 
+  const o=T; 
+  const usedNames = new Set();
+  try{ 
+    SHEETS.forEach((sh, idx)=>{
+      T=sh.trees||[];
+      norm();
+      let sn = sh.name || ('زمین '+(idx+1));
+      sn = sn.replace(/[\\\/\?\*\[\]:]/g,'-').substring(0, 25); // Excel limit
+      let finalSn = sn;
+      let k=2;
+      while(usedNames.has(finalSn)){ finalSn = sn + ' (' + (k++) + ')'; }
+      usedNames.add(finalSn);
+
+      const b = buildInventorySheet(sh.name, T);
+      b[0] = finalSn; // override sheet name
+      out.push(b);
+      all.push(...T);
+    }); 
+    if(getActiveSheet().mode==='garden'){
+       T = all; 
+       let taxSn = 'عوارض';
+       let k=2;
+       while(usedNames.has(taxSn)){ taxSn = 'عوارض (' + (k++) + ')'; }
+       usedNames.add(taxSn);
+       const taxSheet = buildTaxSheet();
+       taxSheet[0] = taxSn;
+       out.push(taxSheet);
+    }
+  }finally{T=o} 
+  return out;
+}
+
 function harvestSheets(){return [['تجدید و استحصال',[['شماره','گونه','دسته','حجم اولیه (مترمکعب)','قطر جدید','ارتفاع جدید','حجم تجدید (مترمکعب)','تغییر %','حجم استحصال (مترمکعب)','تاریخ استحصال','یادداشت']].concat(T.filter(t=>t.v2||t.hv).map(t=>[t.ty==='h'?'هیزمی':(t.no||''),t.sp,G[t.g],R3(t.v),t.d2||'',t.h2||'',t.v2?R3(t.v2):'',t.v2?+((t.v2-t.v)/t.v*100).toFixed(1):'',t.hv||'',t.hd||'',t.hn||'']))]]}
-function backupBlob(){ saveActive(); const payload={app:'hyrcanian',v:3,sheets:SHEETS,activeId,trees:T,snaps:SNAPS}; return new Blob([JSON.stringify(payload)],{type:'application/json'}) }
+function backupBlob(){ saveActive(); const payload={app:'hyrcanian',v:4,sheets:SHEETS,activeId,trees:T,snaps:SNAPS}; return new Blob([JSON.stringify(payload)],{type:'application/json'}) }
 async function buildKMZ(){
   if(!window.JSZip)throw new Error('JSZip بارگذاری نشد (اینترنت لازم است)');
   const X=x=>String(x==null?'':x).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
@@ -1443,8 +1995,12 @@ async function buildKMZ(){
 async function runExport(kind,share){
   try{
     say('در حال ساخت فایل…');
-    if(kind==='x1')return await exp(fnm(),buildE1(getActiveSheet().name),share);
-    if(kind==='x3')return await exp('all-lands-'+today(),allSheets(),share);
+    if(kind==='x1') {
+      const sheets = [buildInventorySheet(getActiveSheet().name)];
+      if(getActiveSheet().mode==='garden') sheets.push(buildTaxSheet());
+      return await exp(fnm(),sheets,share);
+    }
+    if(kind==='x3') return await exp('all-lands-'+today(),allSheets(),share);
     if(kind==='kmz'){
       if(!MAPP.length&&!T.some(t=>Number.isFinite(+t.lat)&&Number.isFinite(+t.lng)||t.ux&&t.uy&&t.uz)&&!TRACK.length){say('نه محدوده‌ای بارگذاری شده و نه درختی/مسیری با مختصات معتبر ثبت شده.',1);return}
       return await outBlob(fnm()+'.kmz',await buildKMZ(),share);
@@ -1465,12 +2021,32 @@ document.querySelectorAll('nav button').forEach(b=>{
   b.onclick=()=>{
     document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
     ['m','l','h'].forEach(k=>{const s=document.getElementById('sec-'+k);if(s)s.classList.toggle('hid',k!==b.dataset.t)});
-    const sb=document.getElementById('saveBar');if(sb)sb.classList.toggle('hid',b.dataset.t!=='m');
+    document.getElementById('forestBanner').classList.toggle('hid', b.dataset.t !== null); // Hide image when any tab is selected
   };
 });
 
 document.addEventListener('visibilitychange',()=>{if(document.hidden){try{saveActive()}catch(e){}}});
 window.addEventListener('beforeunload',()=>{try{saveActive()}catch(e){}});
+
+// Splash Date & Dhikr Logic
+(function(){
+  const d = new Date();
+  const dateStr = d.toLocaleDateString('fa-IR', { year: 'numeric', month: 'long', day: 'numeric' });
+  const days = ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه', 'شنبه'];
+  const dayStr = days[d.getDay()];
+  const dhikrs = {
+    'شنبه': 'یا رب العالمین',
+    'یکشنبه': 'یا ذالجلال و الاکرام',
+    'دوشنبه': 'یا قاضی الحاجات',
+    'سه‌شنبه': 'یا ارحم الراحمین',
+    'چهارشنبه': 'یا حی یا قیوم',
+    'پنجشنبه': 'یا لا اله الا الله',
+    'جمعه': 'اللهم صل علی محمد و آل محمد'
+  };
+  document.getElementById('splashDate').textContent = 'تاریخ: ' + dateStr;
+  document.getElementById('splashDay').textContent = 'روز: ' + dayStr;
+  document.getElementById('splashDhikr').textContent = 'ذکر روز: ' + dhikrs[dayStr];
+})();
 </script>
 
 <!-- همگام‌سازی Supabase و مدیریت اسپلش -->
@@ -1540,9 +2116,9 @@ async function sync(){
       if(!l){
         let nm=r.name;while(SHEETS.some(x=>x.name===nm))nm+=' (حساب)';
         const o={id:SHEETS.reduce((a,x)=>Math.max(a,x.id),0)+1,uid:r.uid,name:nm,trees:tr,ua:r.ua};
-        if(d.map)o.map=d.map;o.h=shash(o);SHEETS.push(o);chg=true;
+        if(d.map)o.map=d.map;if(d.mode)o.mode=d.mode;if(d.volClass)o.volClass=d.volClass;o.h=shash(o);SHEETS.push(o);chg=true;
       }else if(r.ua>l.ua){
-        l.name=r.name;l.trees=tr;if(d.map)l.map=d.map;else delete l.map;l.ua=r.ua;l.h=shash(l);chg=true;
+        l.name=r.name;l.trees=tr;if(d.map)l.map=d.map;else delete l.map;if(d.mode)l.mode=d.mode;if(d.volClass)l.volClass=d.volClass;l.ua=r.ua;l.h=shash(l);chg=true;
       }else if(l.ua>r.ua)out.set(l.uid,row(l));
     }
     const known=new Set(rows.map(r=>r.uid));
@@ -1558,7 +2134,7 @@ async function sync(){
   finally{busy=false;ui()}
 }
 
-const row=s=>({user_id:S.uid,uid:s.uid,name:s.name,data:{trees:s.trees||[],map:s.map||null},ua:s.ua,deleted:false});
+const row=s=>({user_id:S.uid,uid:s.uid,name:s.name,data:{trees:s.trees||[],map:s.map||null,mode:s.mode||null,volClass:s.volClass||null},ua:s.ua,deleted:false});
 
 function ui(){
   if(!S){
