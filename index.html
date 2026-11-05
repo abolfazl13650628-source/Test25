@@ -2273,6 +2273,8 @@ window.addEventListener('beforeunload',()=>{try{saveActive()}catch(e){}});
 })();
 </script>
 
+<div id="sosCard" class="hid" style="max-width:720px;margin:14px auto calc(26px + env(safe-area-inset-bottom));padding:0 12px"></div>
+
 <!-- همگام‌سازی Supabase و مدیریت اسپلش -->
 <script>
 (function(){
@@ -2317,6 +2319,8 @@ const fe=e=>{
   if(/Confirm/i.test(m))return 'تایید ایمیل در Supabase خاموش نیست.';
   return m;
 };
+
+window.SB={api:(p,m,b,x)=>fresh().then(()=>api(p,m,b,x)),fresh,user:()=>S,url:SB_URL,key:SB_KEY,token:()=>S&&S.access_token};
 
 async function sync(){
   if(!S||busy||!navigator.onLine)return false;
@@ -2440,6 +2444,248 @@ if(S) {
 document.getElementById('splashLogin').onclick = () => window.splashGo(false);
 document.getElementById('splashSignup').onclick = () => window.splashGo(true);
 document.getElementById('splashGuest').onclick = () => window.splashGuest();
+</script>
+
+<script>
+/* ===== اعلام خطر (جعبه سیاه) ===== */
+(function(){
+if(!window.SB)return;
+const Q=s=>document.querySelector(s);
+const jget=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}};
+const jset=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const CFG=()=>Object.assign({call:'',sms:'',msg:'در خطر هستم و به کمک نیاز دارم!',video:false},jget('sosCfg',{}));
+const user=()=>SB.user();
+const pad=n=>String(n).padStart(5,'0');
+const num=s=>String(s||'').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[^\d+]/g,'');
+const BS='background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.55)';
+let st=null,tickT=null,rec=null,stream=null,wl=null,seq=0,upBusy=false,fl={rec:null,net:null,err:''};
+let dis=new Set(jget('sosDis',[])),seen=new Set();
+const card=Q('#sosCard');
+const mkOv=z=>{const d=document.createElement('div');d.style.cssText='position:fixed;inset:0;z-index:'+z+';background:rgba(0,0,0,.62);display:none;align-items:center;justify-content:center;padding:12px;overflow:auto';document.body.append(d);return d};
+const ov=mkOv(10001),alOv=mkOv(10002);
+const dlg=h=>{ov.innerHTML='<div style="background:var(--sf);color:var(--tx);border-radius:16px;padding:16px;width:100%;max-width:420px;max-height:92vh;overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.4);line-height:1.9;font-size:14px">'+h+'</div>';ov.style.display='flex'};
+const closeDlg=()=>{ov.style.display='none';ov.innerHTML=''};
+const btn=(id,t,css)=>'<button id="'+id+'" type="button" style="flex:1;'+(css||'')+'">'+t+'</button>';
+
+/* ---- IndexedDB: جعبه سیاه محلی ---- */
+const idb=()=>new Promise((res,rej)=>{const r=indexedDB.open('sosbox',1);r.onupgradeneeded=()=>r.result.createObjectStore('c',{keyPath:'k'});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+const idbPut=async v=>{const d=await idb();return new Promise((res,rej)=>{const t=d.transaction('c','readwrite');t.objectStore('c').put(v);t.oncomplete=res;t.onerror=()=>rej(t.error)})};
+const idbAll=async()=>{const d=await idb();return new Promise((res,rej)=>{const r=d.transaction('c').objectStore('c').getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})};
+
+/* ---- نمایش کارت ---- */
+function renderCard(){
+  if(!card)return;
+  if(!st){
+    const last=localStorage.getItem('sosLast');
+    card.innerHTML='<div style="display:flex;gap:8px"><button data-a="ask" type="button" style="flex:1;background:#c62828;color:#fff;border:0;border-radius:14px;padding:14px;font-size:17px;font-weight:700;box-shadow:0 4px 14px rgba(198,40,40,.4)">🆘 اعلام خطر</button><button data-a="cfg" type="button" class="o" style="border-radius:14px;padding:14px" title="تنظیمات اعلام خطر">⚙️</button></div>'
+      +(last?'<button data-a="save" data-sid="'+last+'" type="button" class="o" style="width:100%;margin-top:8px;font-size:13px">💾 ذخیرهٔ ضبط آخرین اعلام خطر</button>':'');
+  }else{
+    card.innerHTML='<div style="background:#c62828;color:#fff;border-radius:14px;padding:12px;box-shadow:0 4px 14px rgba(198,40,40,.45)"><b>🔴 اعلام خطر فعال است</b><div id="sosStat" style="font-size:12.5px;line-height:2;margin:6px 0"></div><div style="display:flex;gap:6px;flex-wrap:wrap">'
+      +'<button data-a="call" type="button" style="'+BS+'">📞 تماس</button><button data-a="sms" type="button" style="'+BS+'">✉️ پیامک</button><button data-a="save" data-sid="'+st.id+'" type="button" style="'+BS+'">💾 ذخیرهٔ ضبط</button><button data-a="end" type="button" style="background:#fff;color:#c62828;font-weight:700;border:0">✅ در امانم</button></div></div>';
+    stat();
+  }
+}
+function stat(){
+  const e=Q('#sosStat');if(!e||!st)return;
+  const c=CFG();
+  const g=cur?'📍 موقعیت دریافت شد (±'+toFa(Math.round(cur.acc||0))+' متر)':'⚠️ موقعیت دریافت نمی‌شود — GPS (مکان) گوشی را روشن کنید';
+  const r=fl.rec===true?'🎙️ ضبط '+(c.video?'صدا و تصویر':'صدا')+' فعال':(fl.rec===false?'⚠️ ضبط فعال نیست'+(fl.err?' ('+esc(fl.err)+')':''):'🎙️ در حال آماده‌سازی ضبط…');
+  const n=fl.net===true?'📡 هشدار برای کاربران دیگر ارسال شد':(fl.net===false?'📴 آفلاین — ذخیره می‌شود و با اتصال ارسال می‌شود':'📡 در حال ارسال…');
+  e.innerHTML=g+'<br>'+r+'<br>'+n+'<br>⏱️ '+toFa(Math.floor((Date.now()-st.t0)/60000))+' دقیقه از شروع';
+}
+if(card)card.onclick=e=>{
+  const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,c=CFG();
+  if(a==='ask')openConfirm();
+  else if(a==='cfg')openCfg();
+  else if(a==='save')saveRec(b.dataset.sid);
+  else if(a==='call'){const n=num(c.call);n?location.href='tel:'+n:openCfg()}
+  else if(a==='sms'){const n=num(c.sms||c.call);n?location.href=smsLink():openCfg()}
+  else if(a==='end')openEnd();
+};
+
+/* ---- تنظیمات ---- */
+function openCfg(){
+  const c=CFG();
+  dlg('<b>⚙️ تنظیمات اعلام خطر</b><div style="font-size:12px;color:var(--mu)">این اطلاعات فقط روی همین دستگاه ذخیره می‌شود.</div>'
+   +'<label>شمارهٔ تماس</label><input id="sosC" type="tel" dir="ltr" value="'+esc(c.call)+'" placeholder="09121234567" style="width:100%">'
+   +'<label>شمارهٔ پیامک (اگر خالی باشد همان شمارهٔ تماس)</label><input id="sosS" type="tel" dir="ltr" value="'+esc(c.sms)+'" placeholder="09121234567" style="width:100%">'
+   +'<label>متن پیام</label><input id="sosM" value="'+esc(c.msg)+'" style="width:100%">'
+   +'<label style="display:flex;gap:8px;align-items:center;margin-top:6px"><input id="sosV" type="checkbox" '+(c.video?'checked':'')+' style="width:auto"> ضبط تصویر (علاوه بر صدا؛ حجم بیشتر)</label>'
+   +'<div style="display:flex;gap:8px;margin-top:12px">'+btn('sosSave','ذخیره')+btn('sosCl','بستن','background:transparent;color:var(--tx);border:1px solid var(--bd)')+'</div>');
+  Q('#sosCl').onclick=closeDlg;
+  Q('#sosSave').onclick=()=>{jset('sosCfg',{call:num(Q('#sosC').value),sms:num(Q('#sosS').value),msg:Q('#sosM').value.trim()||'در خطر هستم و به کمک نیاز دارم!',video:Q('#sosV').checked});closeDlg()};
+}
+
+/* ---- مجوزها و GPS ---- */
+function prime(){
+  try{if(localStorage.getItem('sosMic')==='1'||!navigator.mediaDevices)return;
+    navigator.mediaDevices.getUserMedia({audio:true,video:CFG().video}).then(s=>{s.getTracks().forEach(t=>t.stop());localStorage.setItem('sosMic','1')}).catch(()=>{});}catch(e){}
+}
+async function gpsEnsure(){
+  let m='';
+  try{if(navigator.permissions){const p=await navigator.permissions.query({name:'geolocation'});if(p.state==='denied')m='دسترسی «مکان» برای این برنامه بسته است. در تنظیمات مرورگر/گوشی آن را روی «مجاز» بگذارید.'}}catch(e){}
+  if(!gpsOn){try{startGPS()}catch(e){}if(!m)m='جی‌پی‌اس خاموش بود و روشن شد. اگر موقعیت دریافت نشد، «مکان (GPS)» گوشی را از نوار بالای صفحه فعال کنید.'}
+  return m;
+}
+
+/* ---- تأیید و شروع ---- */
+function openConfirm(){
+  const c=CFG();
+  prime();
+  dlg('<div style="font-size:18px;font-weight:700;color:#c62828">🆘 اعلام خطر</div>'
+   +'<div>آیا مطمئن هستید که در خطر هستید؟<br>با تأیید: '+(num(c.call)?'با شمارهٔ تعریف‌شده تماس گرفته می‌شود؛ ':(num(c.sms)?'پیامک آماده می‌شود؛ ':'<b>(شماره‌ای تعریف نشده است)</b> '))+'هشدار و موقعیت و مسیر شما برای کاربران ثبت‌نام‌شدهٔ برنامه نمایش داده می‌شود و '+(c.video?'صدا و تصویر':'صدا')+' ضبط می‌شود.</div>'
+   +'<div id="sosGm" style="font-size:13px;color:#b36b00;margin:6px 0"></div>'
+   +'<div style="display:flex;gap:8px;margin-top:10px">'+btn('sosYes','بله، در خطر هستم','background:#c62828;color:#fff;border:0;font-weight:700')+btn('sosNo','انصراف','background:transparent;color:var(--tx);border:1px solid var(--bd)')+'</div>');
+  Q('#sosNo').onclick=closeDlg;
+  Q('#sosYes').onclick=startSOS;
+  gpsEnsure().then(m=>{const e=Q('#sosGm');if(e)e.textContent=m?'⚠️ '+m:''});
+}
+function startSOS(){
+  const u=user();if(!u){closeDlg();return}
+  const c=CFG();
+  st={id:(crypto.randomUUID?crypto.randomUUID():'x'+Date.now()+Math.random().toString(16).slice(2)),t0:Date.now(),track:[],last:null,name:u.name,uid:u.uid,created:false,sentAt:0};
+  seq=0;fl={rec:null,net:null,err:''};
+  jset('sosActive',st);localStorage.setItem('sosLast',st.id);
+  closeDlg();renderCard();tick();tickT=setInterval(tick,5000);record();lock();
+  if(num(c.call))location.href='tel:'+num(c.call);
+  else if(num(c.sms))location.href=smsLink();
+}
+function smsLink(){
+  const c=CFG(),p=st&&st.last?st.last:(cur?[cur.lat,cur.lng]:null);
+  const body=c.msg+'\n'+(st?st.name:'')+(p?'\nhttps://maps.google.com/?q='+p[0]+','+p[1]:'');
+  return 'sms:'+num(c.sms||c.call)+(/iPhone|iPad/.test(navigator.userAgent)?'&':'?')+'body='+encodeURIComponent(body);
+}
+async function lock(){try{wl=await navigator.wakeLock.request('screen')}catch(e){}}
+
+/* ---- ضبط ---- */
+async function record(){
+  try{
+    const v=!!CFG().video,sid=st.id;
+    stream=await navigator.mediaDevices.getUserMedia({audio:true,video:v?{facingMode:'environment',width:{ideal:640},height:{ideal:480}}:false});
+    const mimes=v?['video/webm;codecs=vp8,opus','video/webm','video/mp4']:['audio/webm;codecs=opus','audio/webm','audio/mp4'];
+    const mime=mimes.find(m=>window.MediaRecorder&&MediaRecorder.isTypeSupported(m))||'';
+    rec=new MediaRecorder(stream,Object.assign(mime?{mimeType:mime}:{},v?{videoBitsPerSecond:400000}:{audioBitsPerSecond:32000}));
+    rec.ondataavailable=e=>{if(e.data&&e.data.size){const i=seq++;idbPut({k:sid+':'+pad(i),sid,i,blob:e.data,mime:rec.mimeType||mime,up:0}).catch(()=>{})}};
+    rec.onstop=()=>{fl.rec=false};
+    rec.start(5000);fl.rec=true;fl.err='';
+  }catch(e){fl.rec=false;fl.err=e.name==='NotAllowedError'?'مجوز میکروفن داده نشده':(e.name||'خطا')}
+  stat();
+}
+async function uploadChunks(){
+  if(upBusy||!st||!st.uid||!navigator.onLine)return;upBusy=true;
+  try{
+    await SB.fresh();
+    const list=(await idbAll()).filter(c=>c.sid===st.id&&!c.up).sort((a,b)=>a.i-b.i).slice(0,3);
+    for(const c of list){
+      const ext=(c.mime||'').includes('mp4')?'mp4':'webm';
+      const r=await fetch(SB.url+'/storage/v1/object/sos/'+st.uid+'/'+st.id+'/'+pad(c.i)+'.'+ext,{method:'POST',headers:{apikey:SB.key,Authorization:'Bearer '+SB.token(),'Content-Type':c.blob.type||'application/octet-stream','x-upsert':'true'},body:c.blob});
+      if(r.ok){c.up=1;await idbPut(c)}else break;
+    }
+  }catch(e){}
+  upBusy=false;
+}
+async function saveRec(sid){
+  const cs=(await idbAll()).filter(c=>c.sid===sid).sort((a,b)=>a.i-b.i);
+  if(!cs.length){alert('ضبطی روی این دستگاه موجود نیست.');return}
+  const type=cs[0].mime||'audio/webm';
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(cs.map(c=>c.blob),{type}));
+  a.download='sos-'+sid.slice(0,8)+(type.includes('mp4')?'.mp4':'.webm');document.body.append(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},5000);
+}
+
+/* ---- ارسال دوره‌ای ---- */
+async function tick(){
+  if(!st)return;
+  if(!gpsOn){try{startGPS()}catch(e){}}
+  if(cur){
+    const p=[+cur.lat.toFixed(6),+cur.lng.toFixed(6),Date.now()],l=st.track[st.track.length-1];
+    if(!l||l[0]!==p[0]||l[1]!==p[1]){st.track.push(p);if(st.track.length>400)st.track.shift()}
+    st.last=p;
+  }
+  jset('sosActive',st);
+  uploadChunks();
+  if(navigator.onLine&&Date.now()-st.sentAt>=10000)await push();else if(!navigator.onLine)fl.net=false;
+  stat();
+}
+async function push(){
+  const body={lat:st.last?st.last[0]:null,lng:st.last?st.last[1]:null,acc:cur?cur.acc:null,track:st.track.slice(-300),active:true,updated_at:new Date().toISOString()};
+  try{
+    if(!st.created){await SB.api('/rest/v1/sos_alerts','POST',Object.assign({id:st.id,name:st.name,started_at:new Date(st.t0).toISOString()},body),{Prefer:'return=minimal'});st.created=true}
+    else await SB.api('/rest/v1/sos_alerts?id=eq.'+st.id,'PATCH',body,{Prefer:'return=minimal'});
+    st.sentAt=Date.now();fl.net=true;
+  }catch(e){fl.net=false;if(e&&e.st===409)st.created=true}
+}
+
+/* ---- پایان ---- */
+function openEnd(){
+  dlg('<b>✅ آیا در امان هستید؟</b><div>با پایان، ضبط متوقف و هشدار برای دیگران غیرفعال می‌شود. ضبط روی دستگاه باقی می‌ماند.</div><div style="display:flex;gap:8px;margin-top:10px">'+btn('sosEnd','بله، در امانم','background:#2f6b3c;color:#fff;border:0')+btn('sosKeep','نه، ادامه','background:transparent;color:var(--tx);border:1px solid var(--bd)')+'</div>');
+  Q('#sosKeep').onclick=closeDlg;Q('#sosEnd').onclick=endSOS;
+}
+async function endSOS(){
+  closeDlg();clearInterval(tickT);
+  try{if(rec&&rec.state!=='inactive')rec.stop()}catch(e){}
+  try{stream&&stream.getTracks().forEach(t=>t.stop())}catch(e){}
+  try{wl&&wl.release()}catch(e){}
+  try{await SB.api('/rest/v1/sos_alerts?id=eq.'+st.id,'PATCH',{active:false,updated_at:new Date().toISOString()},{Prefer:'return=minimal'})}catch(e){}
+  await new Promise(r=>setTimeout(r,900));await uploadChunks();
+  st=null;rec=null;stream=null;localStorage.removeItem('sosActive');renderCard();
+}
+async function resume(){
+  const a=jget('sosActive',null),u=user();
+  if(!a||st||!u||a.uid!==u.uid||Date.now()-a.t0>12*3600e3)return;
+  st=a;seq=(await idbAll()).filter(c=>c.sid===st.id).length;
+  renderCard();tick();tickT=setInterval(tick,5000);record();lock();
+}
+
+/* ---- دریافت هشدار دیگران ---- */
+const ago=iso=>{const m=Math.max(0,Math.round((Date.now()-new Date(iso))/60000));return m<1?'لحظاتی پیش':toFa(m)+' دقیقه پیش'};
+function beep(){try{const A=window.AudioContext||window.webkitAudioContext,x=new A();[0,.25,.5].forEach(t=>{const o=x.createOscillator(),g=x.createGain();o.frequency.value=880;g.gain.value=.2;o.connect(g);g.connect(x.destination);o.start(x.currentTime+t);o.stop(x.currentTime+t+.18)});setTimeout(()=>x.close(),1500)}catch(e){}}
+function drawMap(cv,a){
+  const pts=(a.track||[]).map(p=>[p[0],p[1]]);if(a.lat!=null)pts.push([a.lat,a.lng]);
+  const me=cur?[cur.lat,cur.lng]:null,all=me?pts.concat([me]):pts;if(!all.length)return;
+  const W=cv.width,H=cv.height,P=22,ctx=cv.getContext('2d');
+  const la=all.map(p=>p[0]),lo=all.map(p=>p[1]),a0=Math.min(...la),a1=Math.max(...la),c0=Math.min(...lo),c1=Math.max(...lo);
+  const k=Math.cos((a0+a1)/2*Math.PI/180),w=Math.max((c1-c0)*k,1e-5),h=Math.max(a1-a0,1e-5),s=Math.min((W-2*P)/w,(H-2*P)/h);
+  const X=g=>W/2+(g-(c0+c1)/2)*k*s,Y=t=>H/2-(t-(a0+a1)/2)*s;
+  ctx.strokeStyle='rgba(0,0,0,.08)';for(let i=1;i<6;i++){ctx.beginPath();ctx.moveTo(i*W/6,0);ctx.lineTo(i*W/6,H);ctx.moveTo(0,i*H/6);ctx.lineTo(W,i*H/6);ctx.stroke()}
+  if(pts.length>1){ctx.strokeStyle='#c62828';ctx.lineWidth=3;ctx.lineJoin='round';ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(X(p[1]),Y(p[0])):ctx.moveTo(X(p[1]),Y(p[0])));ctx.stroke()}
+  const dot=(p,col,r)=>{ctx.fillStyle=col;ctx.beginPath();ctx.arc(X(p[1]),Y(p[0]),r,0,7);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke()};
+  if(pts.length>1)dot(pts[0],'#2f6b3c',5);
+  if(me)dot(me,'#1565c0',6);
+  dot(pts[pts.length-1],'#c62828',8);
+}
+function renderAlerts(list){
+  if(!list.length){alOv.style.display='none';alOv.innerHTML='';return}
+  alOv.style.display='flex';
+  alOv.innerHTML='<div style="width:100%;max-width:440px;max-height:94vh;overflow:auto">'+list.map(a=>{
+    const d=(cur&&a.lat!=null)?gdist(cur.lat,cur.lng,a.lat,a.lng):null;
+    return '<div style="background:var(--sf);color:var(--tx);border:3px solid #c62828;border-radius:16px;padding:14px;margin-bottom:10px;line-height:1.9;font-size:13.5px">'
+     +'<div style="font-size:18px;font-weight:700;color:#c62828">🆘 '+esc(a.name||'کاربر')+' در خطر است</div>'
+     +'شروع: '+new Date(a.started_at).toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})+' · آخرین به‌روزرسانی: '+ago(a.updated_at)
+     +(d!=null?'<br>فاصله از شما: '+(d<1000?toFa(Math.round(d))+' متر':toFa((d/1000).toFixed(1))+' کیلومتر'):'')
+     +'<canvas data-id="'+a.id+'" width="360" height="220" style="width:100%;border-radius:10px;background:#e9efe7;margin:6px 0"></canvas>'
+     +'<div style="font-size:11.5px;color:var(--mu)">🔴 موقعیت فعلی · 🟢 شروع مسیر · 🔵 شما</div>'
+     +'<div style="display:flex;gap:8px;margin-top:6px">'+(a.lat!=null?'<a href="https://www.google.com/maps?q='+a.lat+','+a.lng+'" target="_blank" rel="noopener" style="flex:1;text-align:center;background:#c62828;color:#fff;border-radius:10px;padding:10px;text-decoration:none;font-weight:700">🗺️ باز کردن در نقشه</a>':'')
+     +'<button data-x="'+a.id+'" type="button" class="o">بستن</button></div></div>';
+  }).join('')+'</div>';
+  list.forEach(a=>{const cv=alOv.querySelector('canvas[data-id="'+a.id+'"]');if(cv)drawMap(cv,a)});
+}
+alOv.onclick=e=>{const b=e.target.closest('[data-x]');if(!b)return;dis.add(b.dataset.x);jset('sosDis',[...dis].slice(-50));poll()};
+async function poll(){
+  const u=user();if(!u||!navigator.onLine||document.hidden)return;
+  try{
+    const since=encodeURIComponent(new Date(Date.now()-30*60000).toISOString());
+    const rows=await SB.api('/rest/v1/sos_alerts?active=eq.true&updated_at=gt.'+since+'&select=id,uid,name,lat,lng,track,started_at,updated_at&order=started_at.desc&limit=10');
+    const list=(rows||[]).filter(r=>r.uid!==u.uid&&!dis.has(r.id));
+    if(list.some(r=>!seen.has(r.id))){try{navigator.vibrate&&navigator.vibrate([300,150,300,150,600])}catch(e){}beep()}
+    list.forEach(r=>seen.add(r.id));renderAlerts(list);
+  }catch(e){}
+}
+let n=0;
+setInterval(()=>{const u=user();if(card)card.classList.toggle('hid',!u);if(u&&!st)resume();if(!u){renderAlerts([])}else if(++n%4===0)poll();if(st)stat()},3000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(st)lock();poll()}});
+renderCard();
+})();
 </script>
 
 <script>
