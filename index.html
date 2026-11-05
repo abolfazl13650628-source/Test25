@@ -1906,7 +1906,10 @@ document.getElementById('smartImportFile').onchange = async (e) => {
           const ai = await aiReadImage(file);
           if (ai.rows.length) { aiRows = ai.rows; extractedData = ai.rows; importNote = ai.note; aiDone = true; }
           else importNote = 'هوش مصنوعی ردیفی پیدا نکرد؛ با OCR ساده خوانده شد.';
-        } catch (aiErr) { importNote = 'خواندن هوشمند ناموفق بود (' + aiErr.message + ')؛ با OCR ساده خوانده شد.'; }
+        } catch (aiErr) {
+          if (!confirm('خواندن هوشمند ناموفق بود:\n' + aiErr.message + '\n\nبا OCR ساده ادامه دهم؟ (دقت آن برای این برگه‌ها خیلی کم است؛ بهتر است انصراف دهید و چند دقیقه بعد دوباره امتحان کنید.)')) { btn.innerHTML = originalText; return; }
+          importNote = 'خواندن هوشمند ناموفق بود؛ با OCR ساده خوانده شد (دقت کم).';
+        }
       }
       if (!aiDone) {
       btn.innerHTML = '⏳ در حال خواندن عکس...';
