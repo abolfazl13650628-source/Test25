@@ -260,6 +260,20 @@ th{background:rgba(47,107,60,.1);font-weight:700}tr:nth-child(even) td{backgroun
 #editModal .box-res { background:var(--bg); border:1px solid var(--bd); border-radius:8px; padding:8px; display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
 #editModal .box-res div { display:flex; flex-direction:column; align-items:center; }
 #editModal .box-res b { font-size:15px; color:var(--ac); }
+
+/* ===== کنترل نقشه/مسیر، خوانایی صفحهٔ اول، کارت خطر ===== */
+.ctlbox{background:rgba(47,107,60,.07);border:1px solid var(--bd);border-radius:14px;padding:8px 10px;margin-top:8px}
+.ctl-t{font-size:12px;font-weight:700;color:var(--ac);margin-bottom:6px}
+#trkState{font-weight:400;color:#c62828}
+.ctlrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(78px,1fr));gap:6px}
+.ctlrow button{padding:8px 4px;font-size:12px;border-radius:10px;white-space:nowrap}
+#trkToggle.rec{background:#c62828;color:#fff}
+body.home-mode #gb,body.home-mode #walkBox{background:rgba(0,0,0,.45);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#fff;border-radius:16px}
+body.home-mode #gb small,body.home-mode #gb b,body.home-mode #walkBox small,body.home-mode #walkBox b{color:#fff}
+body.home-mode #gb.g1 .ac{color:#7dffa0}body.home-mode #gb.g2 .ac{color:#ffd54a}body.home-mode #gb.g3 .ac{color:#ff8a80}
+body.home-mode #gs,body.home-mode #sensors>.m{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+#sosCard{max-width:640px;margin:0 auto;padding:6px 12px calc(10px + env(safe-area-inset-bottom));position:sticky;bottom:0;z-index:50;background:linear-gradient(rgba(0,0,0,0),var(--bg) 40%)}
+body.home-mode #sosCard{background:linear-gradient(rgba(0,0,0,0),rgba(16,26,19,.6) 40%)}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
@@ -347,10 +361,7 @@ th{background:rgba(47,107,60,.1);font-weight:700}tr:nth-child(even) td{backgroun
       <summary>🗺️ نقشه، محدوده و مرز</summary>
       <div class="sec" id="mp">
         <b>نقشهٔ محدوده</b> <span class="m">(KMZ، KML، DXF یا دستی)</span>
-        <div class="r" style="margin-top:6px">
-          <button id="mb" class="o">انتخاب فایل نقشه</button>
-          <button id="btnManualCoord" class="o">ورود دستی</button>
-        </div>
+        <div class="ctlbox"><div class="ctl-t">🗺️ محدوده</div><div class="ctlrow"><button id="mb" class="o">📂 فایل نقشه</button><button id="mbAdd" class="o">➕ پلیگون</button><button id="btnManualCoord" class="o">✍️ دستی</button><button id="mbDel" class="o" style="color:#b3261e;border-color:#b3261e">🗑 حذف</button></div></div>
         <input type="file" id="mf" accept=".kmz,.kml,.dxf,.dwg" class="hid">
         <div id="manualCoordArea" class="hid">
           <div id="manualCoordList"></div>
@@ -366,10 +377,7 @@ th{background:rgba(47,107,60,.1);font-weight:700}tr:nth-child(even) td{backgroun
         <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="mal" checked style="width:auto"> هشدار صوتی هنگام خروج از محدوده</label>
       </div>
     
-      <div class="map-actions">
-        <button type="button" class="o" id="openEarth" style="flex:2">🌍 خروجی KMZ</button>
-        <button type="button" class="o" id="resetWalk" style="flex:1">↺ ریست مسیر</button>
-      </div>
+      <div class="ctlbox"><div class="ctl-t">🥾 مسیر پیمایش <span id="trkState"></span></div><div class="ctlrow"><button type="button" id="trkToggle">▶️ شروع مسیر</button><button type="button" class="o" id="resetWalk">↺ ریست</button><button type="button" class="o" id="openEarth">🌍 KMZ</button></div></div>
       <div class="map-hint">برای مشاهده در Google Earth: فایل KMZ را در Google Earth → Projects → Import کنید.</div>
     
       <div class="gbox" id="walkBox">
@@ -378,7 +386,7 @@ th{background:rgba(47,107,60,.1);font-weight:700}tr:nth-child(even) td{backgroun
           <div><small>قدم</small><b id="walkSteps">۰</b></div>
           <div><small>نقاط مسیر</small><b id="walkPoints">۰</b></div>
         </div>
-        <small>مسیر واقعی روی نقشه و در فایل KMZ نمایش داده می‌شود.</small>
+        <small>مسیر فقط بین «شروع» و «پایان» ثبت می‌شود.</small>
       </div>
     </details>
     
@@ -550,8 +558,6 @@ th{background:rgba(47,107,60,.1);font-weight:700}tr:nth-child(even) td{backgroun
   </section>
 </div>
 
-<div id="sosCard" class="hid" style="max-width:640px;margin:14px auto calc(26px + env(safe-area-inset-bottom));padding:0 12px"></div>
-
 <!-- Save type modal (garden mode) -->
 <div id="saveTypeModal" class="hid">
   <div class="bx">
@@ -652,7 +658,7 @@ const G={1:'دسته اول',2:'دسته دوم',3:'دسته سوم'};
 const VT_GENERAL={
 "10":[0.01,0.03,0.05,0.06],"15":[0.05,0.09,0.14,0.18],"20":[0.09,0.17,0.23,0.29],"25":[0.14,0.24,0.33,0.42],"30":[0.39,0.57,0.71,0.81],"35":[0.5,0.75,0.94,1.09],"40":[0.63,0.95,1.22,1.43],"45":[0.77,1.19,1.53,1.8],"50":[0.93,1.45,1.88,2.22,2.5],"55":[1.11,1.75,2.27,2.69,3.06],"60":[1.31,2.07,2.71,3.21,3.68],"65":[1.53,2.42,3.18,3.79,4.37],"70":[1.76,2.81,3.69,4.4,5.09,5.7],"75":[2.03,3.23,4.25,5.11,5.89,6.63],"80":[2.31,3.68,4.86,5.83,6.74,7.67],"85":[2.61,4.16,5.51,6.6,7.64,8.73],"90":[2.93,4.67,6.2,7.4,8.63,9.82],"95":[3.26,5.21,6.95,8.35,9.71,11.04],"100":[3.6,5.7,7.69,9.28,10.75,12.26],"105":[3.97,7.67,10.65,12.79,14.33,15.51,16.43],"110":[4.34,8.39,11.59,13.8,15.38,16.58,17.55],"115":[4.72,9.14,12.56,14.88,16.52,17.76,18.74],"120":[5.12,9.91,13.59,16.05,17.76,19.06,20.08],"125":[5.53,10.68,14.63,17.23,19.83,21.18,22.25],"130":[5.96,11.49,15.69,18.44,20.33,21.75,22.87],"135":[6.39,12.25,16.63,19.47,21.41,22.86,24.01],"140":[6.84,13.04,17.61,20.55,22.56,24.06,25.11],"145":[7.31,13.94,18.82,21.96,24.1,25.69,26.95],"150":[7.8,14.85,20.01,23.35,25.62,27.29,28.61],"155":[8.3,15.8,21.32,24.91,27.36,29.14,30.36],"160":[8.85,16.85,22.75,26.64,29.18,31.21,32.7],"165":[9.41,17.91,24.2,28.34,31.17,33.22,34.54],"170":[9.99,19.06,25.82,30.31,33.26,35.56,37.23],"175":[10.6,20.2,27.38,32.16,35.4,37.73,39.48],"180":[11.23,21.41,29.06,34.23,37.74,40.27,41.71],"185":[11.85,22.62,30.77,36.3,40.08,42.79,44.8],"190":[12.49,23.82,32.44,38.31,42.28,45.11,47.19],"195":[13.13,25.07,34.16,40.38,44.62,47.66,49.86],"200":[13.78,26.3,35.92,42.59,47.12,50.34,52.69]};
 const VT_BEECH={
-"10":[0.04,0.07,0.1,0.13],"15":[0.07,0.11,0.16,0.21],"20":[0.13,0.19,0.28,0.35],"25":[0.37,0.49,0.68,0.9],"30":[0.42,0.63,0.8,0.92],"35":[0.54,0.84,1.07,1.25],"40":[0.68,1.07,1.38,1.64],"45":[0.84,1.33,1.74,2.07],"50":[1.03,1.64,2.14,2.55,2.9],"55":[1.22,1.96,2.58,3.09,3.54],"60":[1.44,2.33,3.08,3.68,4.25],"65":[1.67,2.67,3.61,4.34,5.04,5.6],"70":[1.93,3.14,4.19,5.05,5.88,6.62],"75":[2.2,3.6,4.81,5.8,6.78,7.71],"80":[2.49,4.09,5.49,6.65,7.75,8.86],"85":[2.8,4.62,6.21,7.52,8.75,10.08],"90":[3.14,5.18,6.98,8.48,9.91,11.33],"95":[3.49,5.77,7.81,9.48,11.12,12.72],"100":[3.86,6.4,8.65,10,12.32,14.18],"105":[4.22,8.18,11.36,13.67,15.35,16.63,17.62],"110":[4.62,8.93,12.35,14.75,16.47,17.77,18.78],"115":[5.02,9.72,13.39,15.89,17.67,19.01,20.05],"120":[5.44,10.53,14.47,17.12,18.99,20.39,21.47],"125":[5.88,11.36,15.59,18.4,20.36,21.83,23.3],"130":[6.32,12.21,16.71,19.68,21.74,23.27,24.44],"135":[6.79,13.04,17.73,20.81,22.92,24.49,25.71],"140":[7.26,13.87,18.77,21.96,24.14,25.76,27.02],"145":[7.77,14.84,20.07,23.48,25.82,27.54,28.87],"150":[8.3,15.82,21.37,24.99,27.46,29.28,30.68],"155":[8.82,16.82,22.74,26.63,29.29,31.23,33.7],"160":[9.39,17.9,24.23,28.43,31.32,33.41,35],"165":[9.97,19,25.73,30.2,33.25,35.47,37.14],"170":[10.57,20.18,27.4,32.24,35.54,37.93,39.73],"175":[11.18,21.34,28.98,34.11,37.63,40.14,43.02],"180":[11.82,22.58,30.72,36.25,40.05,42.78,44.81],"185":[12.49,23.8,32.51,38.44,42.52,45.45,47.62],"190":[13.15,25.12,34.27,40.56,44.85,47.91,50.17],"195":[13.84,26.43,36.08,42.75,47.31,50.56,53.93],"200":[14.54,27.8,38.05,45.22,50.12,53.63,56.19]};
+"10":[0.04,0.07,0.1,0.13],"15":[0.07,0.11,0.16,0.21],"20":[0.13,0.19,0.28,0.35],"25":[0.18,0.29,0.4,0.5],"30":[0.42,0.63,0.8,0.92],"35":[0.54,0.84,1.07,1.25],"40":[0.68,1.07,1.38,1.64],"45":[0.84,1.33,1.74,2.07],"50":[1.03,1.64,2.14,2.55,2.9],"55":[1.22,1.96,2.58,3.09,3.54],"60":[1.44,2.33,3.08,3.68,4.25],"65":[1.67,2.67,3.61,4.34,5.04,5.6],"70":[1.93,3.14,4.19,5.05,5.88,6.62],"75":[2.2,3.6,4.81,5.8,6.78,7.71],"80":[2.49,4.09,5.49,6.65,7.75,8.86],"85":[2.8,4.62,6.21,7.52,8.75,10.08],"90":[3.14,5.18,6.98,8.48,9.91,11.33],"95":[3.49,5.77,7.81,9.48,11.12,12.72],"100":[3.86,6.4,8.65,10,12.32,14.18],"105":[4.22,8.18,11.36,13.67,15.35,16.63,17.62],"110":[4.62,8.93,12.35,14.75,16.47,17.77,18.78],"115":[5.02,9.72,13.39,15.89,17.67,19.01,20.05],"120":[5.44,10.53,14.47,17.12,18.99,20.39,21.47],"125":[5.88,11.36,15.59,18.4,20.36,21.83,23.3],"130":[6.32,12.21,16.71,19.68,21.74,23.27,24.44],"135":[6.79,13.04,17.73,20.81,22.92,24.49,25.71],"140":[7.26,13.87,18.77,21.96,24.14,25.76,27.02],"145":[7.77,14.84,20.07,23.48,25.82,27.54,28.87],"150":[8.3,15.82,21.37,24.99,27.46,29.28,30.68],"155":[8.82,16.82,22.74,26.63,29.29,31.23,33.7],"160":[9.39,17.9,24.23,28.43,31.32,33.41,35],"165":[9.97,19,25.73,30.2,33.25,35.47,37.14],"170":[10.57,20.18,27.4,32.24,35.54,37.93,39.73],"175":[11.18,21.34,28.98,34.11,37.63,40.14,43.02],"180":[11.82,22.58,30.72,36.25,40.05,42.78,44.81],"185":[12.49,23.8,32.51,38.44,42.52,45.45,47.62],"190":[13.15,25.12,34.27,40.56,44.85,47.91,50.17],"195":[13.84,26.43,36.08,42.75,47.31,50.56,53.93],"200":[14.54,27.8,38.05,45.22,50.12,53.63,56.19]};
 const VT_OAK={
 "10":[0.04,0.07,0.1,0.13],"15":[0.06,0.11,0.15,0.2],"20":[0.11,0.18,0.26,0.32],"25":[0.17,0.27,0.37,0.46],"30":[0.4,0.59,0.73,0.84],"35":[0.51,0.78,0.98,1.14],"40":[0.64,0.99,1.27,1.49],"45":[0.79,1.33,1.59,1.88],"50":[0.96,1.52,1.98,2.33,2.63],"55":[1.15,1.82,2.37,2.83,3.22],"60":[1.36,2.17,2.83,3.37,3.87],"65":[1.58,2.53,3.33,3.97,4.58],"70":[1.83,2.93,3.87,4.64,5.36,6],"75":[2.09,3.36,4.44,5.32,6.19,7.01],"80":[2.37,3.82,5.07,6.1,7.6,8.28],"85":[2.66,4.3,5.72,6.89,8.3,9.16],"90":[2.99,4.84,6.45,7.78,9.04,10.31],"95":[3.32,5.38,7.21,8.7,10.15,11.57],"100":[3.67,5.96,7.99,9.68,11.24,12.85],"105":[4.05,7.83,10.87,13.06,14.65,15.86,16.79],"110":[4.44,8.59,11.86,14.14,15.77,17,17.79],"115":[4.82,9.3,12.78,15.76,16.84,18.11,19.38],"120":[5.22,10.2,13.87,16.38,18.14,19.47,20.51],"125":[5.6,10.82,14.82,17.46,19.29,20.67,22.54],"130":[6.08,11.73,16.03,18.86,20.8,22.26,23.4],"135":[6.52,12.5,16.98,19.9,21.89,23.38,24.55],"140":[6.97,13.3,17.97,21,23.06,24.59,26.81],"145":[7.45,14.21,19.19,22.42,24.62,26.35,27.53],"150":[7.94,15.13,20.4,23.82,26.15,27.86,29.2],"155":[8.45,16.11,21.74,25.42,27.92,29.75,31.17],"160":[9.01,17.17,23.2,27.18,29.9,31.87,32.37],"165":[9.59,18.26,24.7,28.94,31.83,33.92,35.52],"170":[10.17,19.4,26.3,30.89,34.2,36.27,37.99],"175":[10.79,20.58,27.91,32.8,36.13,38.52,40.32],"180":[11.4,21.75,29.54,34.81,38.41,40.99,42.92],"185":[12.07,23.04,31.37,37.04,40.92,43.71,45.78],"190":[12.71,24.26,33.05,39.06,43.14,46.05,48.19],"195":[13.36,25.49,34.75,41.12,45.44,48.51,50.76],"200":[14.03,26.81,36.64,43.48,48.14,51.45,53.88]};
 
@@ -689,6 +695,7 @@ let SHEETS=[];try{SHEETS=JSON.parse(localStorage.getItem('sheets')||'[]')}catch(
 let activeId=null;try{activeId=+localStorage.getItem('activeSheet')||null}catch(e){}
 let T=[],MAPP=[],MAPZ=39,MAPNM='',TRACK=[];
 let walkMeters=0,lastWalkFix=null;
+let trackOn=false;try{trackOn=localStorage.getItem('trkOn')==='1'}catch(e){}
 
 if(!SHEETS.length){
   let oldT=[],oldMap=null;
@@ -852,6 +859,8 @@ function updateWalkUI(){
   if(d)d.textContent=m<1000?toFa(m)+' متر':toFa((walkMeters/1000).toFixed(2))+' کیلومتر';
   if(st)st.textContent=toFa(steps);
   if(p)p.textContent=toFa(TRACK.length);
+  const tb=$('#trkToggle');if(tb){tb.textContent=trackOn?'⏹ پایان مسیر':'▶️ شروع مسیر';tb.classList.toggle('rec',trackOn)}
+  const ts=$('#trkState');if(ts)ts.textContent=trackOn?'· 🔴 در حال ثبت':'';
 }
 function utm(lat,lon,zf){const a=6378137,f=1/298.257223563,k=.9996,e2=f*(2-f),ep=e2/(1-e2),z=zf||Math.floor((lon+180)/6)+1,l0=rad((z-1)*6-177),p=rad(lat),A=Math.cos(p)*(rad(lon)-l0),n=a/Math.sqrt(1-e2*Math.sin(p)**2),t=Math.tan(p)**2,c=ep*Math.cos(p)**2;
  const M=a*((1-e2/4-3*e2*e2/64-5*e2**3/256)*p-(3*e2/8+3*e2*e2/32+45*e2**3/1024)*Math.sin(2*p)+(15*e2*e2/256+45*e2**3/1024)*Math.sin(4*p)-(35*e2**3/3072)*Math.sin(6*p));
@@ -873,7 +882,7 @@ function gShow(){
 function gdist(a,b,c,d){const dy=(c-a)*110540,dx=(d-b)*111320*Math.cos(a*Math.PI/180);return Math.hypot(dx,dy)}
 function gpsFix(la,lo,acc){
   const now=Date.now();
-  if(acc<=20){if(lastWalkFix){const delta=gdist(lastWalkFix.lat,lastWalkFix.lng,la,lo);if(delta>=2&&delta<=40)walkMeters+=delta;}lastWalkFix={lat:la,lng:lo};updateWalkUI();}
+  if(trackOn&&acc<=20){if(lastWalkFix){const delta=gdist(lastWalkFix.lat,lastWalkFix.lng,la,lo);if(delta>=2&&delta<=40)walkMeters+=delta;}lastWalkFix={lat:la,lng:lo};updateWalkUI();}
   GBUF=GBUF.filter(g=>now-g.t<15000&&gdist(g.la,g.lo,la,lo)<=Math.max(8,acc*1.5));
   GBUF.push({la,lo,acc,t:now});
   if(GBUF.length>8)GBUF.shift();
@@ -881,7 +890,7 @@ function gpsFix(la,lo,acc){
   GBUF.forEach(g=>{const w=1/Math.max(g.acc,1)**2;sw+=w;sa+=w*g.la;so+=w*g.lo;best=Math.min(best,g.acc)});
   cur={lat:+(sa/sw).toFixed(6),lng:+(so/sw).toFixed(6),acc:best,n:GBUF.length};
   cur.u=utm(cur.lat,cur.lng);
-  if(acc<=15){
+  if(trackOn&&acc<=15){
     const last=TRACK[TRACK.length-1];
     const moved=last?gdist(last.lat,last.lng,cur.lat,cur.lng):999;
     if(moved>=4){
@@ -954,11 +963,10 @@ $('#applyManualCoord').onclick = () => {
     if(isFinite(x) && isFinite(y) && z >= 1 && z <= 60) pts.push([x, y, z]);
   });
   if(pts.length < 3){ alert('حداقل ۳ نقطه با X و Y و زون معتبر لازم است.'); return; }
-  const z0 = pts[0][2];
+  const keep = MAPP.length > 0, z0 = keep ? MAPZ : pts[0][2];
   const poly = pts.map(([x, y, z]) => { if(z === z0) return [x, y]; const g = ll(x, y, z), u = utm(g[0], g[1], z0); return [u.E, u.N]; });
-  if(MAPP.length && !confirm('نقشهٔ فعلی با این محدوده جایگزین شود؟')) return;
   manualCoords = [];
-  setMap([{n:'ورود دستی', o:poly, i:[]}], z0, 'ورود دستی', true);
+  setMap(keep ? MAPP.concat([{n:'ورود دستی', o:poly, i:[]}]) : [{n:'ورود دستی', o:poly, i:[]}], z0, keep ? (MAPNM+' + ورود دستی') : 'ورود دستی', true);
 };
 
 function treeZone(){return MAPP.length?MAPZ:((T.find(t=>t.uz)||{}).uz||MAPZ||39)}
@@ -1128,8 +1136,11 @@ function insideLL(lat,lng){const u=utm(lat,lng,MAPZ);return mtest(MAPP,u.E,u.N).
 
 function setMap(p,z,nm,save){MAPP=p;MAPZ=z;MAPNM=nm;updateMapInfo();if(save)store();mapCheck()}
 function updateMapInfo(){if(MAPP.length){$('#mi').textContent='نقشه: '+MAPNM+' — '+toFa(MAPP.length)+' پلیگون';}else{$('#mi').textContent='نقشه‌ای بارگذاری نشده است.';}}
-$('#mb').onclick=()=>{aud();$('#mf').click()};
-$('#mf').onchange=async e=>{const f=e.target.files[0];if(!f)return;const ext=f.name.split('.').pop().toLowerCase(),S=m=>{$('#mi').textContent=m};
+let appendMap=false;
+$('#mb').onclick=()=>{appendMap=false;aud();$('#mf').click()};
+$('#mbAdd').onclick=()=>{appendMap=true;aud();$('#mf').click()};
+$('#mbDel').onclick=()=>{if(!MAPP.length){alert('نقشه‌ای بارگذاری نشده است.');return}if(!confirm('نقشهٔ محدوده حذف شود؟\n(درختان و مسیر پیمایش حذف نمی‌شوند)'))return;MAPP=[];MAPNM='';updateMapInfo();store();mapCheck();updateGpsUI()};
+$('#mf').onchange=async e=>{const f=e.target.files[0];if(!f)return;const AP=appendMap;appendMap=false;const ext=f.name.split('.').pop().toLowerCase(),S=m=>{$('#mi').textContent=m};
  try{let po=[];
   if(ext=='dwg'){S('DWG مستقیم خوانده نمی‌شود؛ به DXF تبدیل کنید.');return}
   if(ext=='kmz'){if(!window.JSZip){S('JSZip بارگذاری نشد.');return}
@@ -1138,9 +1149,10 @@ $('#mf').onchange=async e=>{const f=e.target.files[0];if(!f)return;const ext=f.n
   else if(ext=='dxf')po=parseDXF(await f.text());
   else{S('فرمت پشتیبانی‌نشده.');return}
   if(!po.length){S(ext==='dxf'?'در DXF مرز بسته پیدا نشد. پلی‌لاین باید بسته (Closed) و مختصات آن جغرافیایی یا UTM باشد.':'در فایل KML/KMZ هیچ Polygon یا مرز بسته‌ای پیدا نشد.');return}
-  const f0=po[0].o[0];let zn=po[0].ll?Math.floor((f0[0]+180)/6)+1:(cur?cur.u.z:39);if(ext==='dxf'&&!po[0].ll&&!cur){const z=prompt('زون مختصات UTM فایل DXF را وارد کنید (برای شمال ایران معمولاً ۳۹ یا ۴۰):',String(zn));if(z===null)return;zn=Number(z);if(!Number.isInteger(zn)||zn<1||zn>60){S('زون UTM نامعتبر است.');return}}
+  const f0=po[0].o[0];let zn=po[0].ll?Math.floor((f0[0]+180)/6)+1:(cur?cur.u.z:39);if(ext==='dxf'&&!po[0].ll&&!cur&&!(AP&&MAPP.length)){const z=prompt('زون مختصات UTM فایل DXF را وارد کنید (برای شمال ایران معمولاً ۳۹ یا ۴۰):',String(zn));if(z===null)return;zn=Number(z);if(!Number.isInteger(zn)||zn<1||zn>60){S('زون UTM نامعتبر است.');return}}
+  if(AP&&MAPP.length)zn=MAPZ;
   const cv=(r,ll)=>r.map(q=>{if(ll){const u=utm(q[1],q[0],zn);return[u.E,u.N]}return[Math.round(q[0]*10)/10,Math.round(q[1]*10)/10]});
-  setMap(po.map(q=>({n:q.n,o:cv(q.o,q.ll),i:q.i.map(r=>cv(r,q.ll))})),zn,f.name,true)}
+  {const add=po.map(q=>({n:q.n,o:cv(q.o,q.ll),i:q.i.map(r=>cv(r,q.ll))})),keep=AP&&MAPP.length>0;setMap(keep?MAPP.concat(add):add,zn,keep?(MAPNM+' + '+f.name):f.name,true)}}
  catch(x){S('خواندن فایل ممکن نشد.')}
  e.target.value=''};
 
@@ -1435,7 +1447,7 @@ window.ed=id=>{
   
   // Populate species dropdown
   const spOpts = Object.keys(SP).sort((a,b)=>a.localeCompare(b,'fa'));
-  $('#emSp').innerHTML = spOpts.map(k=>`<option value="${k}">${k}</option>`).join('');
+  $('#emSp').innerHTML = (SP[t.sp]?'':`<option value="${esc(t.sp)}">${esc(t.sp)}</option>`) + spOpts.map(k=>`<option value="${k}">${k}</option>`).join('');
   
   $('#emSp').value = t.sp;
   $('#emGd').value = t.g;
@@ -1721,6 +1733,7 @@ function fillSp(q){
 const nz=x=>String(x).replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/آ/g,'ا').replace(/[\u200c\s]/g,''),NAMES=Object.keys(SP).sort((a,b)=>a.localeCompare(b,'fa'));
 $('#sps').addEventListener('input',()=>{fillSp($('#sps').value)});
 fillSp('');
+document.getElementById('spList').innerHTML=NAMES.map(n=>'<option value="'+esc(n)+'">').join('');
 $('#sp').onchange=()=>{
   const v=$('#sp').value;
   if($('#sps').value){$('#sps').value='';fillSp('');$('#sp').value=v}
@@ -1738,6 +1751,11 @@ $('#resetWalk').onclick=()=>{
   walkMeters=0;lastWalkFix=cur?{lat:cur.lat,lng:cur.lng}:null;TRACK=[];updateWalkUI();saveActive();mapCheck();
 };
 updateWalkUI();
+$('#trkToggle').onclick=()=>{
+  trackOn=!trackOn;try{localStorage.setItem('trkOn',trackOn?'1':'0')}catch(e){}
+  if(trackOn){if(!gpsOn)startGPS();lastWalkFix=cur?{lat:cur.lat,lng:cur.lng}:null}else{lastWalkFix=null;saveActive()}
+  updateWalkUI();mapCheck();
+};
 $('#ga').onclick=e=>{if(e){e.preventDefault();e.stopPropagation()}if(gpsOn)stopGPS();else startGPS();};
 
 $('#volClass').addEventListener('change',()=>{
@@ -1808,21 +1826,30 @@ async function prepareAiImage(file){
   let img;
   if(window.createImageBitmap){img=await createImageBitmap(file)}
   else{img=await new Promise((res,rej)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{URL.revokeObjectURL(u);res(im)};im.onerror=rej;im.src=u})}
-  const sc=Math.min(1,1800/Math.max(img.width,img.height));
+  const sc=Math.min(1,1400/Math.max(img.width,img.height));
   const c=document.createElement('canvas');c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);
   const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(img,0,0,c.width,c.height);
   img.close&&img.close();
-  return c.toDataURL('image/jpeg',0.88).split(',')[1];
+  return c.toDataURL('image/jpeg',0.8).split(',')[1];
+}
+const SPALIAS={'زبان گنجشک':'ون','زبانگنجشک':'ون','ممرزی':'ممرز'};
+function lev(a,b){const m=a.length,n=b.length,d=Array.from({length:m+1},(_,i)=>[i]);for(let j=1;j<=n;j++)d[0][j]=j;for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][n]}
+function matchSp(raw){
+  const q=nz(String(raw||''));if(!q)return '';
+  const ex=NAMES.find(n=>nz(n)===q);if(ex)return ex;
+  const al=Object.keys(SPALIAS).find(k=>nz(k)===q);if(al)return SPALIAS[al];
+  let best='',bd=9;NAMES.forEach(n=>{const d=lev(nz(n),q);if(d<bd){bd=d;best=n}});
+  return bd<=(q.length<=4?1:2)?best:'';
 }
 async function aiReadImage(file){
   const b64=await prepareAiImage(file);
   const j=await window.hkAiCall({image:b64,mime:'image/jpeg'});
-  const raw=(j.rows||[]).map(o=>({sp:String(o.species||'').trim(),d:parseNum(o.diameter_cm),h:parseNum(o.length_m)||0,n:Math.max(1,parseInt(o.count)||1),k:o.planted===true?'planted':'natural',v:parseNum(o.volume_m3)})).filter(o=>o.d>0);
+  const raw=(j.rows||[]).map(o=>({spRaw:String(o.species||'').trim(),sp:matchSp(o.species),d:parseNum(o.diameter_cm),h:parseNum(o.length_m)||0,n:Math.max(1,parseInt(o.count)||1),k:o.planted===true?'planted':'natural',v:parseNum(o.volume_m3)})).filter(o=>o.d>0);
   // ردیف‌های هم‌مشخصات را یکی می‌کنیم و تعداد می‌شمریم
   const map=new Map();
-  raw.forEach(o=>{const key=[o.sp,o.d,o.h,o.k].join('|');const e=map.get(key);if(e)e.n+=o.n;else map.set(key,{sp:o.sp,d:o.d,h:o.h,n:o.n,k:o.k})});
+  raw.forEach(o=>{const key=[o.sp,o.d,o.h,o.k].join('|');const e=map.get(key);if(e)e.n+=o.n;else map.set(key,{sp:o.sp,spRaw:o.spRaw,d:o.d,h:o.h,n:o.n,k:o.k})});
   const rows=[...map.values()];
-  const nTot=raw.reduce((t,o)=>t+o.n,0);
+  const nTot=raw.reduce((t,o)=>t+o.n,0),unk=rows.filter(r=>!r.sp).length;
   const sheetSum=raw.reduce((t,o)=>t+(isFinite(o.v)?o.v:0),0), sheetTot=parseNum(j.total_volume);
   const appSum=rows.reduce((t,o)=>t+volSp(o.sp,o.d,o.h)*o.n,0);
   let note='🤖 '+toFa(nTot)+' درخت در '+toFa(rows.length)+' سطر خوانده شد. ';
@@ -1830,6 +1857,7 @@ async function aiReadImage(file){
     note+=Math.abs(sheetSum-sheetTot)<0.02?'✅ جمع حجم ردیف‌های برگه با «جمع کل» برگه ('+toFa(sheetTot)+') می‌خواند. ':'⚠️ جمع حجم ردیف‌های خوانده‌شده ('+toFa(+sheetSum.toFixed(3))+') با جمع کل برگه ('+toFa(sheetTot)+') نمی‌خواند؛ اعداد را با برگه تطبیق دهید. ';
     note+='حجم محاسبه‌شدهٔ برنامه: '+toFa(+appSum.toFixed(2))+'.';
   }
+  if(unk)note+='⚠️ '+toFa(unk)+' سطر نام گونهٔ معتبر نداشت (قرمز)؛ اصلاح کنید. ';
   return {rows,note};
 }
 
@@ -1884,7 +1912,7 @@ document.getElementById('smartImportFile').onchange = async (e) => {
     } else if (fext === 'docx') {
       btn.innerHTML = '⏳ در حال خواندن ورد...';
       const zip = await JSZip.loadAsync(await file.arrayBuffer()); const docXml = await zip.file('word/document.xml').async('string');
-      const text = docXml.replace(/<[^>]+>/g, ' '); const matches = text.match(/\d+(\.\d+)?\s+\d+(\.\d+)?/g) || [];
+      const text = normalizeOcrText(docXml.replace(/<[^>]+>/g, ' ')); const matches = text.match(/\d+(\.\d+)?\s+\d+(\.\d+)?/g) || [];
       matches.forEach(m => { const nums = m.trim().split(/\s+/).map(Number); if (nums.length >= 2) extractedData.push({ no:'', sp: '', d: nums[0], h: nums[1], ds: '' }); });
     } else if (fext === 'doc') {
       btn.innerHTML = originalText; alert('فرمت .doc قدیمی پشتیبانی نمی‌شود. لطفاً به .docx تبدیل کنید.'); return;
@@ -1896,7 +1924,7 @@ document.getElementById('smartImportFile').onchange = async (e) => {
         const page = await pdf.getPage(i); const textContent = await page.getTextContent();
         fullText += textContent.items.map(item => item.str).join(' ') + '\n';
       }
-      const lines = fullText.split('\n');
+      const lines = normalizeOcrText(fullText).split('\n');
       lines.forEach(line => { const matches = line.match(/\d+(?:\.\d+)?/g); if (matches && matches.length >= 2) extractedData.push({ no:'', sp: '', d: parseFloat(matches[0]), h: parseFloat(matches[1]), ds: 'PDF' }); });
     } else if (file.type.startsWith('image/') || ['jpg','jpeg','png','webp','gif','bmp','heic','heif','tif','tiff'].includes(fext)) {
       let aiDone = false;
@@ -2025,7 +2053,7 @@ function openQuickEntry(prefill, note) {
     const rows = tbody.querySelectorAll('tr'); let added = 0;
     let currentMaxNo = T.filter(t=>t.ty!='h').reduce((max, t) => Math.max(max, parseInt(t.no) || 0), 0);
     rows.forEach(tr => {
-      let sp = tr.querySelector('.q-sp').value.trim(); const d = parseNum(tr.querySelector('.q-d').value); const h = parseNum(tr.querySelector('.q-h').value) || 0; const count = parseInt(toEn(tr.querySelector('.q-count').value)) || 1;
+      let sp = matchSp(tr.querySelector('.q-sp').value.trim()); const d = parseNum(tr.querySelector('.q-d').value); const h = parseNum(tr.querySelector('.q-h').value) || 0; const count = parseInt(toEn(tr.querySelector('.q-count').value)) || 1;
       const k = tr.querySelector('.q-ty').value; 
       
       if (d > 0) {
@@ -2052,7 +2080,7 @@ function openQuickEntry(prefill, note) {
 document.getElementById('btnQuickEntry').onclick = () => openQuickEntry();
 function quickRowHtml(r) { r = r || {};
   return `<tr style="border-bottom:1px solid var(--bd);">
-    <td style="padding:4px;"><input type="text" class="q-sp" value="${esc(r.sp || '')}" style="padding:6px;text-align:center;width:80px;"></td>
+    <td style="padding:4px;"><input type="text" class="q-sp" list="spList" value="${esc(r.sp || '')}" placeholder="${esc(r.spRaw || '')}" style="padding:6px;text-align:center;width:80px;${(r.spRaw && !r.sp) ? 'border-color:#d33;background:#fdecea;color:#000;' : ''}"></td>
     <td style="padding:4px;"><input type="text" inputmode="decimal" class="q-d" value="${r.d ? toFa(r.d) : ''}" style="padding:6px;text-align:center;width:60px;"></td>
     <td style="padding:4px;"><input type="text" inputmode="decimal" class="q-h" value="${r.h ? toFa(r.h) : ''}" style="padding:6px;text-align:center;width:60px;"></td>
     <td style="padding:4px;"><input type="text" inputmode="decimal" class="q-count" value="${toFa(r.n || 1)}" style="padding:6px;text-align:center;width:50px;"></td>
@@ -2332,6 +2360,9 @@ window.addEventListener('beforeunload',()=>{try{saveActive()}catch(e){}});
 })();
 </script>
 
+<datalist id="spList"></datalist>
+<div id="sosCard" class="hid"></div>
+
 <!-- همگام‌سازی Supabase و مدیریت اسپلش -->
 <script>
 (function(){
@@ -2373,8 +2404,8 @@ window.hkAiCall=async(body)=>{
   if(!S)throw new Error('ابتدا وارد حساب کاربری شوید');
   await fresh();
   let r;
-  try{r=await fetch(SB_URL+'/functions/v1/read-table',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+S.access_token},body:JSON.stringify(body)})}
-  catch(e){throw new Error('اتصال به سرور برقرار نشد')}
+  try{r=await fetch(SB_URL+'/functions/v1/read-table',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+S.access_token},body:JSON.stringify(body),signal:(AbortSignal.timeout?AbortSignal.timeout(55000):undefined)})}
+  catch(e){throw new Error(e&&e.name==='TimeoutError'?'سرور دیر پاسخ داد':'اتصال به سرور برقرار نشد')}
   const j=await r.json().catch(()=>({}));
   if(r.status===404)throw new Error('سرویس هوشمند هنوز روی سرور نصب نشده');
   if(!r.ok)throw new Error(j.error||('خطای سرور '+r.status));
@@ -2523,12 +2554,12 @@ if(!window.SB)return;
 const Q=s=>document.querySelector(s);
 const jget=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}};
 const jset=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
-const CFG=()=>Object.assign({call:'',sms:'',msg:'در خطر هستم و به کمک نیاز دارم!',video:false},jget('sosCfg',{}));
+const num=s=>String(s||'').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[^\d+]/g,'');
+const CFG=()=>{const o=Object.assign({msg:'در خطر هستم و به کمک نیاز دارم!',video:false},jget('sosCfg',{}));if(!Array.isArray(o.nums))o.nums=[o.call,o.sms];o.nums=o.nums.map(num).filter((v,i,a)=>v&&a.indexOf(v)===i).slice(0,6);return o};
 const user=()=>SB.user();
 const pad=n=>String(n).padStart(5,'0');
-const num=s=>String(s||'').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[^\d+]/g,'');
 const BS='background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.55)';
-let st=null,tickT=null,rec=null,stream=null,wl=null,seq=0,upBusy=false,fl={rec:null,net:null,err:''};
+let st=null,tickT=null,rec=null,stream=null,wl=null,seq=0,upBusy=false,fl={rec:null,net:null,err:'',sms:null};
 let dis=new Set(jget('sosDis',[])),seen=new Set();
 const card=Q('#sosCard');
 const mkOv=z=>{const d=document.createElement('div');d.style.cssText='position:fixed;inset:0;z-index:'+z+';background:rgba(0,0,0,.62);display:none;align-items:center;justify-content:center;padding:12px;overflow:auto';document.body.append(d);return d};
@@ -2545,8 +2576,8 @@ function renderCard(){
   if(!card)return;
   if(!st){
     const last=localStorage.getItem('sosLast');
-    card.innerHTML='<div style="display:flex;gap:8px"><button data-a="ask" type="button" style="flex:1;background:#c62828;color:#fff;border:0;border-radius:14px;padding:14px;font-size:17px;font-weight:700;box-shadow:0 4px 14px rgba(198,40,40,.4)">🆘 اعلام خطر</button><button data-a="cfg" type="button" class="o" style="border-radius:14px;padding:14px" title="تنظیمات اعلام خطر">⚙️</button></div>'
-      +(last?'<button data-a="save" data-sid="'+last+'" type="button" class="o" style="width:100%;margin-top:8px;font-size:13px">💾 ذخیرهٔ ضبط آخرین اعلام خطر</button>':'');
+    card.innerHTML='<div style="display:flex;gap:8px"><button data-a="ask" type="button" style="flex:1;background:#c62828;color:#fff;border:0;border-radius:14px;padding:11px;font-size:16px;font-weight:700;box-shadow:0 4px 14px rgba(198,40,40,.4)">🆘 اعلام خطر</button><button data-a="cfg" type="button" class="o" style="border-radius:14px;padding:11px 14px;background:var(--sf)" title="تنظیمات اعلام خطر">⚙️</button></div>'
+      +(last?'<button data-a="save" data-sid="'+last+'" type="button" class="o" style="width:100%;margin-top:6px;font-size:12px;background:var(--sf)">💾 ذخیرهٔ ضبط آخرین اعلام خطر</button>':'');
   }else{
     card.innerHTML='<div style="background:#c62828;color:#fff;border-radius:14px;padding:12px;box-shadow:0 4px 14px rgba(198,40,40,.45)"><b>🔴 اعلام خطر فعال است</b><div id="sosStat" style="font-size:12.5px;line-height:2;margin:6px 0"></div><div style="display:flex;gap:6px;flex-wrap:wrap">'
       +'<button data-a="call" type="button" style="'+BS+'">📞 تماس</button><button data-a="sms" type="button" style="'+BS+'">✉️ پیامک</button><button data-a="save" data-sid="'+st.id+'" type="button" style="'+BS+'">💾 ذخیرهٔ ضبط</button><button data-a="end" type="button" style="background:#fff;color:#c62828;font-weight:700;border:0">✅ در امانم</button></div></div>';
@@ -2559,28 +2590,33 @@ function stat(){
   const g=cur?'📍 موقعیت دریافت شد (±'+toFa(Math.round(cur.acc||0))+' متر)':'⚠️ موقعیت دریافت نمی‌شود — GPS (مکان) گوشی را روشن کنید';
   const r=fl.rec===true?'🎙️ ضبط '+(c.video?'صدا و تصویر':'صدا')+' فعال':(fl.rec===false?'⚠️ ضبط فعال نیست'+(fl.err?' ('+esc(fl.err)+')':''):'🎙️ در حال آماده‌سازی ضبط…');
   const n=fl.net===true?'📡 هشدار برای کاربران دیگر ارسال شد':(fl.net===false?'📴 آفلاین — ذخیره می‌شود و با اتصال ارسال می‌شود':'📡 در حال ارسال…');
-  e.innerHTML=g+'<br>'+r+'<br>'+n+'<br>⏱️ '+toFa(Math.floor((Date.now()-st.t0)/60000))+' دقیقه از شروع';
+  const s=fl.sms===true?'✉️ پیامک برای '+toFa(c.nums.length)+' شماره ارسال شد':(fl.sms===null?'✉️ در حال ارسال پیامک…':'⚠️ پیامک خودکار ارسال نشد ('+esc(fl.sms)+') — دکمهٔ «پیامک» را بزنید');
+  e.innerHTML=g+'<br>'+r+'<br>'+n+'<br>'+s+'<br>⏱️ '+toFa(Math.floor((Date.now()-st.t0)/60000))+' دقیقه از شروع';
 }
 if(card)card.onclick=e=>{
   const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,c=CFG();
   if(a==='ask')openConfirm();
   else if(a==='cfg')openCfg();
   else if(a==='save')saveRec(b.dataset.sid);
-  else if(a==='call'){const n=num(c.call);n?location.href='tel:'+n:openCfg()}
-  else if(a==='sms'){const n=num(c.sms||c.call);n?location.href=smsLink():openCfg()}
+  else if(a==='call'){c.nums[0]?location.href='tel:'+c.nums[0]:openCfg()}
+  else if(a==='sms'){c.nums.length?location.href=smsLink():openCfg()}
   else if(a==='end')openEnd();
 };
 
 function openCfg(){
   const c=CFG();
-  dlg('<b>⚙️ تنظیمات اعلام خطر</b><div style="font-size:12px;color:var(--mu)">این اطلاعات فقط روی همین دستگاه ذخیره می‌شود.</div>'
-   +'<label>شمارهٔ تماس</label><input id="sosC" type="tel" dir="ltr" value="'+esc(c.call)+'" placeholder="09121234567" style="width:100%">'
-   +'<label>شمارهٔ پیامک (اگر خالی باشد همان شمارهٔ تماس)</label><input id="sosS" type="tel" dir="ltr" value="'+esc(c.sms)+'" placeholder="09121234567" style="width:100%">'
+  const row=(v,i)=>'<div class="sosNr" style="display:flex;gap:6px;margin-top:5px"><input class="sosN" type="tel" dir="ltr" value="'+esc(v)+'" placeholder="'+(i?'شمارهٔ '+toFa(i+1)+' (پیامک)':'شمارهٔ ۱ (تماس + پیامک)')+'" style="flex:1">'+(i?'<button type="button" class="o sosRm" style="padding:4px 12px">×</button>':'')+'</div>';
+  dlg('<b>⚙️ تنظیمات اعلام خطر</b><div style="font-size:12px;color:var(--mu)">با شمارهٔ ۱ تماس گرفته می‌شود؛ پیامک برای همهٔ شماره‌ها ارسال می‌شود. فقط روی همین دستگاه ذخیره می‌شود.</div>'
+   +'<div id="sosNums">'+(c.nums.length?c.nums:['']).map(row).join('')+'</div>'
+   +'<button id="sosAdd" type="button" class="o" style="width:100%;margin-top:6px;padding:7px">➕ افزودن شماره</button>'
    +'<label>متن پیام</label><input id="sosM" value="'+esc(c.msg)+'" style="width:100%">'
    +'<label style="display:flex;gap:8px;align-items:center;margin-top:6px"><input id="sosV" type="checkbox" '+(c.video?'checked':'')+' style="width:auto"> ضبط تصویر (علاوه بر صدا؛ حجم بیشتر)</label>'
    +'<div style="display:flex;gap:8px;margin-top:12px">'+btn('sosSave','ذخیره')+btn('sosCl','بستن','background:transparent;color:var(--tx);border:1px solid var(--bd)')+'</div>');
+  const box=Q('#sosNums');
+  Q('#sosAdd').onclick=()=>{const n=box.querySelectorAll('.sosNr').length;if(n>=5)return;box.insertAdjacentHTML('beforeend',row('',n))};
+  box.onclick=e=>{const b=e.target.closest('.sosRm');if(b)b.closest('.sosNr').remove()};
   Q('#sosCl').onclick=closeDlg;
-  Q('#sosSave').onclick=()=>{jset('sosCfg',{call:num(Q('#sosC').value),sms:num(Q('#sosS').value),msg:Q('#sosM').value.trim()||'در خطر هستم و به کمک نیاز دارم!',video:Q('#sosV').checked});closeDlg()};
+  Q('#sosSave').onclick=()=>{jset('sosCfg',{nums:[...box.querySelectorAll('.sosN')].map(i=>num(i.value)).filter(Boolean),msg:Q('#sosM').value.trim()||'در خطر هستم و به کمک نیاز دارم!',video:Q('#sosV').checked});closeDlg()};
 }
 
 function prime(){
@@ -2596,29 +2632,37 @@ async function gpsEnsure(){
 
 function openConfirm(){
   const c=CFG();
-  prime();
+  prime();SB.fresh().catch(()=>{});
   dlg('<div style="font-size:18px;font-weight:700;color:#c62828">🆘 اعلام خطر</div>'
-   +'<div>آیا مطمئن هستید که در خطر هستید؟<br>با تأیید: '+(num(c.call)?'با شمارهٔ تعریف‌شده تماس گرفته می‌شود؛ ':(num(c.sms)?'پیامک آماده می‌شود؛ ':'<b>(شماره‌ای تعریف نشده است)</b> '))+'هشدار و موقعیت و مسیر شما برای کاربران ثبت‌نام‌شدهٔ برنامه نمایش داده می‌شود و '+(c.video?'صدا و تصویر':'صدا')+' ضبط می‌شود.</div>'
+   +'<div>آیا مطمئن هستید که در خطر هستید؟<br>با تأیید: '+(c.nums.length?'پیامک خودکار برای '+toFa(c.nums.length)+' شماره ارسال و با شمارهٔ ۱ تماس گرفته می‌شود؛ ':'<b>(شماره‌ای تعریف نشده است)</b> ')+'هشدار و موقعیت و مسیر شما برای کاربران ثبت‌نام‌شدهٔ برنامه نمایش داده می‌شود و '+(c.video?'صدا و تصویر':'صدا')+' ضبط می‌شود.</div>'
    +'<div id="sosGm" style="font-size:13px;color:#b36b00;margin:6px 0"></div>'
    +'<div style="display:flex;gap:8px;margin-top:10px">'+btn('sosYes','بله، در خطر هستم','background:#c62828;color:#fff;border:0;font-weight:700')+btn('sosNo','انصراف','background:transparent;color:var(--tx);border:1px solid var(--bd)')+'</div>');
   Q('#sosNo').onclick=closeDlg;
   Q('#sosYes').onclick=startSOS;
   gpsEnsure().then(m=>{const e=Q('#sosGm');if(e)e.textContent=m?'⚠️ '+m:''});
 }
+function locText(){const p=st&&st.last?st.last:(cur?[cur.lat,cur.lng]:null);return p?'\nhttps://maps.google.com/?q='+p[0]+','+p[1]:''}
+function smsText(){return CFG().msg+'\n'+(st?st.name:'')+locText()}
+function smsLink(){return 'sms:'+CFG().nums.join(',')+(/iPhone|iPad/.test(navigator.userAgent)?'&':'?')+'body='+encodeURIComponent(smsText())}
+async function smsAuto(text){
+  const nums=CFG().nums;if(!nums.length)return{ok:false,err:'شماره‌ای تعریف نشده'};
+  try{
+    const r=await fetch(SB.url+'/functions/v1/sos-sms',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json',apikey:SB.key,Authorization:'Bearer '+SB.token()},body:JSON.stringify({numbers:nums,text})});
+    const j=await r.json().catch(()=>({}));
+    if(r.ok)return{ok:true};
+    return{ok:false,err:r.status===404?'سرویس پیامک روی سرور نصب نشده':(j.error||('خطا '+r.status))};
+  }catch(e){return{ok:false,err:'اتصال برقرار نشد'}}
+}
 function startSOS(){
   const u=user();if(!u){closeDlg();return}
   const c=CFG();
   st={id:(crypto.randomUUID?crypto.randomUUID():'x'+Date.now()+Math.random().toString(16).slice(2)),t0:Date.now(),track:[],last:null,name:u.name,uid:u.uid,created:false,sentAt:0};
-  seq=0;fl={rec:null,net:null,err:''};
+  if(cur)st.last=[+cur.lat.toFixed(6),+cur.lng.toFixed(6),Date.now()];
+  seq=0;fl={rec:null,net:null,err:'',sms:c.nums.length?null:'شماره‌ای تعریف نشده'};
   jset('sosActive',st);localStorage.setItem('sosLast',st.id);
   closeDlg();renderCard();tick();tickT=setInterval(tick,5000);record();lock();
-  if(num(c.call))location.href='tel:'+num(c.call);
-  else if(num(c.sms))location.href=smsLink();
-}
-function smsLink(){
-  const c=CFG(),p=st&&st.last?st.last:(cur?[cur.lat,cur.lng]:null);
-  const body=c.msg+'\n'+(st?st.name:'')+(p?'\nhttps://maps.google.com/?q='+p[0]+','+p[1]:'');
-  return 'sms:'+num(c.sms||c.call)+(/iPhone|iPad/.test(navigator.userAgent)?'&':'?')+'body='+encodeURIComponent(body);
+  if(c.nums.length)smsAuto(smsText()).then(r=>{fl.sms=r.ok?true:r.err;stat()});
+  if(c.nums[0])location.href='tel:'+c.nums[0];
 }
 async function lock(){try{wl=await navigator.wakeLock.request('screen')}catch(e){}}
 
@@ -2680,7 +2724,7 @@ async function push(){
 }
 
 function openEnd(){
-  dlg('<b>✅ آیا در امان هستید؟</b><div>با پایان، ضبط متوقف و هشدار برای دیگران غیرفعال می‌شود. ضبط روی دستگاه باقی می‌ماند.</div><div style="display:flex;gap:8px;margin-top:10px">'+btn('sosEnd','بله، در امانم','background:#2f6b3c;color:#fff;border:0')+btn('sosKeep','نه، ادامه','background:transparent;color:var(--tx);border:1px solid var(--bd)')+'</div>');
+  dlg('<b>✅ آیا در امان هستید؟</b><div>با پایان، ضبط متوقف می‌شود و پیام «در امانم» برای همهٔ کاربران و شماره‌های تعریف‌شده ارسال می‌شود. ضبط روی دستگاه باقی می‌ماند.</div><div style="display:flex;gap:8px;margin-top:10px">'+btn('sosEnd','بله، در امانم','background:#2f6b3c;color:#fff;border:0')+btn('sosKeep','نه، ادامه','background:transparent;color:var(--tx);border:1px solid var(--bd)')+'</div>');
   Q('#sosKeep').onclick=closeDlg;Q('#sosEnd').onclick=endSOS;
 }
 async function endSOS(){
@@ -2688,7 +2732,10 @@ async function endSOS(){
   try{if(rec&&rec.state!=='inactive')rec.stop()}catch(e){}
   try{stream&&stream.getTracks().forEach(t=>t.stop())}catch(e){}
   try{wl&&wl.release()}catch(e){}
-  try{await SB.api('/rest/v1/sos_alerts?id=eq.'+st.id,'PATCH',{active:false,updated_at:new Date().toISOString()},{Prefer:'return=minimal'})}catch(e){}
+  const id=st.id,nm=st.name,iso=new Date().toISOString();
+  smsAuto('✅ در امانم؛ خطر برطرف شد.\n'+nm).catch(()=>{});
+  try{await SB.api('/rest/v1/sos_alerts?id=eq.'+id,'PATCH',{active:false,safe_at:iso,updated_at:iso},{Prefer:'return=minimal'})}
+  catch(e){try{await SB.api('/rest/v1/sos_alerts?id=eq.'+id,'PATCH',{active:false,updated_at:iso},{Prefer:'return=minimal'})}catch(x){}}
   await new Promise(r=>setTimeout(r,900));await uploadChunks();
   st=null;rec=null;stream=null;localStorage.removeItem('sosActive');renderCard();
 }
@@ -2719,6 +2766,7 @@ function renderAlerts(list){
   if(!list.length){alOv.style.display='none';alOv.innerHTML='';return}
   alOv.style.display='flex';
   alOv.innerHTML='<div style="width:100%;max-width:440px;max-height:94vh;overflow:auto">'+list.map(a=>{
+    if(a.active===false)return '<div style="background:var(--sf);color:var(--tx);border:3px solid #2f6b3c;border-radius:16px;padding:14px;margin-bottom:10px;line-height:1.9"><div style="font-size:18px;font-weight:700;color:#2f6b3c">✅ '+esc(a.name||'کاربر')+' در امان است</div><div style="font-size:13px">خطر برطرف شد · '+ago(a.safe_at||a.updated_at)+'</div><button data-x="'+a.id+':s" type="button" style="width:100%;margin-top:8px">باشه</button></div>';
     const d=(cur&&a.lat!=null)?gdist(cur.lat,cur.lng,a.lat,a.lng):null;
     return '<div style="background:var(--sf);color:var(--tx);border:3px solid #c62828;border-radius:16px;padding:14px;margin-bottom:10px;line-height:1.9;font-size:13.5px">'
      +'<div style="font-size:18px;font-weight:700;color:#c62828">🆘 '+esc(a.name||'کاربر')+' در خطر است</div>'
@@ -2729,16 +2777,19 @@ function renderAlerts(list){
      +'<div style="display:flex;gap:8px;margin-top:6px">'+(a.lat!=null?'<a href="https://www.google.com/maps?q='+a.lat+','+a.lng+'" target="_blank" rel="noopener" style="flex:1;text-align:center;background:#c62828;color:#fff;border-radius:10px;padding:10px;text-decoration:none;font-weight:700">🗺️ باز کردن در نقشه</a>':'')
      +'<button data-x="'+a.id+'" type="button" class="o">بستن</button></div></div>';
   }).join('')+'</div>';
-  list.forEach(a=>{const cv=alOv.querySelector('canvas[data-id="'+a.id+'"]');if(cv)drawMap(cv,a)});
+  list.forEach(a=>{if(a.active===false)return;const cv=alOv.querySelector('canvas[data-id="'+a.id+'"]');if(cv)drawMap(cv,a)});
 }
 alOv.onclick=e=>{const b=e.target.closest('[data-x]');if(!b)return;dis.add(b.dataset.x);jset('sosDis',[...dis].slice(-50));poll()};
 async function poll(){
   const u=user();if(!u||!navigator.onLine||document.hidden)return;
   try{
-    const since=encodeURIComponent(new Date(Date.now()-30*60000).toISOString());
-    const rows=await SB.api('/rest/v1/sos_alerts?active=eq.true&updated_at=gt.'+since+'&select=id,uid,name,lat,lng,track,started_at,updated_at&order=started_at.desc&limit=10');
-    const list=(rows||[]).filter(r=>r.uid!==u.uid&&!dis.has(r.id));
-    if(list.some(r=>!seen.has(r.id))){try{navigator.vibrate&&navigator.vibrate([300,150,300,150,600])}catch(e){}beep()}
+    const since=encodeURIComponent(new Date(Date.now()-30*60000).toISOString()),safe=new Date(Date.now()-10*60000).toISOString();
+    const sel='&select=id,uid,name,lat,lng,track,started_at,updated_at,active,safe_at&order=started_at.desc&limit=10';
+    let rows;
+    try{rows=await SB.api('/rest/v1/sos_alerts?or='+encodeURIComponent('(active.eq.true,safe_at.gt.'+safe+')')+'&updated_at=gt.'+since+sel)}
+    catch(e){rows=await SB.api('/rest/v1/sos_alerts?active=eq.true&updated_at=gt.'+since+'&select=id,uid,name,lat,lng,track,started_at,updated_at,active&order=started_at.desc&limit=10')}
+    const list=(rows||[]).filter(r=>r.uid!==u.uid&&(r.active===false?!dis.has(r.id+':s'):!dis.has(r.id)));
+    if(list.some(r=>r.active!==false&&!seen.has(r.id))){try{navigator.vibrate&&navigator.vibrate([300,150,300,150,600])}catch(e){}beep()}
     list.forEach(r=>seen.add(r.id));renderAlerts(list);
   }catch(e){}
 }
