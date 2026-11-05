@@ -1828,11 +1828,18 @@ async function prepareAiImage(file){
   let img;
   if(window.createImageBitmap){img=await createImageBitmap(file)}
   else{img=await new Promise((res,rej)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{URL.revokeObjectURL(u);res(im)};im.onerror=rej;im.src=u})}
-  const sc=Math.min(1,1400/Math.max(img.width,img.height));
-  const c=document.createElement('canvas');c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);
-  const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(img,0,0,c.width,c.height);
+  // برای حفظ خوانایی اعداد ریز، تصویر فقط در صورت بزرگ‌تر بودن از ۲۲۰۰px کوچک می‌شود.
+  // کیفیت JPEG نیز بالاتر نگه داشته می‌شود تا نقطه‌های اعشار و ارقام فارسی از بین نروند.
+  const maxSide=2200;
+  const sc=Math.min(1,maxSide/Math.max(img.width,img.height));
+  const c=document.createElement('canvas');
+  c.width=Math.max(1,Math.round(img.width*sc));
+  c.height=Math.max(1,Math.round(img.height*sc));
+  const x=c.getContext('2d');
+  if(!x) { img.close&&img.close(); throw new Error('پردازش تصویر در این مرورگر پشتیبانی نمی‌شود'); }
+  x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(img,0,0,c.width,c.height);
   img.close&&img.close();
-  return c.toDataURL('image/jpeg',0.8).split(',')[1];
+  return c.toDataURL('image/jpeg',0.92).split(',')[1];
 }
 const SPALIAS={'زبان گنجشک':'ون','زبانگنجشک':'ون','ممرزی':'ممرز'};
 function lev(a,b){const m=a.length,n=b.length,d=Array.from({length:m+1},(_,i)=>[i]);for(let j=1;j<=n;j++)d[0][j]=j;for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][n]}
@@ -1846,18 +1853,25 @@ function matchSp(raw){
 async function aiReadImage(file){
   const b64=await prepareAiImage(file);
   const j=await window.hkAiCall({image:b64,mime:'image/jpeg'});
-  const raw=(j.rows||[]).map(o=>({spRaw:String(o.species||'').trim(),sp:matchSp(o.species),d:parseNum(o.diameter_cm),h:parseNum(o.length_m)||0,n:Math.max(1,parseInt(o.count)||1),k:o.planted===true?'planted':'natural',v:parseNum(o.volume_m3)})).filter(o=>o.d>0);
+  const raw=(Array.isArray(j.rows)?j.rows:[]).map(o=>{
+    const count=Math.max(1,Math.round(parseNum(o.count)||1));
+    const planted=o.planted===true||String(o.planted).toLowerCase()==='true'||o.planted===1;
+    return {spRaw:String(o.species||'').trim(),sp:matchSp(o.species),d:parseNum(o.diameter_cm),h:parseNum(o.length_m)||0,n:count,k:planted?'planted':'natural',v:parseNum(o.volume_m3)};
+  }).filter(o=>o.d>0&&isFinite(o.d));
   // ردیف‌های هم‌مشخصات را یکی می‌کنیم و تعداد می‌شمریم
   const map=new Map();
   raw.forEach(o=>{const key=[o.sp,o.d,o.h,o.k].join('|');const e=map.get(key);if(e)e.n+=o.n;else map.set(key,{sp:o.sp,spRaw:o.spRaw,d:o.d,h:o.h,n:o.n,k:o.k})});
   const rows=[...map.values()];
   const nTot=raw.reduce((t,o)=>t+o.n,0),unk=rows.filter(r=>!r.sp).length;
+  const hasRowVolumes=raw.some(o=>isFinite(o.v)&&o.v>0);
   const sheetSum=raw.reduce((t,o)=>t+(isFinite(o.v)?o.v:0),0), sheetTot=parseNum(j.total_volume);
   const appSum=rows.reduce((t,o)=>t+volSp(o.sp,o.d,o.h)*o.n,0);
   let note='🤖 '+toFa(nTot)+' درخت در '+toFa(rows.length)+' سطر خوانده شد. ';
-  if(isFinite(sheetTot)&&sheetTot>0){
+  if(isFinite(sheetTot)&&sheetTot>0&&hasRowVolumes){
     note+=Math.abs(sheetSum-sheetTot)<0.02?'✅ جمع حجم ردیف‌های برگه با «جمع کل» برگه ('+toFa(sheetTot)+') می‌خواند. ':'⚠️ جمع حجم ردیف‌های خوانده‌شده ('+toFa(+sheetSum.toFixed(3))+') با جمع کل برگه ('+toFa(sheetTot)+') نمی‌خواند؛ اعداد را با برگه تطبیق دهید. ';
     note+='حجم محاسبه‌شدهٔ برنامه: '+toFa(+appSum.toFixed(2))+'.';
+  }else if(isFinite(sheetTot)&&sheetTot>0){
+    note+='جمع کل درج‌شده روی برگه: '+toFa(sheetTot)+' مترمکعب؛ حجم ردیف‌ها از تصویر قابل‌تأیید نبود. ';
   }
   if(unk)note+='⚠️ '+toFa(unk)+' سطر نام گونهٔ معتبر نداشت (قرمز)؛ اصلاح کنید. ';
   return {rows,note};
@@ -2405,8 +2419,8 @@ window.hkAiCall=async(body)=>{
   if(!S)throw new Error('ابتدا وارد حساب کاربری شوید');
   await fresh();
   let r;
-  try{r=await fetch(SB_URL+'/functions/v1/read-table',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+S.access_token},body:JSON.stringify(body),signal:(AbortSignal.timeout?AbortSignal.timeout(55000):undefined)})}
-  catch(e){throw new Error(e&&e.name==='TimeoutError'?'سرور دیر پاسخ داد':'اتصال به سرور برقرار نشد')}
+  try{r=await fetch(SB_URL+'/functions/v1/read-table',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+S.access_token},body:JSON.stringify(body),signal:(AbortSignal.timeout?AbortSignal.timeout(110000):undefined)})}
+  catch(e){throw new Error(e&&(e.name==='TimeoutError'||e.name==='AbortError')?'زمان خواندن تصویر تمام شد؛ عکس واضح‌تر یا کوچک‌تر را امتحان کنید':'اتصال به سرور برقرار نشد')}
   const j=await r.json().catch(()=>({}));
   if(r.status===404)throw new Error('سرویس هوشمند هنوز روی سرور نصب نشده');
   if(!r.ok)throw new Error(j.error||('خطای سرور '+r.status));
