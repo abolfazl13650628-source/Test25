@@ -67,6 +67,7 @@ body.home-mode .mode-toggle button { color: #fff; }
 body.home-mode .mode-toggle button.on { background: var(--ac); color: #fff; }
 body.home-mode #acct button { border-color: rgba(255,255,255,0.6); color: #fff; background: rgba(0,0,0,0.4); }
 body.home-mode .sbtn { border-color: rgba(255,255,255,0.6); color: #fff; background: rgba(0,0,0,0.4); }
+body.home-mode #gpsStripTxt span { color: #fff !important; } /* Fix for black text */
 
 /* Splash (Login) */
 #splash{position:fixed;inset:0;z-index:999;background:linear-gradient(135deg,#1d3b2a,#101a13);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;overflow-y:auto}
@@ -83,8 +84,8 @@ button.o{background:none;color:var(--ac);border:1px solid var(--ac)}button.x{bac
 
 /* App Layout */
 #app{max-width:640px;margin:auto;padding:12px 12px 150px;display:none;min-height:100vh}
-#app-header{text-align:center;margin-bottom:10px}
-#app-header h1{font-family:'Amiri',serif;font-size:22px;color:var(--ac);margin:0 0 4px}
+#app-header{text-align:center;margin-bottom:10px;cursor:pointer}
+#app-header h1{font-family:'Amiri',serif;font-size:24px;color:var(--ac);margin:0 0 4px;line-height:1.8;letter-spacing:.3px}
 #app-header .meta{font-size:12px;color:var(--mu);display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
 #app-header .meta span{background:var(--sf);padding:2px 8px;border-radius:10px;border:1px solid var(--bd)}
 #app-header .dhikr{font-size:13px;font-weight:700;color:var(--ac);margin-top:4px}
@@ -94,32 +95,37 @@ button.o{background:none;color:var(--ac);border:1px solid var(--ac)}button.x{bac
 .mode-toggle button{background:none;color:var(--mu);padding:6px 12px;font-size:12px;border-radius:0}
 .mode-toggle button.on{background:var(--ac);color:var(--ac2)}
 .mode-toggle.locked{opacity:0.7;cursor:not-allowed}
-.mode-toggle.locked::after{content:'🔒';position:absolute;top:-6px;right:-6px;font-size:14px;background:var(--sf);border-radius:50%;padding:2px;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.mode-toggle.locked::after{content:'🔒';position:absolute;top:50%;right:auto;left:5px;transform:translateY(-50%);font-size:11px;background:none;box-shadow:none;padding:0}
 
-#topbar{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:2}
+#topbar{position:sticky;top:env(safe-area-inset-top,0px);background:transparent;z-index:2;padding-top:2px}
+body:not(.home-mode) #topbar{background:var(--bg)}
 .sheetbar{display:flex;gap:4px;overflow-x:auto;padding:4px 0 6px;align-items:center;scrollbar-width:none}
 .sheetbar::-webkit-scrollbar{display:none}
-.sheetbar .tab{background:var(--sf);color:var(--tx);border:1px solid var(--bd);border-radius:20px;padding:6px 12px;font-size:13px;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:6px}
-.sheetbar .tab.on{background:var(--ac);color:var(--ac2);border-color:var(--ac)}
+.sheetbar .tab{background:var(--sf);color:var(--tx);border:1px solid var(--bd);border-radius:20px;padding:6px 12px;font-size:13px;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:6px;box-shadow:var(--sh1);font-weight:600}
+.sheetbar .tab.on{background:var(--ac);color:var(--ac2);border-color:var(--ac);box-shadow:0 3px 10px rgba(47,107,60,.35)}
 .sheetbar .tab .tname{max-width:120px;overflow:hidden;text-overflow:ellipsis}
 .sheetbar .tab .del{font-size:14px;opacity:.55;padding:0 2px;font-style:normal}
 .sheetbar .add{background:var(--sf);color:var(--ac);border:1px dashed var(--ac);border-radius:20px;padding:6px 14px;font-size:16px;font-weight:700}
 
-nav{display:flex;gap:6px;background:var(--bg);padding:8px 0}
-nav button{flex:1;background:var(--sf);color:var(--tx);border:1px solid var(--bd)}nav button.on{background:var(--ac);color:var(--ac2)}
+nav{display:flex;gap:6px;background:var(--bg);padding:6px 0}
+nav button{flex:1;background:var(--sf);color:var(--tx);border:1px solid var(--bd);border-radius:12px;padding:10px 4px;font-size:13px;font-weight:700}nav button.on{background:var(--ac);color:var(--ac2);box-shadow:0 4px 12px rgba(47,107,60,.35)}
 
-#gpsStrip{padding:4px 8px;font-size:12px;text-align:center;border-top:1px solid var(--bd);background:var(--sf);border-radius:8px;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:4px}
+#gpsStrip{padding:4px 8px;font-size:12px;text-align:center;border-top:1px solid var(--bd);background:var(--sf);border-radius:12px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;gap:6px;box-shadow:var(--sh1)}
 #compassWrap{display:flex;align-items:center;justify-content:space-between;background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:6px 10px;margin-bottom:6px;font-size:12px}
 .compass{width:36px;height:36px;border-radius:50%;border:2px solid var(--bd);position:relative;display:flex;align-items:center;justify-content:center;background:var(--bg)}
 .compass-needle{position:absolute;width:2px;height:28px;background:linear-gradient(to bottom, #d33 50%, #333 50%);transition:transform 0.1s linear;transform-origin:center}
 .compass-n{position:absolute;top:-14px;font-size:10px;font-weight:bold;color:#d33}
 
-.c{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:9px;margin:8px 0}
+.c{background:var(--sf);border:1px solid var(--bd);border-radius:16px;box-shadow:var(--sh1);padding:12px;margin:8px 0}
 label{display:block;font-size:12px;color:var(--mu);margin-top:5px}
-input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:36px;border:1px solid var(--bd);border-radius:7px;background:var(--bg);color:var(--tx)}
+input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:36px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px rgba(47,107,60,.25)}
+.tall-input{min-height:46px !important;font-size:16px !important;font-weight:bold}
+
 .r{display:flex;gap:8px}.r>*{flex:1}
 .big{font-size:22px;font-weight:700;color:var(--ac)}
 .tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}th,td{border-bottom:1px solid var(--bd);padding:6px;text-align:center}
+th{background:rgba(47,107,60,.1);font-weight:700}tr:nth-child(even) td{background:rgba(47,107,60,.04)}
 .m{color:var(--mu);font-size:12px}.hid{display:none!important}
 
 .gbox{border:3px solid var(--bd);border-radius:14px;padding:10px;margin-top:8px;text-align:center}
@@ -152,7 +158,7 @@ input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:3
 #spSug{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
 #spSug button{background:var(--sf);color:var(--tx);border:1px solid var(--bd);border-radius:16px;padding:5px 12px;font-size:12px;cursor:pointer}
 #recentSp{display:flex;gap:4px;flex-wrap:wrap;margin:4px 0}
-#recentSp button{padding:6px 10px!important;font-size:12px!important;flex:0 0 auto!important}
+#recentSp button{padding:6px 10px!important;font-size:12px!important;flex:0 0 auto!important;border-radius:16px}
 .chipbtn{padding:2px 8px!important;font-size:12px!important}
 #totSummary{background:var(--sf);border:1px solid var(--bd);border-radius:9px;padding:7px 9px;margin-top:6px;font-size:12px}
 #totSummary b{color:var(--ac)}
@@ -162,11 +168,11 @@ input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:3
 #acct{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:2px 6px;font-size:12px;color:var(--mu)}
 #acct button{padding:4px 10px!important;font-size:12px!important}
 #aov{position:fixed;inset:0;z-index:1000;background:#0009;display:flex;align-items:center;justify-content:center;padding:16px}
-#aov .bx{background:var(--sf);color:var(--tx);border-radius:14px;padding:16px;width:100%;max-width:340px;text-align:center}
+#aov .bx{background:var(--sf);color:var(--tx);border-radius:14px;padding:16px;width:100%;max-width:340px;text-align:center;box-shadow:var(--sh2)}
 #aov input{width:100%;margin:4px 0 10px;direction:ltr;text-align:left}
 #aer{color:#b3261e;min-height:20px;font-size:13px}
 
-#manualCoordArea{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:10px;margin-top:8px;display:flex;flex-direction:column;gap:6px}
+#manualCoordArea{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:10px;margin-top:8px;display:flex;flex-direction:column;gap:6px;direction:ltr}
 .mc-row{display:flex;gap:6px;align-items:center}
 .mc-row input{padding:6px;font-size:13px;text-align:center}
 
@@ -184,7 +190,6 @@ input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:3
 .compass-needle.qn::before{content:'🕋';position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:10px;line-height:1}
 
 #acct{max-width:640px;margin:auto}
-#gpsStrip{justify-content:space-between;gap:6px;padding:4px 6px}
 #gpsStripTxt{flex:1;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sbtn{padding:4px 10px!important;font-size:12px!important;flex:0 0 auto}
 #gb{margin-top:0;margin-bottom:6px}
@@ -195,8 +200,7 @@ input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:3
 #tools[open]>summary::after,#mapDetails[open]>summary::after,#cameraDetails[open]>summary::after{content:'▲'}
 #tools .sec,#mapDetails .sec,#cameraDetails .sec{margin-top:8px;padding-top:8px;border-top:1px dashed var(--bd)}
 #mapDetails,#cameraDetails{margin:8px 0 10px;padding:9px 10px}#mapDetails>summary,#cameraDetails>summary{font-size:15px;padding:4px 0}
-#recentSp button.spchip{padding:7px 14px!important;font-size:13px!important}
-#saveBar{position:static;width:100%;z-index:1;background:var(--sf);border:1px solid var(--bd);border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);padding:8px 10px;margin-top:8px}
+#saveBar{position:static;width:100%;z-index:1;background:var(--sf);border:1px solid var(--bd);border-radius:14px;box-shadow:var(--sh1);padding:8px 10px;margin-top:8px}
 #saveBar .sbIn{max-width:640px;margin:auto}
 #saveBar #svHint,#saveBar #msg{font-size:12px;line-height:1.5}
 #saveBar #msg:empty{display:none}
@@ -220,7 +224,7 @@ input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:3
 #walkBox small{font-size:10px!important}
 
 #saveTypeModal{position:fixed;inset:0;z-index:1001;background:#0009;display:flex;align-items:center;justify-content:center;padding:16px}
-#saveTypeModal .bx{background:var(--sf);color:var(--tx);border-radius:16px;padding:20px;width:100%;max-width:340px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+#saveTypeModal .bx{background:var(--sf);color:var(--tx);border-radius:16px;padding:20px;width:100%;max-width:340px;text-align:center;box-shadow:var(--sh2)}
 #saveTypeModal .bx h3{margin:0 0 8px;color:var(--ac);font-size:17px}
 #saveTypeModal .bx .sub{font-size:12px;color:var(--mu);margin-bottom:14px}
 #saveTypeModal .mbtn{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
@@ -229,7 +233,7 @@ input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:3
 #saveTypeModal .cancel{width:100%;padding:10px;font-size:13px}
 
 #newSheetModal{position:fixed;inset:0;z-index:1002;background:#0009;display:flex;align-items:center;justify-content:center;padding:16px}
-#newSheetModal .bx{background:var(--sf);color:var(--tx);border-radius:16px;padding:20px;width:100%;max-width:340px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+#newSheetModal .bx{background:var(--sf);color:var(--tx);border-radius:16px;padding:20px;width:100%;max-width:340px;text-align:center;box-shadow:var(--sh2)}
 #newSheetModal .bx h3{margin:0 0 8px;color:var(--ac);font-size:17px}
 #newSheetModal .bx .sub{font-size:12px;color:var(--mu);margin-bottom:14px}
 #newSheetModal .mbtn{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
@@ -241,55 +245,21 @@ input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:3
 #volClassRow select{font-size:13px}
 
 .taxCol{color:#b3261e;font-weight:700}
-.taxTotal{background:#fff3cd;border:1px solid #e0c56b;border-radius:10px;padding:10px;margin-top:8px;font-size:13px}
+.taxTotal{background:#fff3cd;border:1px solid #e0c56b;border-radius:12px;padding:10px;margin-top:8px;font-size:13px;color:#3d2f00}
 .taxTotal table{font-size:12px}
-.taxTotal th{background:#f5e7b5}
+.taxTotal th{background:#f5e7b5;color:#3d2f00}
 .plantedNote{background:#e3eef9;color:#1a4d7a;border-radius:8px;padding:6px 10px;margin-top:6px;font-size:12px;text-align:center}
 
-/* mic animation */
-@keyframes pulse-red {
-  0% { box-shadow: 0 0 0 0 rgba(211, 51, 51, 0.7); }
-  70% { box-shadow: 0 0 0 10px rgba(211, 51, 51, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(211, 51, 51, 0); }
-}
-.recording {
-  background: #d33 !important;
-  color: #fff !important;
-  animation: pulse-red 1.5s infinite;
-}
-
-/* ===== Polish & fixes ===== */
-:root{--r:16px;--sh1:0 2px 10px rgba(24,36,27,.07);--sh2:0 8px 24px rgba(24,36,27,.16)}
-body{-webkit-tap-highlight-color:transparent;background-color:#101a13}
-body:not(.home-mode){background-color:var(--bg)}
-#app-header{cursor:pointer}
-#app-header h1{font-size:24px;letter-spacing:.3px;line-height:1.8}
-.c{border-radius:var(--r);box-shadow:var(--sh1);padding:12px}
-.c>b:first-child,#tools>b{font-size:15px;color:var(--ac)}
-button{font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.14);transition:transform .12s,box-shadow .2s,background .2s,opacity .2s}
-button:active{transform:scale(.97)}
-button.o,.seg button,.mode-toggle button,nav button:not(.on){box-shadow:none}
-input,select{border-radius:10px;transition:border-color .2s,box-shadow .2s}
-input:focus,select:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px rgba(47,107,60,.25)}
-#topbar{background:transparent;padding-top:2px}
-body:not(.home-mode) #topbar{background:var(--bg)}
-nav{gap:6px;padding:6px 0}
-nav button{border-radius:12px;padding:10px 4px;font-size:13px;font-weight:700}
-nav button.on{box-shadow:0 4px 12px rgba(47,107,60,.35)}
-body.home-mode nav button{color:#18241b}
-body.home-mode nav button.on{color:#fff}
-.sheetbar .tab{box-shadow:var(--sh1);font-weight:600}
-.sheetbar .tab.on{box-shadow:0 3px 10px rgba(47,107,60,.35)}
-#gpsStrip{border-radius:12px;box-shadow:var(--sh1)}
-#saveBar{border-radius:14px;box-shadow:var(--sh1)}
-#sv{font-weight:700;box-shadow:0 4px 12px rgba(47,107,60,.3)}
-table th{background:rgba(47,107,60,.1);font-weight:700}
-table tr:nth-child(even) td{background:rgba(47,107,60,.04)}
-.mode-toggle.locked::after{top:50%;right:auto;left:5px;transform:translateY(-50%);font-size:11px;background:none;box-shadow:none;padding:0}
-.taxTotal{color:#3d2f00;border-radius:12px}
-.taxTotal th{color:#3d2f00}
-#saveTypeModal .bx,#newSheetModal .bx,#aov .bx{box-shadow:var(--sh2)}
-#recentSp button.spchip{border-radius:16px}
+/* Edit Modal */
+#editModal { position:fixed; inset:0; z-index:1005; background:#0009; display:flex; align-items:center; justify-content:center; padding:16px; }
+#editModal .bx { background:var(--sf); color:var(--tx); border-radius:16px; padding:16px; width:100%; max-width:400px; box-shadow:var(--sh2); }
+#editModal h3 { margin:0 0 12px; color:var(--ac); font-size:16px; text-align:center; }
+#editModal label { margin-top:2px; }
+#editModal .r { margin-bottom:6px; }
+#editModal input, #editModal select { min-height:32px; padding:4px 6px; font-size:13px; }
+#editModal .box-res { background:var(--bg); border:1px solid var(--bd); border-radius:8px; padding:8px; display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
+#editModal .box-res div { display:flex; flex-direction:column; align-items:center; }
+#editModal .box-res b { font-size:15px; color:var(--ac); }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
@@ -482,15 +452,9 @@ table tr:nth-child(even) td{background:rgba(47,107,60,.04)}
       </div>
       <div id="spSug" class="hid"></div>
 
-      <!-- Voice Input Row -->
-      <div class="r" style="margin-top:6px; align-items:stretch;">
-          <div id="micStatus" style="flex:4; padding:6px 8px; background:var(--bg); border:1px solid var(--bd); border-radius:7px; display:flex; align-items:center; font-size:12px; color:var(--mu); overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">🎙️ ضبط صوتی (مثلاً: قطر ۲۵ طول ۱۰)</div>
-          <button id="micBtn" class="o" type="button" style="flex:1; max-width:50px; font-size:20px; display:flex; justify-content:center; align-items:center; padding:0; border-radius:7px;">🎤</button>
-      </div>
-
       <div class="r" style="margin-top:6px;">
-        <div><label>قطر سینه (cm)</label><input id="d" type="text" inputmode="decimal"></div>
-        <div><label>طول / ارتفاع (m)</label><input id="h" type="text" inputmode="decimal"></div>
+        <div><label>قطر سینه (cm)</label><input id="d" type="text" inputmode="decimal" class="tall-input"></div>
+        <div><label>طول / ارتفاع (m)</label><input id="h" type="text" inputmode="decimal" class="tall-input"></div>
         <div><label>دور تنه (cm)</label><input id="gi" type="text" inputmode="decimal" placeholder="اختیاری"></div>
       </div>
 
@@ -511,8 +475,6 @@ table tr:nth-child(even) td{background:rgba(47,107,60,.04)}
           <div class="m" id="msg"></div>
           <div class="sbRow">
             <div id="newSaveBtns" class="r"><button id="sv">📌 ذخیره با مختصات</button><button id="svNo" class="o">بدون مختصات</button></div>
-            <button id="svEdit" class="hid" style="flex:1">💾 ذخیرهٔ ویرایش</button>
-            <button id="ce" class="o hid">لغو</button>
             <div class="vb">حجم<b id="vBar">—</b></div>
           </div>
         </div>
@@ -626,6 +588,52 @@ table tr:nth-child(even) td{background:rgba(47,107,60,.04)}
   </div>
 </div>
 
+<!-- Edit Modal (Inline) -->
+<div id="editModal" class="hid">
+  <div class="bx">
+    <h3>ویرایش درخت</h3>
+    
+    <div class="r">
+      <div><label>گونه</label><select id="emSp"></select></div>
+      <div><label>دسته</label><select id="emGd"><option value="1">دسته اول</option><option value="2">دسته دوم</option><option value="3">دسته سوم</option></select></div>
+    </div>
+    
+    <div class="r">
+      <div><label>قطر (cm)</label><input id="emD" class="tall-input" type="text" inputmode="decimal"></div>
+      <div><label>طول (m)</label><input id="emH" class="tall-input" type="text" inputmode="decimal"></div>
+      <div><label>دور تنه</label><input id="emGi" type="text" inputmode="decimal"></div>
+    </div>
+    
+    <div class="r">
+      <div><label>تعداد</label><input id="emNn" type="text" inputmode="decimal"></div>
+      <div><label>شماره</label><input id="emNo"></div>
+      <div><label>نوع</label><select id="emTy"><option value="i">صنعتی</option><option value="h">هیزمی</option></select></div>
+    </div>
+    
+    <div class="r hid" id="emKindRow">
+      <div><label>دسته باغی</label><select id="emK"><option value="natural">🌿 خودرو</option><option value="planted">🌱 دست‌کاشت</option></select></div>
+    </div>
+    
+    <div class="r" dir="ltr" style="margin-top:6px;">
+      <div><label>X (UTM)</label><input id="emX" type="text" inputmode="decimal" style="text-align:center"></div>
+      <div><label>Y (UTM)</label><input id="emY" type="text" inputmode="decimal" style="text-align:center"></div>
+      <div><label>Z (Zone)</label><input id="emZ" type="text" inputmode="numeric" style="text-align:center"></div>
+    </div>
+    
+    <div class="r"><div><label>توضیحات</label><input id="emDs"></div></div>
+    
+    <div class="box-res">
+      <div><small>حجم</small><b id="emV">—</b></div>
+      <div id="emTaxBox"><small>عوارض (ریال)</small><b id="emTax">—</b></div>
+    </div>
+    
+    <div class="r" style="margin-top:12px;">
+      <button id="emCancel" class="o" style="flex:1">انصراف</button>
+      <button id="emSave" style="flex:2;background:#2e9d4f;font-weight:bold;">💾 ذخیره تغییرات</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const $=s=>document.querySelector(s),fa=(n,m=2)=>(n!==null&&n!==undefined&&n!==''&&isFinite(n))?Number(n).toLocaleString('fa-IR',{maximumFractionDigits:m}):'—';
 const toFa=s=>String(s).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]).replace(/\./g,'٫'),toEn=s=>String(s).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٫،,]/g,'.');
@@ -667,7 +675,7 @@ function volSp(sp,d,h){
 }
 function catOf(t){const g=+t.g;return(g>=1&&g<=3)?g:((SP[t.sp]||[0,3])[1])}
 function taxOf(t){
-  if(t.k === 'planted') return 0; // Fix: planted trees have 0 tax
+  if(t.k === 'planted') return 0;
   const v=tv(t);
   if(!(v>0))return 0;
   if(t.ty==='h')return Math.round((v/STER_VOLUME)*FIREWOOD_RATE);
@@ -727,7 +735,6 @@ function loadActive(){
   lastWalkFix=TRACK.length?{lat:TRACK[TRACK.length-1].lat,lng:TRACK[TRACK.length-1].lng}:null;
   try{localStorage.setItem('activeSheet',String(activeId))}catch(e){}
   
-  // Update UI elements based on mode
   if(!sh.mode)sh.mode=modeOf(sh);
   const currentMode = sh.mode;
   document.getElementById('volClassRow').classList.toggle('hid', currentMode!=='forest');
@@ -1012,7 +1019,6 @@ function mapCheck(quiet){
 
 function renderTabs(){
   const bar=document.querySelector('.sheetbar');if(!bar)return;
-  // We now have 3 sheetbars (one for each tab). We render to all of them.
   const html = SHEETS.map(s=>{
     const on=s.id===activeId;
     let badge='';
@@ -1420,33 +1426,129 @@ $('#svNo').onclick=()=>{
   }
 };
 
-$('#svEdit').onclick=()=>{
-  const d=N('#d'),h=N('#h'),sp=$('#sp').value;
-  if(!sp){$('#msg').textContent='ابتدا گونه را انتخاب کنید.';return}
-  if(!(d>0&&h>0)){$('#msg').textContent='قطر و ارتفاع را وارد کنید.';return}
-  {const w=saveWarnings(d,h,$('#ty').value==='h',toEn($('#no').value),edId);if(w.length&&!confirm('⚠ '+w.join('\n⚠ ')+'\n\nبا همین مقادیر ذخیره شود؟'))return;}
-  const t=T.find(x=>x.id==edId);
-  if(t){
-    const hz=$('#ty').value==='h';
-    Object.assign(t,{no:hz?'':toEn($('#no').value),sp,g:+$('#gd').value,ty:$('#ty').value,n:hz?Math.max(1,Math.round(N('#nn'))||1):1,d,h,f:ff(),v:volSp(sp,d,h),ds:$('#ds').value});
-    if(t.d2)t.v2=volSp(sp,t.d2,t.h2);
-    if(cur && t.lat==null){t.lat=cur.lat;t.lng=cur.lng;t.ux=cur.u.E;t.uy=cur.u.N;t.uz=cur.u.z;t.ua=Math.round(cur.acc)}
-  }
-  store();endEdit();clr();draw();
-  $('#msg').textContent='ویرایش ذخیره شد.';
-  setTimeout(()=>{if($('#msg').textContent==='ویرایش ذخیره شد.')$('#msg').textContent=''},3000);
-};
-function endEdit(){edId=null;$('#newSaveBtns').classList.remove('hid');$('#svEdit').classList.add('hid');$('#ce').classList.add('hid');}
-$('#ce').onclick=()=>{endEdit();clr();};
-
+/* Inline Edit Logic */
 window.ed=id=>{
   const t=T.find(x=>x.id==id);if(!t)return;
-  edId=id; $('#sps').value='';fillSp('');$('#sp').value=t.sp;
-  $('#gd').value=t.g;$('#gi').value='';$('#d').value=toFa(t.d);$('#h').value=toFa(t.h);
-  tyM=true;$('#ty').value=t.ty;$('#nn').value=toFa(t.n||1);
-  noM=true;$('#no').value=t.ty==='h'?'':toFa(t.no||'');$('#ds').value=t.ds||'';
-  $('#newSaveBtns').classList.add('hid'); $('#svEdit').classList.remove('hid'); $('#ce').classList.remove('hid');
-  document.querySelector('nav button[data-t=m]').click(); calc();scrollTo(0,0);
+  edId=id;
+  
+  // Populate species dropdown
+  const spOpts = Object.keys(SP).sort((a,b)=>a.localeCompare(b,'fa'));
+  $('#emSp').innerHTML = spOpts.map(k=>`<option value="${k}">${k}</option>`).join('');
+  
+  $('#emSp').value = t.sp;
+  $('#emGd').value = t.g;
+  $('#emD').value = toFa(t.d);
+  $('#emH').value = toFa(t.h);
+  $('#emGi').value = ''; 
+  $('#emNn').value = toFa(t.n||1);
+  $('#emNo').value = t.ty==='h'?'':toFa(t.no||'');
+  $('#emTy').value = t.ty;
+  $('#emDs').value = t.ds||'';
+  
+  $('#emX').value = t.ux ? toFa(t.ux) : '';
+  $('#emY').value = t.uy ? toFa(t.uy) : '';
+  $('#emZ').value = t.uz ? toFa(t.uz) : '';
+  
+  if(getActiveSheet().mode==='garden'){
+    $('#emKindRow').classList.remove('hid');
+    $('#emK').value = t.k || 'natural';
+    $('#emTaxBox').style.display='flex';
+  } else {
+    $('#emKindRow').classList.add('hid');
+    $('#emTaxBox').style.display='none';
+  }
+  
+  calcEdit(); // Trigger live calculation
+  document.getElementById('editModal').classList.remove('hid');
+};
+
+$('#emCancel').onclick = () => { document.getElementById('editModal').classList.add('hid'); };
+
+function calcEdit() {
+  const sp = $('#emSp').value;
+  const d = +toEn($('#emD').value);
+  const h = +toEn($('#emH').value);
+  const ty = $('#emTy').value;
+  const g = +$('#emGd').value;
+  const n = Math.max(1, Math.round(toEn($('#emNn').value)) || 1);
+  const k = getActiveSheet().mode==='garden' ? $('#emK').value : 'natural';
+  
+  const v1 = volSp(sp, d, h);
+  const vTotal = v1 * n;
+  
+  $('#emV').textContent = vTotal > 0 ? fa(vTotal, 3) : '—';
+  
+  if(getActiveSheet().mode==='garden'){
+    const fakeTree = {sp, d, h, ty, g, n, k, v: v1};
+    const tax = taxOf(fakeTree);
+    $('#emTax').textContent = tax > 0 ? fa(tax, 0) : '—';
+  }
+}
+
+// Attach live recalculation events
+['#emSp','#emD','#emH','#emNn','#emTy','#emGd','#emK'].forEach(sel => {
+  $(sel).addEventListener('input', () => {
+    if(sel==='#emTy' || sel==='#emD') {
+      const d = +toEn($('#emD').value);
+      if(d > 0 && d < 20) $('#emTy').value = 'h';
+      else if(d >= 20 && $('#emTy').value === 'h') $('#emTy').value = 'i';
+    }
+    calcEdit();
+  });
+  $(sel).addEventListener('change', () => {
+    if(sel==='#emTy' || sel==='#emD') {
+      const d = +toEn($('#emD').value);
+      if(d > 0 && d < 20) $('#emTy').value = 'h';
+      else if(d >= 20 && $('#emTy').value === 'h') $('#emTy').value = 'i';
+    }
+    calcEdit();
+  });
+});
+
+$('#emSave').onclick = () => {
+  const t = T.find(x => x.id === edId); if(!t) return;
+  
+  const sp = $('#emSp').value;
+  const d = +toEn($('#emD').value);
+  const h = +toEn($('#emH').value);
+  if(!(d>0 && h>0)) { alert('قطر و ارتفاع را وارد کنید.'); return; }
+  
+  t.sp = sp;
+  t.g = +$('#emGd').value;
+  t.d = d;
+  t.h = h;
+  t.n = Math.max(1, Math.round(toEn($('#emNn').value)) || 1);
+  t.ty = $('#emTy').value;
+  t.no = t.ty==='h' ? '' : toEn($('#emNo').value);
+  t.ds = $('#emDs').value;
+  
+  if(getActiveSheet().mode==='garden'){
+    t.k = $('#emK').value;
+  }
+  
+  // Coordinates Update
+  const x = parseFloat(toEn($('#emX').value));
+  const y = parseFloat(toEn($('#emY').value));
+  const z = parseInt(toEn($('#emZ').value));
+  
+  if(isFinite(x) && isFinite(y) && z >= 1 && z <= 60){
+      t.ux = x; t.uy = y; t.uz = z;
+      const g = ll(x, y, z);
+      t.lat = g[0]; t.lng = g[1];
+  } else if($('#emX').value === '' && $('#emY').value === '' && $('#emZ').value === ''){
+      t.ux = null; t.uy = null; t.uz = null;
+      t.lat = null; t.lng = null;
+  }
+  
+  t.v = volSp(sp, d, h);
+  if(t.d2) t.v2 = volSp(sp, t.d2, t.h2);
+  
+  store(); draw();
+  mapCheck(); // Update the map points instantly
+  document.getElementById('editModal').classList.add('hid');
+  
+  $('#msg').textContent='ویرایش ذخیره شد.';
+  setTimeout(()=>{if($('#msg').textContent==='ویرایش ذخیره شد.')$('#msg').textContent=''},3000);
 };
 
 const cnt=t=>t.n||1,tv=t=>t.v*cnt(t),sv=a=>a.reduce((x,t)=>x+tv(t),0),ct=a=>a.reduce((x,t)=>x+cnt(t),0);
@@ -1563,7 +1665,6 @@ function draw(){
   const showTax = (getActiveSheet().mode||'garden')==='garden';
   const list=invTrees();
   
-  // Sort trees: numbered trees first (by number), unnumbered (like firewood) at the end
   list.sort((a,b) => {
     const noA = (a.ty==='h' || a.no==='' || a.no==null) ? 999999 : (parseInt(a.no)||999999);
     const noB = (b.ty==='h' || b.no==='' || b.no==null) ? 999999 : (parseInt(b.no)||999999);
@@ -1605,7 +1706,6 @@ function fillSp(q){
   q=nz(q||'');
   const a=q?NAMES.filter(n=>nz(n).startsWith(q)).concat(NAMES.filter(n=>!nz(n).startsWith(q)&&nz(n).includes(q))):NAMES;
   $('#sp').innerHTML='<option value="">— انتخاب —</option>'+a.map(k=>`<option>${esc(k)}</option>`).join('');
-  // Removed size logic to keep it a normal dropdown
   const sug=$('#spSug');
   if(sug){
     if(q&&a.length){
@@ -1851,7 +1951,7 @@ document.getElementById('btnQuickEntry').onclick = () => {
       <div style="flex:1;overflow:auto;border:1px solid var(--bd);border-radius:8px;">
         <table style="width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap;">
           <thead style="position:sticky;top:0;background:var(--bg);z-index:2;">
-            <tr><th>گونه (Sp)</th><th>قطر (D)</th><th>طول (H)</th><th>تعداد</th><th>حذف</th></tr>
+            <tr><th>گونه (Sp)</th><th>قطر (D)</th><th>طول (H)</th><th>تعداد</th><th>نوع</th><th>حذف</th></tr>
           </thead>
           <tbody id="quickTbBody">${quickRowHtml()}</tbody>
         </table>
@@ -1868,18 +1968,20 @@ document.getElementById('btnQuickEntry').onclick = () => {
     let currentMaxNo = T.filter(t=>t.ty!='h').reduce((max, t) => Math.max(max, parseInt(t.no) || 0), 0);
     rows.forEach(tr => {
       let sp = tr.querySelector('.q-sp').value.trim(); const d = parseNum(tr.querySelector('.q-d').value); const h = parseNum(tr.querySelector('.q-h').value) || 0; const count = parseInt(toEn(tr.querySelector('.q-count').value)) || 1;
+      const k = tr.querySelector('.q-ty').value; 
+      
       if (d > 0) {
         if (!sp) sp = 'نامشخص';
         const isFw = d < 20;
         if (isFw) {
           const newId = T.reduce((a, t) => Math.max(a, t.id), 0) + 1;
-          T.push({ id: newId, no: '', sp: sp, g: (SP[sp] || [0,3])[1], ty: 'h', n: count, d: d, h: h, f: 0.5, v: volSp(sp, d, h), ds: '', lat: null, lng: null, ux: null, uy: null, uz: null, ua: null, dt: new Date().toISOString().slice(0,10) });
+          T.push({ id: newId, no: '', sp: sp, g: (SP[sp] || [0,3])[1], ty: 'h', n: count, d: d, h: h, f: 0.5, v: volSp(sp, d, h), ds: '', k: k, lat: null, lng: null, ux: null, uy: null, uz: null, ua: null, dt: new Date().toISOString().slice(0,10) });
           added += count;
         } else {
           for (let i = 0; i < count; i++) {
             currentMaxNo++;
             const newId = T.reduce((a, t) => Math.max(a, t.id), 0) + 1;
-            T.push({ id: newId, no: currentMaxNo.toString(), sp: sp, g: (SP[sp] || [0,3])[1], ty: 'i', n: 1, d: d, h: h, f: 0.5, v: volSp(sp, d, h), ds: '', lat: null, lng: null, ux: null, uy: null, uz: null, ua: null, dt: new Date().toISOString().slice(0,10) });
+            T.push({ id: newId, no: currentMaxNo.toString(), sp: sp, g: (SP[sp] || [0,3])[1], ty: 'i', n: 1, d: d, h: h, f: 0.5, v: volSp(sp, d, h), ds: '', k: k, lat: null, lng: null, ux: null, uy: null, uz: null, ua: null, dt: new Date().toISOString().slice(0,10) });
             added++;
           }
         }
@@ -1889,7 +1991,21 @@ document.getElementById('btnQuickEntry').onclick = () => {
     ov.remove();
   };
 };
-function quickRowHtml() { return `<tr style="border-bottom:1px solid var(--bd);"><td style="padding:4px;"><input type="text" class="q-sp" style="padding:6px;text-align:center;width:80px;"></td><td style="padding:4px;"><input type="text" inputmode="decimal" class="q-d" style="padding:6px;text-align:center;width:60px;"></td><td style="padding:4px;"><input type="text" inputmode="decimal" class="q-h" style="padding:6px;text-align:center;width:60px;"></td><td style="padding:4px;"><input type="text" inputmode="decimal" class="q-count" value="1" style="padding:6px;text-align:center;width:50px;"></td><td style="padding:4px;text-align:center;"><button class="x" onclick="this.closest('tr').remove()">×</button></td></tr>`; }
+function quickRowHtml() { 
+  return `<tr style="border-bottom:1px solid var(--bd);">
+    <td style="padding:4px;"><input type="text" class="q-sp" style="padding:6px;text-align:center;width:80px;"></td>
+    <td style="padding:4px;"><input type="text" inputmode="decimal" class="q-d" style="padding:6px;text-align:center;width:60px;"></td>
+    <td style="padding:4px;"><input type="text" inputmode="decimal" class="q-h" style="padding:6px;text-align:center;width:60px;"></td>
+    <td style="padding:4px;"><input type="text" inputmode="decimal" class="q-count" value="1" style="padding:6px;text-align:center;width:50px;"></td>
+    <td style="padding:4px;">
+      <select class="q-ty" style="padding:4px;font-size:12px;">
+        <option value="natural">🌿 خودرو</option>
+        <option value="planted">🌱 دست‌کاشت</option>
+      </select>
+    </td>
+    <td style="padding:4px;text-align:center;"><button class="x" onclick="this.closest('tr').remove()">×</button></td>
+  </tr>`; 
+}
 
 function saveSnaps(){try{localStorage.setItem('snaps',JSON.stringify(SNAPS));stWarn(false)}catch(e){stWarn(true)}}
 function renderSnaps(){const el=$('#savedList');if(!el)return;if(!SNAPS.length){el.innerHTML='<div class="m">هنوز موردی ذخیره نشده است.</div>';return}el.innerHTML=SNAPS.slice().reverse().map(s=>`<div class="sitem"><div class="sinfo"><b>${esc(s.name)}</b><small>${toFa((s.trees||[]).length)} درخت</small></div><button class="o" style="padding:4px 10px;font-size:12px" data-load="${s.id}">باز کردن</button><button class="x" data-del="${s.id}">×</button></div>`).join('');el.querySelectorAll('[data-load]').forEach(b=>b.onclick=()=>loadSnap(+b.dataset.load));el.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const id=+b.dataset.del;if(!confirm('حذف شود؟'))return;SNAPS=SNAPS.filter(s=>s.id!==id);saveSnaps();renderSnaps()});}
@@ -2154,150 +2270,6 @@ window.addEventListener('beforeunload',()=>{try{saveActive()}catch(e){}});
   document.getElementById('splashDay').textContent = 'روز: ' + dayStr;
   document.getElementById('splashDhikr').textContent = 'ذکر روز: ' + dhikrs[dayStr];
 })();
-
-/* --- Voice Input Logic --- */
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-let recognition = null;
-let isListening = false;
-
-if (SpeechRecognition) {
-    recognition = new SpeechRecognition();
-    recognition.lang = 'fa-IR';
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-
-    recognition.onstart = function() {
-        isListening = true;
-        document.getElementById('micBtn').classList.add('recording');
-        document.getElementById('micBtn').innerHTML = '⏹';
-        document.getElementById('micStatus').textContent = 'در حال شنیدن... (دوباره بزنید تا قطع شود)';
-    };
-
-    recognition.onresult = function(event) {
-        const transcript = event.results[0][0].transcript;
-        document.getElementById('micStatus').textContent = 'شنیده شد: ' + transcript;
-        processVoiceInput(transcript);
-    };
-
-    recognition.onerror = function(event) {
-        if (event.error === 'no-speech') {
-            document.getElementById('micStatus').textContent = 'صدایی شنیده نشد. دوباره تلاش کنید.';
-        } else if (event.error === 'not-allowed') {
-            document.getElementById('micStatus').textContent = 'دسترسی به میکروفن داده نشد.';
-        } else {
-            document.getElementById('micStatus').textContent = 'خطا: ' + event.error;
-        }
-        resetMic();
-    };
-
-    recognition.onend = function() {
-        resetMic();
-    };
-} else {
-    document.getElementById('micBtn').disabled = true;
-    document.getElementById('micBtn').style.opacity = '0.5';
-    document.getElementById('micStatus').textContent = 'مرورگر شما از ضبط صدا پشتیبانی نمی‌کند.';
-}
-
-function resetMic() {
-    isListening = false;
-    document.getElementById('micBtn').classList.remove('recording');
-    document.getElementById('micBtn').innerHTML = '🎤';
-}
-
-document.getElementById('micBtn').onclick = () => {
-    if (isListening) {
-        recognition.stop();
-    } else {
-        if(!navigator.onLine) {
-            document.getElementById('micStatus').textContent = 'برای ضبط صدا، اینترنت خود را روشن کنید.';
-            return;
-        }
-        try {
-            recognition.start();
-        } catch(e) {
-            document.getElementById('micStatus').textContent = 'در حال شروع...';
-        }
-    }
-};
-
-function processVoiceInput(text) {
-    // 1. Normalize Persian digits to English
-    let normalized = text.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/(\d)\s*[٫\/،,]\s*(\d)/g,'$1.$2');
-    
-    // 2. Convert spoken number words to digits
-    const numWords = {
-        'یک':1, 'دو':2, 'سه':3, 'چهار':4, 'پنج':5, 'شش':6, 'هفت':7, 'هشت':8, 'نه':9,
-        'ده':10, 'یازده':11, 'دوازده':12, 'سیزده':13, 'چهارده':14, 'پانزده':15, 'شانزده':16, 'هفده':17, 'هجده':18, 'نوزده':19,
-        'بیست':20, 'سی':30, 'چهل':40, 'پنجاه':50, 'شصت':60, 'هفتاد':70, 'هشتاد':80, 'نود':90,
-        'صد':100, 'دویست':200, 'سیصد':300, 'چهارصد':400, 'پانصد':500, 'ششصد':600, 'هفتصد':700, 'هشتصد':800, 'نهصد':900,
-        'ممیز': '.'
-    };
-    
-    let tokens = normalized.split(/\s+/);
-    let resultTokens = [];
-    let currentNum = 0;
-    let hasNum = false;
-
-    tokens.forEach(t => {
-        if (numWords[t] !== undefined) {
-            if (numWords[t] === '.') {
-                if (hasNum) {
-                    resultTokens.push(currentNum.toString() + '.');
-                    currentNum = 0;
-                    hasNum = false;
-                }
-            } else {
-                currentNum += numWords[t];
-                hasNum = true;
-            }
-        } else if (t === 'و') {
-            // ignore "and"
-        } else {
-            if (hasNum) {
-                resultTokens.push(currentNum.toString());
-                currentNum = 0;
-                hasNum = false;
-            }
-            resultTokens.push(t);
-        }
-    });
-    if (hasNum) resultTokens.push(currentNum.toString());
-    
-    let finalString = resultTokens.join(' ');
-    finalString = finalString.replace(/(\d+)\.\s+(\d+)/g, '$1.$2'); // Fix decimals
-
-    // 3. Extract values using Regex
-    const diaMatch = finalString.match(/قطر\s*(\d+(?:\.\d+)?)/);
-    const lenMatch = finalString.match(/(?:طول|ارتفاع|درازا)\s*(\d+(?:\.\d+)?)/);
-    const qtyMatch = finalString.match(/(?:تعداد|عدد|دانه)\s*(\d+)/);
-
-    let found = false;
-    let msg = 'شنیده شد: ';
-
-    if (diaMatch) {
-        $('#d').value = toFa(diaMatch[1]);
-        msg += 'قطر ' + toFa(diaMatch[1]) + ' ';
-        found = true;
-    }
-    if (lenMatch) {
-        $('#h').value = toFa(lenMatch[1]);
-        msg += 'طول ' + toFa(lenMatch[1]) + ' ';
-        found = true;
-    }
-    if (qtyMatch) {
-        $('#nn').value = toFa(qtyMatch[1]);
-        msg += 'تعداد ' + toFa(qtyMatch[1]);
-        found = true;
-    }
-
-    if (found) {
-        document.getElementById('micStatus').textContent = msg;
-        calc(); // Recalculate volume
-    } else {
-        document.getElementById('micStatus').textContent = 'کلمه "قطر" یا "طول" پیدا نشد. دوباره تلاش کنید.';
-    }
-}
 </script>
 
 <!-- همگام‌سازی Supabase و مدیریت اسپلش -->
