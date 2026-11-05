@@ -97,13 +97,13 @@ button.o{background:none;color:var(--ac);border:1px solid var(--ac)}button.x{bac
 .mode-toggle.locked::after{content:'🔒';position:absolute;top:-6px;right:-6px;font-size:14px;background:var(--sf);border-radius:50%;padding:2px;box-shadow:0 1px 3px rgba(0,0,0,.2)}
 
 #topbar{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:2}
-#sheetbar{display:flex;gap:4px;overflow-x:auto;padding:4px 0 6px;align-items:center;scrollbar-width:none}
-#sheetbar::-webkit-scrollbar{display:none}
-#sheetbar .tab{background:var(--sf);color:var(--tx);border:1px solid var(--bd);border-radius:20px;padding:6px 12px;font-size:13px;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:6px}
-#sheetbar .tab.on{background:var(--ac);color:var(--ac2);border-color:var(--ac)}
-#sheetbar .tab .tname{max-width:120px;overflow:hidden;text-overflow:ellipsis}
-#sheetbar .tab .del{font-size:14px;opacity:.55;padding:0 2px;font-style:normal}
-#sheetbar .add{background:var(--sf);color:var(--ac);border:1px dashed var(--ac);border-radius:20px;padding:6px 14px;font-size:16px;font-weight:700}
+.sheetbar{display:flex;gap:4px;overflow-x:auto;padding:4px 0 6px;align-items:center;scrollbar-width:none}
+.sheetbar::-webkit-scrollbar{display:none}
+.sheetbar .tab{background:var(--sf);color:var(--tx);border:1px solid var(--bd);border-radius:20px;padding:6px 12px;font-size:13px;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:6px}
+.sheetbar .tab.on{background:var(--ac);color:var(--ac2);border-color:var(--ac)}
+.sheetbar .tab .tname{max-width:120px;overflow:hidden;text-overflow:ellipsis}
+.sheetbar .tab .del{font-size:14px;opacity:.55;padding:0 2px;font-style:normal}
+.sheetbar .add{background:var(--sf);color:var(--ac);border:1px dashed var(--ac);border-radius:20px;padding:6px 14px;font-size:16px;font-weight:700}
 
 nav{display:flex;gap:6px;background:var(--bg);padding:8px 0}
 nav button{flex:1;background:var(--sf);color:var(--tx);border:1px solid var(--bd)}nav button.on{background:var(--ac);color:var(--ac2)}
@@ -245,6 +245,51 @@ input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:3
 .taxTotal table{font-size:12px}
 .taxTotal th{background:#f5e7b5}
 .plantedNote{background:#e3eef9;color:#1a4d7a;border-radius:8px;padding:6px 10px;margin-top:6px;font-size:12px;text-align:center}
+
+/* mic animation */
+@keyframes pulse-red {
+  0% { box-shadow: 0 0 0 0 rgba(211, 51, 51, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(211, 51, 51, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(211, 51, 51, 0); }
+}
+.recording {
+  background: #d33 !important;
+  color: #fff !important;
+  animation: pulse-red 1.5s infinite;
+}
+
+/* ===== Polish & fixes ===== */
+:root{--r:16px;--sh1:0 2px 10px rgba(24,36,27,.07);--sh2:0 8px 24px rgba(24,36,27,.16)}
+body{-webkit-tap-highlight-color:transparent;background-color:#101a13}
+body:not(.home-mode){background-color:var(--bg)}
+#app-header{cursor:pointer}
+#app-header h1{font-size:24px;letter-spacing:.3px;line-height:1.8}
+.c{border-radius:var(--r);box-shadow:var(--sh1);padding:12px}
+.c>b:first-child,#tools>b{font-size:15px;color:var(--ac)}
+button{font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.14);transition:transform .12s,box-shadow .2s,background .2s,opacity .2s}
+button:active{transform:scale(.97)}
+button.o,.seg button,.mode-toggle button,nav button:not(.on){box-shadow:none}
+input,select{border-radius:10px;transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px rgba(47,107,60,.25)}
+#topbar{background:transparent;padding-top:2px}
+body:not(.home-mode) #topbar{background:var(--bg)}
+nav{gap:6px;padding:6px 0}
+nav button{border-radius:12px;padding:10px 4px;font-size:13px;font-weight:700}
+nav button.on{box-shadow:0 4px 12px rgba(47,107,60,.35)}
+body.home-mode nav button{color:#18241b}
+body.home-mode nav button.on{color:#fff}
+.sheetbar .tab{box-shadow:var(--sh1);font-weight:600}
+.sheetbar .tab.on{box-shadow:0 3px 10px rgba(47,107,60,.35)}
+#gpsStrip{border-radius:12px;box-shadow:var(--sh1)}
+#saveBar{border-radius:14px;box-shadow:var(--sh1)}
+#sv{font-weight:700;box-shadow:0 4px 12px rgba(47,107,60,.3)}
+table th{background:rgba(47,107,60,.1);font-weight:700}
+table tr:nth-child(even) td{background:rgba(47,107,60,.04)}
+.mode-toggle.locked::after{top:50%;right:auto;left:5px;transform:translateY(-50%);font-size:11px;background:none;box-shadow:none;padding:0}
+.taxTotal{color:#3d2f00;border-radius:12px}
+.taxTotal th{color:#3d2f00}
+#saveTypeModal .bx,#newSheetModal .bx,#aov .bx{box-shadow:var(--sh2)}
+#recentSp button.spchip{border-radius:16px}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
@@ -289,6 +334,7 @@ input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:3
     <div id="acct"></div>
   </div>
 
+  <div id="topbar">
   <nav>
     <button data-t="m">📍 نشانه‌گذاری</button>
     <button data-t="l">📋 دریافت سیاهه</button>
@@ -300,6 +346,7 @@ input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:3
     <button id="ga" class="o sbtn" type="button">📍 مختصات</button>
     <button id="gTog" class="o sbtn hid" type="button" title="مخفی کردن مختصات">▴</button>
     <button id="cmpTog" class="o sbtn" type="button" title="نمایش قطب‌نما و قبله‌نما">🧭 قطب‌نما</button>
+  </div>
   </div>
 
   <div id="bn" class="hid"></div>
@@ -324,7 +371,7 @@ input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:3
 
   <!-- Tab Content: Neshanegozari -->
   <section id="sec-m" class="hid">
-    <div id="sheetbar"></div>
+    <div class="sheetbar"></div>
     
     <details class="c" id="mapDetails">
       <summary>🗺️ نقشه، محدوده و مرز</summary>
@@ -435,6 +482,12 @@ input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:3
       </div>
       <div id="spSug" class="hid"></div>
 
+      <!-- Voice Input Row -->
+      <div class="r" style="margin-top:6px; align-items:stretch;">
+          <div id="micStatus" style="flex:4; padding:6px 8px; background:var(--bg); border:1px solid var(--bd); border-radius:7px; display:flex; align-items:center; font-size:12px; color:var(--mu); overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">🎙️ ضبط صوتی (مثلاً: قطر ۲۵ طول ۱۰)</div>
+          <button id="micBtn" class="o" type="button" style="flex:1; max-width:50px; font-size:20px; display:flex; justify-content:center; align-items:center; padding:0; border-radius:7px;">🎤</button>
+      </div>
+
       <div class="r" style="margin-top:6px;">
         <div><label>قطر سینه (cm)</label><input id="d" type="text" inputmode="decimal"></div>
         <div><label>طول / ارتفاع (m)</label><input id="h" type="text" inputmode="decimal"></div>
@@ -480,7 +533,7 @@ input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:3
 
   <!-- Tab Content: Siahhe -->
   <section id="sec-l" class="hid">
-    <div id="sheetbar"></div>
+    <div class="sheetbar"></div>
     
     <div id="noCoordBanner" class="hid"></div>
     <div id="numCheck" class="hid"></div>
@@ -520,7 +573,7 @@ input,select{width:100%;font:inherit;font-size:14px;padding:6px 8px;min-height:3
 
   <!-- Tab Content: Tajdid -->
   <section id="sec-h" class="hid">
-    <div id="sheetbar"></div>
+    <div class="sheetbar"></div>
     <div class="c">
       <label>درخت</label><select id="hs2"></select>
       <div class="r"><div><label>قطر جدید (cm)</label><input id="d2" type="text" inputmode="decimal"></div><div><label>ارتفاع جدید (m)</label><input id="h2" type="text" inputmode="decimal"></div></div>
@@ -612,12 +665,13 @@ function volSp(sp,d,h){
   if(sp==='بلوط')return tblV(VT_OAK,d,h);
   return tblV(VT_GENERAL,d,h);
 }
+function catOf(t){const g=+t.g;return(g>=1&&g<=3)?g:((SP[t.sp]||[0,3])[1])}
 function taxOf(t){
   if(t.k === 'planted') return 0; // Fix: planted trees have 0 tax
   const v=tv(t);
   if(!(v>0))return 0;
   if(t.ty==='h')return Math.round((v/STER_VOLUME)*FIREWOOD_RATE);
-  const cat=(SP[t.sp]||[0,3])[1];
+  const cat=catOf(t);
   return Math.round(v*(TAX_RATE[cat]||TAX_RATE[3]));
 }
 
@@ -635,6 +689,7 @@ if(!SHEETS.length){
   try{localStorage.setItem('sheets',JSON.stringify(SHEETS));localStorage.setItem('activeSheet','1')}catch(e){}
 }
 function getActiveSheet(){return SHEETS.find(s=>s.id===activeId)||SHEETS[0]}
+function modeOf(sh){return sh.mode||((sh.trees&&sh.trees.length)?'forest':'garden')}
 
 function updateModeLock() {
   const isLocked = T.length > 0;
@@ -673,7 +728,8 @@ function loadActive(){
   try{localStorage.setItem('activeSheet',String(activeId))}catch(e){}
   
   // Update UI elements based on mode
-  const currentMode = sh.mode || 'garden';
+  if(!sh.mode)sh.mode=modeOf(sh);
+  const currentMode = sh.mode;
   document.getElementById('volClassRow').classList.toggle('hid', currentMode!=='forest');
   const vc=$('#volClass'); if(vc) vc.value=sh.volClass||'general';
 }
@@ -685,6 +741,7 @@ const store=()=>{saveActive();bnr();try{if(window.syncSoon)window.syncSoon()}cat
 
 /* Global Mode Toggle Logic with Alerts */
 document.getElementById('btnModeGarden').onclick = () => {
+  if ((getActiveSheet().mode||'garden')==='garden') return;
   if (T.length > 0) {
     const currentModeName = getActiveSheet().mode === 'forest' ? 'جنگل' : 'باغی';
     alert(`شما در حال ثبت درختان «${currentModeName}» هستید و نمی‌توانید آن را به حالت دیگر تغییر دهید.\n\nلطفاً یک سربرگ جدید (+) باز کنید یا تمام موارد ثبتی این سربرگ را پاک کنید.`);
@@ -699,6 +756,7 @@ document.getElementById('btnModeGarden').onclick = () => {
   draw();
 };
 document.getElementById('btnModeForest').onclick = () => {
+  if (getActiveSheet().mode==='forest') return;
   if (T.length > 0) {
     const currentModeName = getActiveSheet().mode === 'forest' ? 'جنگل' : 'باغی';
     alert(`شما در حال ثبت درختان «${currentModeName}» هستید و نمی‌توانید آن را به حالت دیگر تغییر دهید.\n\nلطفاً یک سربرگ جدید (+) باز کنید یا تمام موارد ثبتی این سربرگ را پاک کنید.`);
@@ -953,7 +1011,7 @@ function mapCheck(quiet){
 }
 
 function renderTabs(){
-  const bar=document.getElementById('sheetbar');if(!bar)return;
+  const bar=document.querySelector('.sheetbar');if(!bar)return;
   // We now have 3 sheetbars (one for each tab). We render to all of them.
   const html = SHEETS.map(s=>{
     const on=s.id===activeId;
@@ -965,7 +1023,7 @@ function renderTabs(){
     return `<button class="tab ${on?'on':''}" data-id="${s.id}" data-act="switch"><span class="tname">${esc(s.name)}${badge}</span>${on?`<i class="del" data-act="rename" title="تغییر نام">✏️</i>${SHEETS.length>1?`<i class="del" data-act="delete" title="حذف">×</i>`:''}`:''}</button>`;
   }).join('')+`<button class="add" data-act="add" title="سربرگ جدید">+</button>`;
   
-  document.querySelectorAll('#sheetbar').forEach(b=>{
+  document.querySelectorAll('.sheetbar').forEach(b=>{
     b.innerHTML = html;
     b.querySelectorAll('button').forEach(btn=>{
       btn.onclick=e=>{
@@ -1315,7 +1373,7 @@ function doSave(useCoords, forcedK){
   const count = Math.max(1, Math.round(N('#nn')) || 1);
   const hz = $('#ty').value==='h';
   
-  {const w=saveWarnings(d,h,hz,toEn($('#no').value),null);
+  {const w=saveWarnings(d,h,hz,toEn($('#no').value),null,hz?1:count);
    if(coords&&cur&&cur.acc>10)w.push('دقت مختصات ±'+fa(cur.acc,0)+' متر است (بدتر از ۱۰ متر).');
    if(w.length&&!confirm('⚠ '+w.join('\n⚠ ')+'\n\nبا همین مقادیر ذخیره شود؟'))return;}
    
@@ -1328,7 +1386,7 @@ function doSave(useCoords, forcedK){
     if(forcedK) o.k = forcedK;
     T.push(Object.assign({id:startId,...(coords||{lat:null,lng:null,ux:null,uy:null,uz:null,ua:null}),dt:new Date().toISOString().slice(0,10)},o));
   } else {
-    const startNo = parseInt(toEn($('#no').value)) || 0;
+    const startNo = parseInt(toEn($('#no').value)) || (T.filter(t=>t.ty!='h').reduce((a,t)=>Math.max(a,(parseInt(t.no)||0)+(t.n||1)-1),0)+1);
     for (let c = 0; c < count; c++) {
       const o={no:(startNo + c).toString(),sp,g:+$('#gd').value,ty:'i',n:1,d,h,f:ff(),v:volSp(sp,d,h),ds:$('#ds').value};
       if(forcedK) o.k = forcedK;
@@ -1399,9 +1457,7 @@ function sumX(){
   return{r:sp.map(n=>{const i=I.filter(t=>t.sp==n),h=H.filter(t=>t.sp==n);return[n,ct(i),sv(i),ct(h),sv(h)]}),t:['مجموع',ct(I),sv(I),ct(H),sv(H)]};
 }
 
-function invTrees(){
-  return T; // Show all trees, including planted
-}
+function invTrees(){return T.slice();}
 
 function updateNoCoord(){
   const el=$('#noCoordBanner');if(!el)return;
@@ -1424,7 +1480,7 @@ function updateNumCheck(){
   el.classList.toggle('hid',!p.length);
   if(p.length)el.textContent='⚠ '+p.join(' • ');
 }
-function saveWarnings(d,h,hz,no,exId){
+function saveWarnings(d,h,hz,no,exId,cntN){
   const w=[];
   if(d>180)w.push('قطر '+fa(d,1)+' سانتی‌متر خیلی زیاد است.');
   if(d>0&&d<5)w.push('قطر کمتر از ۵ سانتی‌متر است.');
@@ -1440,7 +1496,7 @@ function saveWarnings(d,h,hz,no,exId){
         const start = parseInt(t.no) || 0;
         const count = t.n || 1;
         const end = start + count - 1;
-        return k >= start && k <= end;
+        return k <= end && (k+Math.max(1,cntN||1)-1) >= start;
       });
       if(conflict) w.push('شمارهٔ ' + toFa(k) + ' با محدودهٔ شماره درختان ثبت‌شده تداخل دارد.');
     }
@@ -1458,6 +1514,7 @@ function updateTotSummary(){
 
 function updateTaxBox(){
   const box=$('#taxTotalBox');if(!box)return;
+  if((getActiveSheet().mode||'garden')!=='garden'){box.classList.add('hid');return}
   const trees=invTrees();
   if(!trees.length){box.classList.add('hid');return}
   const byCat={1:{n:0,v:0,t:0},2:{n:0,v:0,t:0},3:{n:0,v:0,t:0},fw:{n:0,v:0,t:0}};
@@ -1468,7 +1525,7 @@ function updateTaxBox(){
     totalTax+=tax;totalV+=v;
     if(t.ty==='h'){byCat.fw.n+=c;byCat.fw.v+=v;byCat.fw.t+=tax;}
     else{
-      const cat=(SP[t.sp]||[0,3])[1];
+      const cat=catOf(t);
       const cc=byCat[cat]||byCat[3];
       cc.n+=c;cc.v+=v;cc.t+=tax;
     }
@@ -1503,13 +1560,13 @@ function updatePlantedBox(){
 
 function draw(){
   bnr();updateNoCoord();updateNumCheck();updateTotSummary();updateTaxBox();updatePlantedBox();
-  const showTax = getActiveSheet().mode==='garden' || getActiveSheet().mode==='forest';
+  const showTax = (getActiveSheet().mode||'garden')==='garden';
   const list=invTrees();
   
   // Sort trees: numbered trees first (by number), unnumbered (like firewood) at the end
   list.sort((a,b) => {
-    const noA = (a.ty==='h' || a.no==='' || a.no==null) ? 999999 : parseInt(a.no);
-    const noB = (b.ty==='h' || b.no==='' || b.no==null) ? 999999 : parseInt(b.no);
+    const noA = (a.ty==='h' || a.no==='' || a.no==null) ? 999999 : (parseInt(a.no)||999999);
+    const noB = (b.ty==='h' || b.no==='' || b.no==null) ? 999999 : (parseInt(b.no)||999999);
     if(noA === noB) return a.id - b.id;
     return noA - noB;
   });
@@ -1566,7 +1623,6 @@ $('#sp').onchange=()=>{
   const v=$('#sp').value;
   if($('#sps').value){$('#sps').value='';fillSp('');$('#sp').value=v}
   const x=SP[v];if(x)$('#gd').value=x[1];
-  if(v) addRecent(v);
   calc();renderRecent();
 };
 $('#simBtn').onclick=()=>{SIM=!SIM;try{localStorage.setItem('simSp',SIM?'1':'0')}catch(e){}updSimBtn()};
@@ -1867,16 +1923,16 @@ async function mkX(sheets){ const wb=new ExcelJS.Workbook(),bd={style:'thin'}; s
 const MIME='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',msg=e=>String(e&&e.message||e);
 const safe=f=>()=>{try{const r=f();if(r&&r.catch)r.catch(e=>say('خطا: '+msg(e),1))}catch(e){say('خطا: '+msg(e),1)}};
 
-function buildInventorySheet(title, allTrees){
-  const list = allTrees || invTrees();
+function buildInventorySheet(title, allTrees, modeOverride){
+  const list = (allTrees||invTrees()).slice();
   list.sort((a,b) => {
-    const noA = (a.ty==='h' || a.no==='' || a.no==null) ? 999999 : parseInt(a.no);
-    const noB = (b.ty==='h' || b.no==='' || b.no==null) ? 999999 : parseInt(b.no);
+    const noA = (a.ty==='h' || a.no==='' || a.no==null) ? 999999 : (parseInt(a.no)||999999);
+    const noB = (b.ty==='h' || b.no==='' || b.no==null) ? 999999 : (parseInt(b.no)||999999);
     if(noA === noB) return a.id - b.id;
     return noA - noB;
   });
 
-  const isGarden = getActiveSheet().mode === 'garden';
+  const isGarden = (modeOverride||getActiveSheet().mode||'garden') === 'garden';
   const headers = ['ردیف','شماره','گونه','دسته','نوع','قطر (cm)','ارتفاع (m)','حجم (m³)','X','Y','زون','توضیحات'];
   if(isGarden) headers.push('عوارض (ریال)');
 
@@ -1930,7 +1986,7 @@ function buildTaxSheet(){
     const c=cnt(t),v=tv(t),tax=taxOf(t);
     totalTax+=tax;totalV+=v;
     if(t.ty==='h'){byCat.fw.n+=c;byCat.fw.v+=v;byCat.fw.t+=tax;}
-    else{const cat=(SP[t.sp]||[0,3])[1];const cc=byCat[cat]||byCat[3];cc.n+=c;cc.v+=v;cc.t+=tax;}
+    else{const cat=catOf(t);const cc=byCat[cat]||byCat[3];cc.n+=c;cc.v+=v;cc.t+=tax;}
   });
   const rows=[
     ['محاسبهٔ عوارض بر اساس ماده ۱۵ قانون حفاظت و بهره‌برداری از جنگل‌ها و مراتع','','','','',''],
@@ -1939,12 +1995,12 @@ function buildTaxSheet(){
     [2,'دسته دوم',byCat[2].n,R3(byCat[2].v),1172000,byCat[2].t],
     [3,'دسته سوم',byCat[3].n,R3(byCat[3].v),700000,byCat[3].t],
     [4,'درختان هیزمی',byCat.fw.n,R3(byCat.fw.v),'۱۶۵٬۰۰۰ ریال/استر',byCat.fw.t],
-    ['','جمع کل',byCat[1].n+byCat[2].n+byCat[3].n+byCat.fw.n,R3(totalV),'',totalTax],
+    ['جمع کل','',byCat[1].n+byCat[2].n+byCat[3].n+byCat.fw.n,R3(totalV),'',totalTax],
     ['','','','','',''],
     ['','','','','شماره شبا:','IR 0501 0000 4001 0385 0200 4170'],
     ['','','','','شناسه واریز:','3560 3855 3130 4160 2053 0070 2000 00'],
   ];
-  return ['عوارض',rows,[[0,0,0,5],[1,0,1,1],[1,1,1,1],[1,2,1,2],[1,3,1,2],[1,4,1,4],[1,5,1,5],[6,0,6,1],[6,2,6,3],[6,4,6,5]],2];
+  return ['عوارض',rows,[[0,0,0,5]],2];
 }
 
 function fnm(){return String(getActiveSheet().name).replace(/[\\\/:*?"<>|]/g,'-').trim()+'-'+new Date().toISOString().slice(0,10)}
@@ -1986,12 +2042,12 @@ function allSheets(){
       while(usedNames.has(finalSn)){ finalSn = sn + ' (' + (k++) + ')'; }
       usedNames.add(finalSn);
 
-      const b = buildInventorySheet(sh.name, T);
+      const b = buildInventorySheet(sh.name, T, modeOf(sh));
       b[0] = finalSn; // override sheet name
       out.push(b);
-      all.push(...T);
+      if(modeOf(sh)==='garden')all.push(...T);
     }); 
-    if(getActiveSheet().mode==='garden'){
+    if(all.length){
        T = all; 
        let taxSn = 'عوارض';
        let k=2;
@@ -2075,6 +2131,7 @@ document.querySelectorAll('nav button').forEach(b=>{
   };
 });
 
+document.getElementById('app-header').onclick=()=>{document.body.classList.add('home-mode');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('on'));['m','l','h'].forEach(k=>{const e=document.getElementById('sec-'+k);if(e)e.classList.add('hid')});scrollTo(0,0)};
 document.addEventListener('visibilitychange',()=>{if(document.hidden){try{saveActive()}catch(e){}}});
 window.addEventListener('beforeunload',()=>{try{saveActive()}catch(e){}});
 
@@ -2097,6 +2154,150 @@ window.addEventListener('beforeunload',()=>{try{saveActive()}catch(e){}});
   document.getElementById('splashDay').textContent = 'روز: ' + dayStr;
   document.getElementById('splashDhikr').textContent = 'ذکر روز: ' + dhikrs[dayStr];
 })();
+
+/* --- Voice Input Logic --- */
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition = null;
+let isListening = false;
+
+if (SpeechRecognition) {
+    recognition = new SpeechRecognition();
+    recognition.lang = 'fa-IR';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = function() {
+        isListening = true;
+        document.getElementById('micBtn').classList.add('recording');
+        document.getElementById('micBtn').innerHTML = '⏹';
+        document.getElementById('micStatus').textContent = 'در حال شنیدن... (دوباره بزنید تا قطع شود)';
+    };
+
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById('micStatus').textContent = 'شنیده شد: ' + transcript;
+        processVoiceInput(transcript);
+    };
+
+    recognition.onerror = function(event) {
+        if (event.error === 'no-speech') {
+            document.getElementById('micStatus').textContent = 'صدایی شنیده نشد. دوباره تلاش کنید.';
+        } else if (event.error === 'not-allowed') {
+            document.getElementById('micStatus').textContent = 'دسترسی به میکروفن داده نشد.';
+        } else {
+            document.getElementById('micStatus').textContent = 'خطا: ' + event.error;
+        }
+        resetMic();
+    };
+
+    recognition.onend = function() {
+        resetMic();
+    };
+} else {
+    document.getElementById('micBtn').disabled = true;
+    document.getElementById('micBtn').style.opacity = '0.5';
+    document.getElementById('micStatus').textContent = 'مرورگر شما از ضبط صدا پشتیبانی نمی‌کند.';
+}
+
+function resetMic() {
+    isListening = false;
+    document.getElementById('micBtn').classList.remove('recording');
+    document.getElementById('micBtn').innerHTML = '🎤';
+}
+
+document.getElementById('micBtn').onclick = () => {
+    if (isListening) {
+        recognition.stop();
+    } else {
+        if(!navigator.onLine) {
+            document.getElementById('micStatus').textContent = 'برای ضبط صدا، اینترنت خود را روشن کنید.';
+            return;
+        }
+        try {
+            recognition.start();
+        } catch(e) {
+            document.getElementById('micStatus').textContent = 'در حال شروع...';
+        }
+    }
+};
+
+function processVoiceInput(text) {
+    // 1. Normalize Persian digits to English
+    let normalized = text.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/(\d)\s*[٫\/،,]\s*(\d)/g,'$1.$2');
+    
+    // 2. Convert spoken number words to digits
+    const numWords = {
+        'یک':1, 'دو':2, 'سه':3, 'چهار':4, 'پنج':5, 'شش':6, 'هفت':7, 'هشت':8, 'نه':9,
+        'ده':10, 'یازده':11, 'دوازده':12, 'سیزده':13, 'چهارده':14, 'پانزده':15, 'شانزده':16, 'هفده':17, 'هجده':18, 'نوزده':19,
+        'بیست':20, 'سی':30, 'چهل':40, 'پنجاه':50, 'شصت':60, 'هفتاد':70, 'هشتاد':80, 'نود':90,
+        'صد':100, 'دویست':200, 'سیصد':300, 'چهارصد':400, 'پانصد':500, 'ششصد':600, 'هفتصد':700, 'هشتصد':800, 'نهصد':900,
+        'ممیز': '.'
+    };
+    
+    let tokens = normalized.split(/\s+/);
+    let resultTokens = [];
+    let currentNum = 0;
+    let hasNum = false;
+
+    tokens.forEach(t => {
+        if (numWords[t] !== undefined) {
+            if (numWords[t] === '.') {
+                if (hasNum) {
+                    resultTokens.push(currentNum.toString() + '.');
+                    currentNum = 0;
+                    hasNum = false;
+                }
+            } else {
+                currentNum += numWords[t];
+                hasNum = true;
+            }
+        } else if (t === 'و') {
+            // ignore "and"
+        } else {
+            if (hasNum) {
+                resultTokens.push(currentNum.toString());
+                currentNum = 0;
+                hasNum = false;
+            }
+            resultTokens.push(t);
+        }
+    });
+    if (hasNum) resultTokens.push(currentNum.toString());
+    
+    let finalString = resultTokens.join(' ');
+    finalString = finalString.replace(/(\d+)\.\s+(\d+)/g, '$1.$2'); // Fix decimals
+
+    // 3. Extract values using Regex
+    const diaMatch = finalString.match(/قطر\s*(\d+(?:\.\d+)?)/);
+    const lenMatch = finalString.match(/(?:طول|ارتفاع|درازا)\s*(\d+(?:\.\d+)?)/);
+    const qtyMatch = finalString.match(/(?:تعداد|عدد|دانه)\s*(\d+)/);
+
+    let found = false;
+    let msg = 'شنیده شد: ';
+
+    if (diaMatch) {
+        $('#d').value = toFa(diaMatch[1]);
+        msg += 'قطر ' + toFa(diaMatch[1]) + ' ';
+        found = true;
+    }
+    if (lenMatch) {
+        $('#h').value = toFa(lenMatch[1]);
+        msg += 'طول ' + toFa(lenMatch[1]) + ' ';
+        found = true;
+    }
+    if (qtyMatch) {
+        $('#nn').value = toFa(qtyMatch[1]);
+        msg += 'تعداد ' + toFa(qtyMatch[1]);
+        found = true;
+    }
+
+    if (found) {
+        document.getElementById('micStatus').textContent = msg;
+        calc(); // Recalculate volume
+    } else {
+        document.getElementById('micStatus').textContent = 'کلمه "قطر" یا "طول" پیدا نشد. دوباره تلاش کنید.';
+    }
+}
 </script>
 
 <!-- همگام‌سازی Supabase و مدیریت اسپلش -->
