@@ -67,7 +67,7 @@ body.home-mode .mode-toggle button { color: #fff; }
 body.home-mode .mode-toggle button.on { background: var(--ac); color: #fff; }
 body.home-mode #acct button { border-color: rgba(255,255,255,0.6); color: #fff; background: rgba(0,0,0,0.4); }
 body.home-mode .sbtn { border-color: rgba(255,255,255,0.6); color: #fff; background: rgba(0,0,0,0.4); }
-body.home-mode #gpsStripTxt span { color: #fff !important; } /* Fix for black text */
+body.home-mode #gpsStripTxt span { color: #fff !important; }
 
 /* Splash (Login) */
 #splash{position:fixed;inset:0;z-index:999;background:linear-gradient(135deg,#1d3b2a,#101a13);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;overflow-y:auto}
@@ -285,6 +285,8 @@ body.home-mode #sosCard{background:linear-gradient(rgba(0,0,0,0),rgba(16,26,19,.
 </script>
 </head>
 <body>
+
+<datalist id="spList"></datalist>
 
 <div id="splash">
   <div class="auth-box">
@@ -2360,7 +2362,6 @@ window.addEventListener('beforeunload',()=>{try{saveActive()}catch(e){}});
 })();
 </script>
 
-<datalist id="spList"></datalist>
 <div id="sosCard" class="hid"></div>
 
 <!-- همگام‌سازی Supabase و مدیریت اسپلش -->
