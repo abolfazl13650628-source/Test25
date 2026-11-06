@@ -292,9 +292,15 @@ nav button.aibtn{flex:0 0 auto;padding:10px 11px;font-size:12px;min-width:58px}
 .aiIn textarea{flex:1;font:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx);resize:vertical;min-height:44px;max-height:30vh}
 .aiIn textarea:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px rgba(47,107,60,.25)}
 .aiIn button{padding:10px 16px}
+
+/* اصلاحات چیدمان چت و میکروفن */
+#sec-a { height: calc(100vh - 160px); display: flex; flex-direction: column; }
+#aiBox { flex: 1; display: flex; flex-direction: column; height: 100%; overflow: hidden; margin-bottom: 0; }
+#aiMsgs { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 4px 2px; margin: 6px 0; }
+.aiIn { margin-top: auto; flex-shrink: 0; }
+#aiChips { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 6px 0; }
+#aiChips button { padding: 10px 4px; font-size: 12px; border-radius: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #aiMic.rec { background: #c62828; color: #fff; animation: pulse 1s infinite; }
-#aiVoiceMode.active { background: #c62828; color: #fff; animation: pulse 1.5s infinite; }
-#aiVoiceMode.listening { background: #2e9d4f; color: #fff; }
 @keyframes pulse { 50% { opacity: .6; } }
 
 /* SOS FAB */
@@ -595,6 +601,7 @@ nav button.aibtn{flex:0 0 auto;padding:10px 11px;font-size:12px;min-width:58px}
       <div class="m xs"></div>
     </div>
   </section>
+  
   <!-- Tab Content: AI -->
   <section id="sec-a" class="hid">
     <div class="c" id="aiBox">
@@ -1202,6 +1209,7 @@ function switchSheet(id,skipSave){
   updateWalkUI();
   renderTabs();updateMapInfo();draw();mapCheck();updateGpsUI();
   updateModeLock();
+  window.dispatchEvent(new Event('tabchange'));
 }
 
 let BK={n:0,dt:''};try{BK=JSON.parse(localStorage.getItem('bk')||'{"n":0,"dt":""}')}catch(e){}
@@ -2491,8 +2499,7 @@ document.querySelectorAll('nav button').forEach(b=>{
     document.body.classList.remove('home-mode');
     document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
     ['m','l','h','a'].forEach(k=>{const s=document.getElementById('sec-'+k);if(s)s.classList.toggle('hid',k!==b.dataset.t)});
-    const fab = document.getElementById('sosFab');
-    if(fab) fab.classList.toggle('hid', b.dataset.t === 'm');
+    window.dispatchEvent(new Event('tabchange')); 
   };
 });
 
@@ -2733,17 +2740,34 @@ const idbPut=async v=>{const d=await idb();return new Promise((res,rej)=>{const 
 const idbAll=async()=>{const d=await idb();return new Promise((res,rej)=>{const r=d.transaction('c').objectStore('c').getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})};
 
 function renderCard(){
-  if(!card)return;
+  if(!card) return;
+  
+  // بررسی اینکه آیا کاربر الان در تب نشانه‌گذاری است یا خیر
+  const isTabM = document.querySelector('nav button[data-t="m"]').classList.contains('on');
+  const loggedIn = !!user();
+
+  if (!loggedIn) {
+    card.classList.add('hid');
+    if (fab) fab.classList.add('hid');
+    return;
+  }
+
   if(!st){
+    // کادر بزرگ فقط در تب نشانه‌گذاری، دکمه شناور در بقیه تب‌ها
+    card.classList.toggle('hid', !isTabM);
+    if(fab) fab.classList.toggle('hid', isTabM);
+
     const last=localStorage.getItem('sosLast');
     card.innerHTML='<div style="display:flex;gap:8px"><button data-a="ask" type="button" style="flex:1;background:#c62828;color:#fff;border:0;border-radius:14px;padding:11px;font-size:16px;font-weight:700;box-shadow:0 4px 14px rgba(198,40,40,.4)">🆘 اعلام خطر</button><button data-a="cfg" type="button" class="o" style="border-radius:14px;padding:11px 14px;background:var(--sf)" title="تنظیمات اعلام خطر">⚙️</button></div>'
       +(last?'<button data-a="save" data-sid="'+last+'" type="button" class="o" style="width:100%;margin-top:6px;font-size:12px;background:var(--sf)">💾 ذخیرهٔ ضبط آخرین اعلام خطر</button>':'');
-    if(fab) fab.classList.remove('hid');
   }else{
+    // اگر اعلام خطر فعال باشد، در هر دو حالت نشان داده می‌شود
+    card.classList.toggle('hid', !isTabM);
+    if(fab) fab.classList.toggle('hid', isTabM);
+
     card.innerHTML='<div style="background:#c62828;color:#fff;border-radius:14px;padding:12px;box-shadow:0 4px 14px rgba(198,40,40,.45)"><b>🔴 اعلام خطر فعال است</b><div id="sosStat" style="font-size:12.5px;line-height:2;margin:6px 0"></div><div style="display:flex;gap:6px;flex-wrap:wrap">'
       +'<button data-a="call" type="button" style="'+BS+'">📞 تماس</button><button data-a="sms" type="button" style="'+BS+'">✉️ پیامک</button><button data-a="save" data-sid="'+st.id+'" type="button" style="'+BS+'">💾 ذخیرهٔ ضبط</button><button data-a="end" type="button" style="background:#fff;color:#c62828;font-weight:700;border:0">✅ در امانم</button></div></div>';
     stat();
-    if(fab) fab.classList.add('hid');
   }
 }
 function stat(){
@@ -2963,6 +2987,7 @@ async function poll(){
 let n=0;
 setInterval(()=>{const u=user();if(card)card.classList.toggle('hid',!u);if(u&&!st)resume();if(!u){renderAlerts([])}else if(++n%4===0)poll();if(st)stat()},3000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(st)lock();poll()}});
+window.addEventListener('tabchange', renderCard);
 renderCard();
 })();
 </script>
@@ -2988,19 +3013,18 @@ if(SR) {
   rec = new SR();
   rec.lang = 'fa-IR';
   rec.interimResults = true;
-  rec.continuous = false;
+  rec.continuous = true;
 }
 
 const startListening = () => {
-  if(!rec || recognizing) return;
-  if(isSpeaking && window.speechSynthesis) { window.speechSynthesis.cancel(); isSpeaking = false; }
+  if(!rec || recognizing || isSpeaking) return;
   try { 
     rec.start(); 
     recognizing = true; 
-    const vb = document.getElementById('aiVoiceMode');
-    if(vb && voiceMode) vb.className = 'listening'; 
     const mb = document.getElementById('aiMic');
     if(mb) mb.classList.add('rec');
+    const vb = document.getElementById('aiVoiceMode');
+    if(vb && voiceMode) vb.textContent = '🔴';
   } catch(e){}
 };
 
@@ -3008,10 +3032,10 @@ const stopListening = () => {
   if(!rec || !recognizing) return;
   try { rec.stop(); } catch(e){}
   recognizing = false;
-  const vb = document.getElementById('aiVoiceMode');
-  if(vb && voiceMode) vb.className = 'active';
   const mb = document.getElementById('aiMic');
   if(mb) mb.classList.remove('rec');
+  const vb = document.getElementById('aiVoiceMode');
+  if(vb && voiceMode) vb.textContent = '🗣️';
 };
 
 const speakText = (text, callback) => {
@@ -3034,28 +3058,30 @@ if(rec) {
       if(e.results[i].isFinal) finalText += t; else interimText += t;
     }
     inp.value = finalText + interimText;
+    
     if(voiceMode && finalText.trim().length > 0) {
       setTimeout(() => {
         if(inp.value.trim() === finalText.trim() && !isSpeaking) {
+          stopListening();
           sendB.click();
         }
-      }, 400);
+      }, 800);
     }
   };
   rec.onerror = (e) => {
     if(e.error === 'not-allowed') alert('دسترسی به میکروفن رد شد.');
     recognizing = false;
-    const vb = document.getElementById('aiVoiceMode');
-    if(vb && voiceMode) vb.className = 'active';
-    const mb = document.getElementById('aiMic');
-    if(mb) mb.classList.remove('rec');
+    const mb = document.getElementById('aiMic'); if(mb) mb.classList.remove('rec');
+    const vb = document.getElementById('aiVoiceMode'); if(vb && voiceMode) vb.textContent = '🗣️';
   };
   rec.onend = () => {
     recognizing = false;
-    const vb = document.getElementById('aiVoiceMode');
-    if(vb && voiceMode) vb.className = 'active';
-    const mb = document.getElementById('aiMic');
-    if(mb) mb.classList.remove('rec');
+    const mb = document.getElementById('aiMic'); if(mb) mb.classList.remove('rec');
+    const vb = document.getElementById('aiVoiceMode'); if(vb && voiceMode) vb.textContent = '🗣️';
+    
+    if(voiceMode && !isSpeaking && !busy) {
+      setTimeout(() => startListening(), 500);
+    }
   };
 }
 
@@ -3067,11 +3093,13 @@ document.getElementById('aiVoiceMode').onclick = () => {
   voiceMode = !voiceMode;
   const btn = document.getElementById('aiVoiceMode');
   if(voiceMode) {
-    btn.classList.add('active');
-    alert('حالت مکالمه فعال شد. صحبت کنید...');
+    btn.style.background = '#2e9d4f';
+    btn.style.color = '#fff';
+    if(window.speechSynthesis) window.speechSynthesis.cancel();
     startListening();
   } else {
-    btn.className = '';
+    btn.style.background = '#5c6b5f';
+    btn.textContent = '🗣️';
     stopListening();
     if(window.speechSynthesis) window.speechSynthesis.cancel();
   }
@@ -3101,7 +3129,7 @@ function ctx(){
 }
 
 const bub=(m,i)=>m.role==='user'?'<div class="aiU">'+esc(m.content)+'</div>'
-  :'<div class="aiB'+(m.err?' err':'')+'"><div class="aiT">'+esc(m.content)+'</div>'+(m.err?'':'<div class="aiAct"><button type="button" class="o" data-c="'+i+'">📋 کپی</button><button type="button" class="o" data-s="'+i+'">📤 اشتراک</button><button type="button" class="o" data-tts="'+i+'">🔊 خواندن</button></div>')+'</div>';
+  :'<div class="aiB'+(m.err?' err':'')+'"><div class="aiT">'+esc(m.content)+'</div>'+(m.err?'':'<div class="aiAct"><button type="button" class="o" data-c="'+i+'">📋 کپی</button><button type="button" class="o" data-tts="'+i+'">🔊 خواندن</button></div>')+'</div>';
 
 function lastAssistantText(){
   for(let i = hist.length - 1; i >= 0; i--){
@@ -3111,7 +3139,7 @@ function lastAssistantText(){
 }
 
 function render(){
-  box.innerHTML=hist.length?hist.map(bub).join('')+(busy?'<div class="aiB"><div class="aiT m">⏳ در حال نوشتن…</div></div>':'') : '<div class="m" style="text-align:center;padding:14px 6px">سلام! یکی از گزینه‌های بالا را بزنید یا سؤالتان را بنویسید.</div>';
+  box.innerHTML=hist.length?hist.map(bub).join('')+(busy?'<div class="aiB"><div class="aiT m">⏳ در حال نوشتن…</div></div>') : '<div class="m" style="text-align:center;padding:14px 6px">سلام! یکی از گزینه‌های بالا را بزنید یا سؤالتان را بنویسید.</div>';
   box.scrollTop=box.scrollHeight;sendB.disabled=busy;sendB.textContent=busy?'…':'ارسال';
   const act = document.getElementById('aiActions');
   if(act){
@@ -3124,12 +3152,12 @@ async function send(text, contextOverride){
   text=String(text==null?inp.value:text).trim();if(!text||busy)return;
   if(voiceMode) stopListening();
   
-  if(!(window.hkAiLoggedIn&&window.hkAiLoggedIn())){hist.push({role:'user',content:text});hist.push({role:'assistant',content:'برای استفاده از دستیار ابتدا وارد حساب کاربری شوید (ورود مهمان کافی نیست).',err:true});inp.value='';render();return}
+  if(!(window.hkAiLoggedIn&&window.hkAiLoggedIn())){hist.push({role:'user',content:text});hist.push({role:'assistant',content:'برای استفاده از دستیار ابتدا وارد حساب کاربری شوید.',err:true});inp.value='';render();return}
   hist.push({role:'user',content:text.slice(0,3000)});inp.value='';busy=true;render();
   try{
     const msgs=hist.filter(m=>!m.err).slice(-12).map(m=>({role:m.role,content:m.content}));
     const j=await window.hkAiCall({chat:{messages:msgs,context:contextOverride || ctx()}});
-    const replyText = String(j.reply||'').trim() || 'پاسخی دریافت نشد؛ دوباره امتحان کنید.';
+    const replyText = String(j.reply||'').trim() || 'پاسخی دریافت نشد.';
     hist.push({role:'assistant',content:replyText});
     busy=false; save(); render();
     
@@ -3147,14 +3175,14 @@ async function send(text, contextOverride){
   }
 }
 
+// ساخت ۴ دکمه در دو ردیف
 const CHIPS = [
   ['📊 تجزیه و تحلیل', 'analysis'],
   ['📝 دریافت صورتجلسه', 'minutes'],
-  ['🌲 سؤال تخصصی جنگل و قوانین', 'specialist'],
-  ['💬 چت آزاد و عمومی', 'general']
+  ['🌲 سؤال تخصصی', 'specialist'],
+  ['💬 چت آزاد', 'general']
 ];
-Q('#aiChips').innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">' + 
-  CHIPS.map(c => '<button type="button" class="o" data-k="' + c[1] + '" style="padding:10px 6px;font-size:12.5px;border-radius:12px">' + c[0] + '</button>').join('') + '</div>';
+Q('#aiChips').innerHTML = CHIPS.map(c => '<button type="button" class="o" data-k="' + c[1] + '">' + c[0] + '</button>').join('');
 
 Q('#aiChips').onclick = e => {
   const b = e.target.closest('[data-k]');
@@ -3167,43 +3195,33 @@ Q('#aiChips').onclick = e => {
 };
 
 function startAnalysis(){
-  if(!(window.hkAiLoggedIn && window.hkAiLoggedIn())){
-    alert('برای تجزیه و تحلیل ابتدا وارد حساب کاربری شوید.');
-    return;
-  }
-  if(SHEETS.length === 1){
-    send('اقدامات صورت‌گرفته در سربرگ «' + SHEETS[0].name + '» را تجزیه و تحلیل کن: نقاط قوت، موارد ناقص، و پیشنهادهای عملی.');
-    return;
-  }
+  if(!(window.hkAiLoggedIn && window.hkAiLoggedIn())){ alert('ابتدا وارد حساب شوید.'); return; }
+  if(SHEETS.length === 1){ send('اقدامات صورت‌گرفته در سربرگ «' + SHEETS[0].name + '» را تجزیه و تحلیل کن.'); return; }
+  
   hist.push({ role: 'assistant', content: 'کدام سربرگ را تجزیه و تحلیل کنم؟' });
   render();
   const wrap = document.createElement('div');
   wrap.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 8px';
-  wrap.innerHTML =
-    SHEETS.map(s => '<button type="button" class="o" data-an="' + s.id + '" style="padding:6px 10px;font-size:12px">' + esc(s.name) + '</button>').join('') +
+  wrap.innerHTML = SHEETS.map(s => '<button type="button" class="o" data-an="' + s.id + '" style="padding:6px 10px;font-size:12px">' + esc(s.name) + '</button>').join('') +
     '<button type="button" class="o" data-an="all" style="padding:6px 10px;font-size:12px;background:var(--ac);color:var(--ac2)">همهٔ سربرگ‌ها</button>';
   box.appendChild(wrap);
   box.scrollTop = box.scrollHeight;
   wrap.onclick = e => {
-    const b = e.target.closest('[data-an]');
-    if(!b) return;
+    const b = e.target.closest('[data-an]'); if(!b) return;
     wrap.remove();
     const v = b.dataset.an;
     if(v === 'all'){
       const parts = SHEETS.map(s => {
-        const oldT = T;
-        T = s.trees || [];
-        const c = ctx();
-        T = oldT;
+        const oldT = T; T = s.trees || [];
+        const c = ctx(); T = oldT;
         return '### سربرگ «' + s.name + '»\n' + JSON.stringify(c, null, 0);
       });
-      send('اقدامات صورت‌گرفته در همهٔ سربرگ‌ها را تجزیه و تحلیل کن. داده‌های هر سربرگ:\n\n' + parts.join('\n\n'));
+      send('اقدامات صورت‌گرفته در همهٔ سربرگ‌ها را تجزیه و تحلیل کن:\n\n' + parts.join('\n\n'));
     } else {
-      const sh = SHEETS.find(s => s.id === +v);
-      if(!sh) return;
+      const sh = SHEETS.find(s => s.id === +v); if(!sh) return;
       const oldT = T; T = sh.trees || [];
       const c = ctx(); T = oldT;
-      send('اقدامات صورت‌گرفته در سربرگ «' + sh.name + '» را تجزیه و تحلیل کن. داده‌ها:\n' + JSON.stringify(c));
+      send('اقدامات صورت‌گرفته در سربرگ «' + sh.name + '» را تجزیه و تحلیل کن:\n' + JSON.stringify(c));
     }
   };
 }
@@ -3211,19 +3229,14 @@ function startAnalysis(){
 let mmHammerColor = 'قرمز';
 
 function openMinutesForm(){
-  if(!(window.hkAiLoggedIn && window.hkAiLoggedIn())){
-    alert('برای نوشتن صورتجلسه ابتدا وارد حساب کاربری شوید.');
-    return;
-  }
+  if(!(window.hkAiLoggedIn && window.hkAiLoggedIn())){ alert('ابتدا وارد حساب شوید.'); return; }
   const sel = document.getElementById('mmSheet');
   sel.innerHTML = SHEETS.map(s => '<option value="' + s.id + '"' + (s.id === activeId ? ' selected' : '') + '>' + esc(s.name) + '</option>').join('');
   document.getElementById('mmDate').value = new Date().toLocaleDateString('fa-IR');
   document.getElementById('minutesModal').classList.remove('hid');
 }
 
-document.getElementById('mmToday').onclick = () => {
-  document.getElementById('mmDate').value = new Date().toLocaleDateString('fa-IR');
-};
+document.getElementById('mmToday').onclick = () => { document.getElementById('mmDate').value = new Date().toLocaleDateString('fa-IR'); };
 document.getElementById('mmCancel').onclick = () => document.getElementById('minutesModal').classList.add('hid');
 
 document.querySelectorAll('#mmHammer [data-c]').forEach(b => {
@@ -3248,45 +3261,31 @@ document.getElementById('mmGo').onclick = () => {
   };
   document.getElementById('minutesModal').classList.add('hid');
 
-  const oldActive = activeId;
   let ctxOverride = null;
   if (shId !== activeId) {
     const sh = SHEETS.find(s => s.id === shId);
     if (sh) {
-      const oldT = T;
-      T = sh.trees || [];
-      ctxOverride = ctx();
-      T = oldT;
+      const oldT = T; T = sh.trees || [];
+      ctxOverride = ctx(); T = oldT;
     }
   }
 
-  const prompt =
-    'برای سربرگ «' + f.sheet + '» یک صورتجلسهٔ رسمی نشانه‌گذاری درختان بنویس.\n' +
-    '- تاریخ اقدام: ' + (f.date || '……') + '\n' +
-    '- منطقه/پارسل: ' + (f.area || '……') + '\n' +
-    '- سری: ' + (f.series || '……') + '\n' +
-    '- شمارهٔ حکم نشانه‌گذاری: ' + (f.decree_no || '……') + '\n' +
-    '- تاریخ حکم: ' + (f.decree_date || '……') + '\n' +
-    '- رنگ چکش: ' + f.hammer_color + '\n' +
-    'از آمار و حجم‌های «اطلاعات سربرگ» استفاده کن. هر چیز نامعلوم دیگر (حاضرین، ساعت، شمارهٔ نامه) را با «……» خالی بگذار. سبک: اداری و رسمی ایران.';
+  const prompt = 'برای سربرگ «' + f.sheet + '» یک صورتجلسهٔ رسمی نشانه‌گذاری درختان بنویس.\n' +
+    '- تاریخ اقدام: ' + (f.date || '……') + '\n- منطقه/پارسل: ' + (f.area || '……') + '\n- سری: ' + (f.series || '……') + '\n' +
+    '- شمارهٔ حکم نشانه‌گذاری: ' + (f.decree_no || '……') + '\n- تاریخ حکم: ' + (f.decree_date || '……') + '\n- رنگ چکش: ' + f.hammer_color + '\n' +
+    'از آمار و حجم‌های «اطلاعات سربرگ» استفاده کن. هر چیز نامعلوم را با «……» خالی بگذار.';
 
   send(prompt, ctxOverride);
 };
 
 box.onclick=async e=>{
-  const c=e.target.closest('[data-c]'),s=e.target.closest('[data-s]'),tts=e.target.closest('[data-tts]');
-  const i=c?+c.dataset.c:s?+s.dataset.s:tts?+tts.dataset.tts:-1;
+  const c=e.target.closest('[data-c]'),tts=e.target.closest('[data-tts]');
+  const i=c?+c.dataset.c:tts?+tts.dataset.tts:-1;
   if(i<0||!hist[i])return;
   const t=hist[i].content;
   
   if(c){
-    try{await navigator.clipboard.writeText(t);c.textContent='✓ کپی شد'}catch(x){
-      const ta=document.createElement('textarea');ta.value=t;document.body.append(ta);ta.select();
-      try{document.execCommand('copy');c.textContent='✓ کپی شد'}catch(y){}ta.remove();
-    }
-  } else if(s){
-    if(navigator.share){try{await navigator.share({text:t})}catch(x){}}
-    else{try{await navigator.clipboard.writeText(t);s.textContent='✓ کپی شد'}catch(x){}}
+    try{await navigator.clipboard.writeText(t);c.textContent='✓ کپی شد'}catch(x){}
   } else if(tts){
     if(window.speechSynthesis){
       if(window.speechSynthesis.speaking){ window.speechSynthesis.cancel(); tts.textContent='🔊 خواندن'; }
@@ -3297,44 +3296,32 @@ box.onclick=async e=>{
         tts.textContent = '⏹ توقف';
         window.speechSynthesis.speak(utt);
       }
-    } else alert('پشتیبانی نمی‌شود.');
+    }
   }
 };
 
 sendB.onclick=()=>send();
 inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();send()}});
-Q('#aiNew').onclick=()=>{if(hist.length&&!confirm('گفتگوی فعلی پاک شود؟'))return;hist=[];save();render()};
+Q('#aiNew').onclick=()=>{if(hist.length&&!confirm('گفتگو پاک شود؟'))return;hist=[];save();render()};
 render();
 
 document.getElementById('aiCopyAll').onclick = async () => {
   const t = lastAssistantText(); if(!t) return;
-  try{ await navigator.clipboard.writeText(t); }catch(e){
-    const ta = document.createElement('textarea'); ta.value = t; document.body.append(ta); ta.select(); document.execCommand('copy'); ta.remove();
-  }
-  const b = document.getElementById('aiCopyAll');
-  b.textContent = '✓ کپی شد'; setTimeout(() => b.textContent = '📋 کپی متن', 1500);
+  try{ await navigator.clipboard.writeText(t); }catch(e){}
+  const b = document.getElementById('aiCopyAll'); b.textContent = '✓ کپی شد'; setTimeout(() => b.textContent = '📋 کپی متن', 1500);
 };
 
 document.getElementById('aiShareAll').onclick = async () => {
   const t = lastAssistantText(); if(!t) return;
-  if(navigator.share){
-    try{ await navigator.share({ text: t, title: 'صورتجلسه' }); }catch(e){}
-  } else {
-    await navigator.clipboard.writeText(t).catch(()=>{});
-    alert('اشتراک مستقیم پشتیبانی نمی‌شود؛ متن کپی شد.');
-  }
+  if(navigator.share){ try{ await navigator.share({ text: t }); }catch(e){} }
 };
 
 document.getElementById('aiWord').onclick = async () => {
   const t = lastAssistantText(); if(!t) return;
-  const html = '<html dir="rtl"><head><meta charset="utf-8"><style>body{font-family:"B Nazanin","Vazirmatn",Tahoma;font-size:14pt;line-height:1.9;padding:2cm}h1{text-align:center}</style></head><body>' +
-    t.split(/\n+/).map(l => '<p>' + esc(l.trim()) + '</p>').join('') + '</body></html>';
-  const wordBlob = new Blob(['\ufeff' + html], { type: 'application/msword' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(wordBlob);
-  a.download = 'صورتجلسه-' + new Date().toISOString().slice(0, 10) + '.doc';
+  const html = '<html dir="rtl"><head><meta charset="utf-8"><style>body{font-family:"B Nazanin","Vazirmatn",Tahoma;font-size:14pt;padding:2cm}</style></head><body>' + t.split(/\n+/).map(l => '<p>' + esc(l.trim()) + '</p>').join('') + '</body></html>';
+  const blob = new Blob(['\ufeff' + html], { type: 'application/msword' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'صورتجلسه.doc';
   document.body.append(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
 };
 
 })();
