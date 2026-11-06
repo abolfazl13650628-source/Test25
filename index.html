@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+
+<html dir="rtl" lang="fa">
 <head>
-<meta charset="utf-8">
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#2f6b3c">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta charset="utf-8"/>
+<link href="manifest.webmanifest" rel="manifest"/>
+<meta content="#2f6b3c" name="theme-color"/>
+<link href="icon-192.png" rel="icon"/>
+<link href="icon-192.png" rel="apple-touch-icon"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
 <title>برآورد و استحصال چوب‌آلات هیرکانی</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Vazirmatn:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&amp;family=Vazirmatn:wght@400;700&amp;display=swap" rel="stylesheet"/>
 <style>
 :root{--bg:#f4f7f2;--sf:#fff;--tx:#18241b;--mu:#5c6b5f;--ac:#2f6b3c;--ac2:#fff;--bd:#d5dfd3;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101a13;--sf:#18251c;--tx:#e8f0e9;--mu:#9fb2a3;--ac:#5fb374;--ac2:#08140b;--bd:#2b3d30;color-scheme:dark}}
@@ -321,426 +322,388 @@ nav button.aibtn{flex:0 0 auto;padding:10px 11px;font-size:12px;min-width:58px}
 </script>
 </head>
 <body>
-
 <datalist id="spList"></datalist>
-
 <div id="splash">
-  <div class="auth-box">
-    <h3>ورود به حساب کاربری</h3>
-    <input id="splashUser" placeholder="نام کاربری (انگلیسی)" autocomplete="username">
-    <input id="splashPass" type="password" placeholder="رمز عبور" autocomplete="current-password">
-    <div id="splashErr" class="err"></div>
-    <button id="splashLogin">ورود</button>
-    <button id="splashSignup" class="o">ثبت‌نام</button>
-    <div class="divider">یا</div>
-    <button id="splashGuest" style="background:#5c6b5f">ورود مهمان (آفلاین)</button>
-    <div class="m" style="margin-top:10px">با ورود مهمان، داده‌ها فقط روی گوشی ذخیره می‌شوند.</div>
-  </div>
+<div class="auth-box">
+<h3>ورود به حساب کاربری</h3>
+<input autocomplete="username" id="splashUser" placeholder="نام کاربری (انگلیسی)"/>
+<input autocomplete="current-password" id="splashPass" placeholder="رمز عبور" type="password"/>
+<div class="err" id="splashErr"></div>
+<button id="splashLogin">ورود</button>
+<button class="o" id="splashSignup">ثبت‌نام</button>
+<div class="divider">یا</div>
+<button id="splashGuest" style="background:#5c6b5f">ورود مهمان (آفلاین)</button>
+<div class="m" style="margin-top:10px">با ورود مهمان، داده‌ها فقط روی گوشی ذخیره می‌شوند.</div>
 </div>
-
+</div>
 <div id="app">
-  <div id="app-header">
-    <h1>بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِیم</h1>
-    <div class="meta">
-      <span id="splashDate">تاریخ: ...</span>
-      <span id="splashDay">روز: ...</span>
-    </div>
-    <div class="dhikr" id="splashDhikr">ذکر روز: ...</div>
-  </div>
-
-  <div class="top-bar-actions">
-    <div class="mode-toggle" id="modeToggleContainer">
-      <button id="btnModeGarden" class="on">🌳 باغی/جنگلی</button>
-      <button id="btnModeForest">🌲 جنگل</button>
-    </div>
-    <div id="acct"></div>
-  </div>
-
-  <div id="topbar">
-  <nav>
-    <button data-t="m">📍 نشانه‌گذاری</button>
-    <button data-t="l">📋 دریافت سیاهه</button>
-    <button data-t="h">🪓 تجدید و استحصال</button>
-    <button data-t="a" class="aibtn" title="دستیار هوشمند">🤖 AI</button>
-  </nav>
-
-  <div id="gpsStrip">
-    <span id="gpsStripTxt"><span style="color:var(--mu)">◌ مختصات خاموش</span></span>
-    <button id="ga" class="o sbtn" type="button">📍 مختصات</button>
-    <button id="gTog" class="o sbtn hid" type="button" title="مخفی کردن مختصات">▴</button>
-    <button id="cmpTog" class="o sbtn" type="button" title="نمایش قطب‌نما و قبله‌نما">🧭 قطب‌نما</button>
-  </div>
-  </div>
-
-  <div id="bn" class="hid"></div>
-  <div id="sw" class="hid" style="background:#f8d7da;color:#58151c;border-radius:10px;padding:8px 10px;margin:8px 0"></div>
-
-  <div id="sensors">
-    <div id="gb" class="gbox hid"><div class="gx"><div><small>X</small><b id="gX"></b></div><div><small>Y</small><b id="gY"></b></div><div><small>زون</small><b id="gZ"></b></div></div><div class="ac" id="gA"></div></div>
-    <div class="m hid" id="gs" style="margin-top:4px"></div>
-    <div id="compassWrap" class="hid">
-      <div class="cblk">
-        <div class="compass"><div class="compass-n">N</div><div id="compassNeedle" class="compass-needle"></div></div>
-        <div><div id="compassDeg">زاویه: --°</div></div>
-      </div>
-      <div class="cblk" id="qiblaBlk" title="برای به‌روزرسانی موقعیت لمس کنید">
-        <div class="compass"><div id="qiblaNeedle" class="compass-needle qn"></div></div>
-        <div><div id="qiblaDeg">قبله: --°</div></div>
-        <div class="m" id="qiblaHint" style="font-size:10px"></div>
-      </div>
-      <div class="m" style="font-size:10px;flex:0 0 100%;text-align:center">برای دقت، گوشی را به شکل ۸ حرکت دهید • برای قبله، دایرهٔ قبله را لمس کنید</div>
-    </div>
-  </div>
-
-  <!-- Tab Content: Neshanegozari -->
-  <section id="sec-m" class="hid">
-    <div class="sheetbar"></div>
-    
-    <details class="c" id="mapDetails">
-      <summary>🗺️ نقشه، محدوده و مرز</summary>
-      <div class="sec" id="mp">
-        <b>نقشهٔ محدوده</b> <span class="m">(KMZ، KML، DXF یا دستی)</span>
-        <div class="ctlbox"><div class="ctl-t">🗺️ محدوده</div><div class="ctlrow"><button id="mb" class="o">📂 فایل نقشه</button><button id="mbAdd" class="o">➕ پلیگون</button><button id="btnManualCoord" class="o">✍️ دستی</button><button id="mbDel" class="o" style="color:#b3261e;border-color:#b3261e">🗑 حذف</button></div></div>
-        <input type="file" id="mf" accept=".kmz,.kml,.dxf,.dwg" class="hid">
-        <div id="manualCoordArea" class="hid">
-          <div id="manualCoordList"></div>
-          <div class="r">
-            <button id="addManualRow" class="o" style="flex:1">+ افزودن نقطه</button>
-            <button id="applyManualCoord" style="flex:1">رسم روی نقشه</button>
-          </div>
-        </div>
-        <div class="m" id="mi" style="margin-top:6px">نقشه‌ای بارگذاری نشده است.</div><div class="m" style="margin-top:4px;font-size:10px">نکته: DXF باید مختصات واقعی UTM یا طول/عرض جغرافیایی داشته باشد.</div>
-        <canvas id="mc2" width="640" height="400" class="hid"></canvas>
-        <div id="mapLegend" class="m hid" style="margin-top:4px;font-size:10px">● <span style="color:#1b7a34">صنعتی</span> ● <span style="color:#e08a00">هیزمی</span> ● <span style="color:#d33">خارج از محدوده</span> ● <span style="color:#2196f3">مسیر پیمایش</span></div>
-        <div id="ms" class="gbox hid"><b id="mst"></b><div class="ac" id="msd"></div></div>
-        <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="mal" checked style="width:auto"> هشدار صوتی هنگام خروج از محدوده</label>
-      </div>
-    
-      <div class="ctlbox"><div class="ctl-t">🥾 مسیر پیمایش <span id="trkState"></span></div><div class="ctlrow"><button type="button" id="trkToggle">▶️ شروع مسیر</button><button type="button" class="o" id="resetWalk">↺ ریست</button><button type="button" class="o" id="openEarth">🌍 KMZ</button></div></div>
-      <div class="map-hint">برای مشاهده در Google Earth: فایل KMZ را در Google Earth → Projects → Import کنید.</div>
-    
-      <div class="gbox" id="walkBox">
-        <div class="gx">
-          <div><small>مسافت</small><b id="walkDistance">۰ متر</b></div>
-          <div><small>قدم</small><b id="walkSteps">۰</b></div>
-          <div><small>نقاط مسیر</small><b id="walkPoints">۰</b></div>
-        </div>
-        <small>مسیر فقط بین «شروع» و «پایان» ثبت می‌شود.</small>
-      </div>
-    </details>
-    
-    <details class="c" id="cameraDetails">
-      <summary>📷 اندازه‌گیری تقریبی با دوربین</summary>
-      <div class="sec">
-        <p class="m" style="margin:0 0 8px;color:#b78500">⚠️ این روش فقط برآورد تصویری و تقریبی است.</p>
-        <div id="cm">
-      <label class="m">روش اندازه‌گیری</label>
-      <div class="seg">
-        <button id="mref" class="on" type="button">📏 با شیء مرجع</button>
-        <button id="mdist" type="button">📐 با فاصله</button>
-      </div>
-      <div id="refBox">
-        <label>شیء مرجع</label>
-        <select id="refType">
-          <option value="a4">کاغذ A4 (۲۹٫۷ سانتی‌متر)</option>
-          <option value="card">کارت بانکی (۸٫۵۶ سانتی‌متر)</option>
-          <option value="person">قد یک شخص (۱۷۰ سانتی‌متر)</option>
-          <option value="custom">اندازه دلخواه</option>
-        </select>
-        <input id="refSize" type="text" inputmode="decimal" placeholder="اندازه دلخواه (سانتی‌متر)" class="hid" style="margin-top:6px">
-      </div>
-      <div id="distBox" class="hid">
-        <label id="distLabel">فاصله دوربین تا تنه (متر)</label>
-        <input id="D1" type="text" inputmode="decimal" value="1">
-        <label>فاصله کانونی معادل ۳۵mm (میلی‌متر)</label>
-        <input id="fl" type="text" inputmode="decimal" value="26">
-      </div>
-      <label class="m">هدف اندازه‌گیری</label>
-      <div class="seg">
-        <button id="s1" class="on" type="button">قطر درخت</button>
-        <button id="s2" type="button">ارتفاع درخت</button>
-      </div>
-      <button id="ph" style="width:100%;padding:14px;font-size:16px;margin-top:10px">📷 عکس‌برداری</button>
-      <input type="file" id="fi" accept="image/*" capture="environment" class="hid">
-      <p id="gd1" class="m"></p>
-      <div id="photoArea" class="hid">
-        <div id="pw"><img id="im" alt=""><div id="ov"></div></div>
-        <div id="chips"></div>
-        <div id="rd" class="big" style="margin-top:8px"></div>
-        <div class="m" id="st"></div>
-        <div class="r" style="margin-top:8px">
-          <button id="clrMarkers" class="o" style="font-size:13px">🔄 تنظیم مجدد</button>
-          <button id="ph2" class="o" style="font-size:13px">📷 عکس جدید</button>
-        </div>
-      </div>
-    </div>
-      </div>
-    </details>
-
-    <div class="c">
-      <div class="m" style="margin:4px 2px 8px">برای ورود دستی، فیلدهای زیر را تکمیل کنید.</div>
-      
-      <div id="volClassRow" class="hid">
-        <label>کلاسه حجم</label>
-        <select id="volClass">
-          <option value="general">حجم عمومی</option>
-          <option value="tala" disabled>کلاسه درختان حوزه تالار (به‌زودی)</option>
-          <option value="karsang" disabled>کلاسه درختان کارسنگ (به‌زودی)</option>
-          <option value="babolak" disabled>کلاسه درختان بابلک (به‌زودی)</option>
-        </select>
-      </div>
-
-      <label>گونه</label>
-      <div id="recentSp"></div>
-      <div class="r" style="align-items:stretch; margin-top:4px;">
-        <input id="sps" placeholder="جستجو..." autocomplete="off" style="flex:1.2">
-        <select id="sp" style="flex:1.5; margin-top:0; padding:4px; min-height:36px; font-size:13px;"></select>
-        <button id="simBtn" class="o" type="button" title="پس از ذخیره، گونه تغییر نکند" style="flex:0.5; padding:0; font-size:11px; white-space:nowrap;">🔁 مشابه</button>
-      </div>
-      <div id="spSug" class="hid"></div>
-
-      <div class="r" style="margin-top:6px;">
-        <div><label>قطر سینه (cm)</label><input id="d" type="text" inputmode="decimal" class="tall-input"></div>
-        <div><label>طول / ارتفاع (m)</label><input id="h" type="text" inputmode="decimal" class="tall-input"></div>
-        <div><label>دور تنه (cm)</label><input id="gi" type="text" inputmode="decimal" placeholder="اختیاری"></div>
-      </div>
-
-      <div class="r">
-        <div style="flex:0.5"><label>تعداد</label><input id="nn" type="text" inputmode="decimal" value="1"></div>
-        <div style="flex:1"><label>شماره درخت</label><input id="no"></div>
-        <div style="flex:1.5"><label>توضیحات</label><input id="ds" placeholder="مثلاً وضعیت تنه…"></div>
-      </div>
-
-      <div class="r">
-        <div><label>نوع</label><select id="ty"><option value="i">صنعتی</option><option value="h">هیزمی</option></select></div>
-        <div><label>دسته (تشخیص خودکار)</label><select id="gd"><option value="1">دسته اول</option><option value="2">دسته دوم</option><option value="3">دسته سوم</option></select></div>
-      </div>
-
-      <div id="saveBar">
-        <div class="sbIn">
-          <div id="svHint"></div>
-          <div class="m" id="msg"></div>
-          <div class="sbRow">
-            <div id="newSaveBtns" class="r"><button id="sv">📌 ذخیره با مختصات</button><button id="svNo" class="o">بدون مختصات</button></div>
-            <div class="vb">حجم<b id="vBar">—</b></div>
-          </div>
-        </div>
-      </div>
-      <div id="totSummary">—</div>
-    </div>
-
-    <section class="c" id="tools">
-      <b>📥 ورود داده‌ها</b>
-      <div class="sec">
-        <div class="m" style="margin-bottom: 8px;">فایل اکسل، ورد، PDF یا عکس برگه را وارد کنید، یا دستی تایپ کنید. عکس برگه با هوش مصنوعی خوانده می‌شود (نیاز به ورود به حساب کاربری).</div>
-        <input type="file" id="smartImportFile" accept=".xlsx,.xls,.csv,.docx,.doc,.pdf,.jpg,.jpeg,.png,.webp,.gif,.bmp,.heic,.heif,.tif,.tiff" class="hid">
-        <button id="btnSmartImport" style="width:100%; padding: 12px; font-size: 15px; margin-bottom: 6px;">انتخاب فایل (اکسل، ورد، PDF، عکس)</button>
-        <button id="btnQuickEntry" class="o" style="width:100%; padding: 12px; font-size: 15px;">⌨️ ورود سریع دستی (تایپ)</button>
-      </div>
-    </section>
-  </section>
-
-  <!-- Tab Content: Siahhe -->
-  <section id="sec-l" class="hid">
-    <div class="sheetbar"></div>
-    
-    <div id="noCoordBanner" class="hid"></div>
-    <div id="numCheck" class="hid"></div>
-    <div class="c">
-      <div class="tw"><table id="tb"></table></div>
-      <p>جمع حجم: <b id="tot">۰</b> متر مکعب</p>
-      <b>خلاصه وضعیت درختان</b>
-      <div class="tw"><table id="sm"></table></div>
-      <div id="taxTotalBox" class="taxTotal hid"></div>
-      <div id="plantedBox" class="plantedNote hid"></div>
-    </div>
-    <div class="c" id="expCard">
-      <b>خروجی و اشتراک‌گذاری</b>
-      <label>نوع فایل</label>
-      <select id="expType">
-        <option value="x1">اکسل — این زمین</option>
-        <option value="x3">اکسل — همهٔ زمین‌ها</option>
-        <option value="kmz">Google Earth (KMZ) — محدوده، مسیر و درختان</option>
-        <option value="bk">پشتیبان کامل (JSON)</option>
-      </select>
-      <div class="r" style="margin-top:8px"><button id="expSave" class="o">💾 ذخیره روی گوشی</button><button id="expShare">📤 اشتراک‌گذاری</button></div>
-      <div class="m xs"></div>
-    </div>
-    <div class="c">
-      <b>موارد ذخیره شده</b><br>
-      <button id="saveSnap" class="o" style="width:100%;margin-top:6px">💾 ذخیرهٔ سربرگ فعلی با نام</button>
-      <div class="m" id="snapMsg" style="min-height:18px"></div>
-      <div id="savedList" style="margin-top:2px"></div>
-    </div>
-    <div class="c">
-      <b>بازیابی از پشتیبان</b><div class="m" id="bks"></div>
-      <div style="margin-top:6px"><button id="rb" class="o" style="width:100%">بازیابی از فایل پشتیبان</button></div>
-      <label>روش بازیابی</label><select id="rm"><option value="a">افزودن به داده‌های فعلی</option><option value="r">جایگزینی کامل</option></select>
-      <input type="file" id="rf" accept=".json,application/json" class="hid">
-    </div>
-  </section>
-
-  <!-- Tab Content: Tajdid -->
-  <section id="sec-h" class="hid">
-    <div class="sheetbar"></div>
-    <div class="c">
-      <label>درخت</label><select id="hs2"></select>
-      <div class="r"><div><label>قطر جدید (cm)</label><input id="d2" type="text" inputmode="decimal"></div><div><label>ارتفاع جدید (m)</label><input id="h2" type="text" inputmode="decimal"></div></div>
-      <div class="r"><div><label>حجم استحصال‌شده (m³)</label><input id="hv" type="text" inputmode="decimal"></div><div><label>تاریخ استحصال</label><input id="hd" type="date"></div></div>
-      <label>یادداشت</label><input id="hn"><br><button id="sh" style="width:100%">ذخیره</button>
-    </div>
-    <div class="c">
-      <div class="tw"><table id="tb2"></table></div><br>
-      <div class="r"><button id="e2">خروجی اکسل</button><button id="e2s" class="o">📤 اشتراک‌گذاری</button></div>
-      <div class="m xs"></div>
-    </div>
-  </section>
-  <!-- Tab Content: AI -->
-  <section id="sec-a" class="hid">
-    <div class="c" id="aiBox">
-      <div class="aiHead"><b>🤖 دستیار هوشمند</b><button id="aiNew" class="o" type="button">🗑 گفتگوی جدید</button></div>
-      <div class="m" style="margin-bottom:6px">برای نوشتن صورتجلسه، خلاصهٔ سیاهه و راهنمایی؛ از اطلاعات سربرگ فعلی استفاده می‌کند. (نیاز به ورود به حساب)</div>
-      <div id="aiChips"></div>
-      <div id="aiMsgs"></div>
-      <div class="aiIn">
-        <textarea id="aiIn" rows="2" placeholder="پیام…"></textarea>
-        <button id="aiMic" type="button" title="میکروفن" style="padding:10px 12px;font-size:17px">🎤</button>
-        <button id="aiVoiceMode" type="button" title="حالت مکالمه زنده" style="padding:10px 12px;font-size:17px;background:#5c6b5f;color:#fff">🗣️</button>
-        <button id="aiSend" type="button">ارسال</button>
-      </div>
-      <div id="aiActions" class="hid" style="display:flex;gap:6px;margin-top:8px">
-        <button id="aiCopyAll" class="o" style="flex:1;padding:7px;font-size:12px">📋 کپی متن</button>
-        <button id="aiWord" class="o" style="flex:1;padding:7px;font-size:12px">📄 دریافت ورد</button>
-        <button id="aiShareAll" class="o" style="flex:1;padding:7px;font-size:12px">📤 اشتراک</button>
-      </div>
-      <div class="m" style="font-size:11px;margin-top:4px">پاسخ‌ها را قبل از استفادهٔ رسمی بازبینی کنید؛ حجم و عوارض برنامه برآورد است.</div>
-    </div>
-  </section>
+<div id="app-header">
+<h1>بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِیم</h1>
+<div class="meta">
+<span id="splashDate">تاریخ: ...</span>
+<span id="splashDay">روز: ...</span>
 </div>
-
+<div class="dhikr" id="splashDhikr">ذکر روز: ...</div>
+</div>
+<div class="top-bar-actions">
+<div class="mode-toggle" id="modeToggleContainer">
+<button class="on" id="btnModeGarden">🌳 باغی/جنگلی</button>
+<button id="btnModeForest">🌲 جنگل</button>
+</div>
+<div id="acct"></div>
+</div>
+<div id="topbar">
+<nav>
+<button data-t="m">📍 نشانه‌گذاری</button>
+<button data-t="l">📋 دریافت سیاهه</button>
+<button data-t="h">🪓 تجدید و استحصال</button>
+<button class="aibtn" data-t="a" title="دستیار هوشمند">🤖 AI</button>
+</nav>
+<div id="gpsStrip">
+<span id="gpsStripTxt"><span style="color:var(--mu)">◌ مختصات خاموش</span></span>
+<button class="o sbtn" id="ga" type="button">📍 مختصات</button>
+<button class="o sbtn hid" id="gTog" title="مخفی کردن مختصات" type="button">▴</button>
+<button class="o sbtn" id="cmpTog" title="نمایش قطب‌نما و قبله‌نما" type="button">🧭 قطب‌نما</button>
+</div>
+</div>
+<div class="hid" id="bn"></div>
+<div class="hid" id="sw" style="background:#f8d7da;color:#58151c;border-radius:10px;padding:8px 10px;margin:8px 0"></div>
+<div id="sensors">
+<div class="gbox hid" id="gb"><div class="gx"><div><small>X</small><b id="gX"></b></div><div><small>Y</small><b id="gY"></b></div><div><small>زون</small><b id="gZ"></b></div></div><div class="ac" id="gA"></div></div>
+<div class="m hid" id="gs" style="margin-top:4px"></div>
+<div class="hid" id="compassWrap">
+<div class="cblk">
+<div class="compass"><div class="compass-n">N</div><div class="compass-needle" id="compassNeedle"></div></div>
+<div><div id="compassDeg">زاویه: --°</div></div>
+</div>
+<div class="cblk" id="qiblaBlk" title="برای به‌روزرسانی موقعیت لمس کنید">
+<div class="compass"><div class="compass-needle qn" id="qiblaNeedle"></div></div>
+<div><div id="qiblaDeg">قبله: --°</div></div>
+<div class="m" id="qiblaHint" style="font-size:10px"></div>
+</div>
+<div class="m" style="font-size:10px;flex:0 0 100%;text-align:center">برای دقت، گوشی را به شکل ۸ حرکت دهید • برای قبله، دایرهٔ قبله را لمس کنید</div>
+</div>
+</div>
+<!-- Tab Content: Neshanegozari -->
+<section class="hid" id="sec-m">
+<div class="sheetbar"></div>
+<details class="c" id="mapDetails">
+<summary>🗺️ نقشه، محدوده و مرز</summary>
+<div class="sec" id="mp">
+<b>نقشهٔ محدوده</b> <span class="m">(KMZ، KML، DXF یا دستی)</span>
+<div class="ctlbox"><div class="ctl-t">🗺️ محدوده</div><div class="ctlrow"><button class="o" id="mb">📂 فایل نقشه</button><button class="o" id="mbAdd">➕ پلیگون</button><button class="o" id="btnManualCoord">✍️ دستی</button><button class="o" id="mbDel" style="color:#b3261e;border-color:#b3261e">🗑 حذف</button></div></div>
+<input accept=".kmz,.kml,.dxf,.dwg" class="hid" id="mf" type="file"/>
+<div class="hid" id="manualCoordArea">
+<div id="manualCoordList"></div>
+<div class="r">
+<button class="o" id="addManualRow" style="flex:1">+ افزودن نقطه</button>
+<button id="applyManualCoord" style="flex:1">رسم روی نقشه</button>
+</div>
+</div>
+<div class="m" id="mi" style="margin-top:6px">نقشه‌ای بارگذاری نشده است.</div><div class="m" style="margin-top:4px;font-size:10px">نکته: DXF باید مختصات واقعی UTM یا طول/عرض جغرافیایی داشته باشد.</div>
+<canvas class="hid" height="400" id="mc2" width="640"></canvas>
+<div class="m hid" id="mapLegend" style="margin-top:4px;font-size:10px">● <span style="color:#1b7a34">صنعتی</span> ● <span style="color:#e08a00">هیزمی</span> ● <span style="color:#d33">خارج از محدوده</span> ● <span style="color:#2196f3">مسیر پیمایش</span></div>
+<div class="gbox hid" id="ms"><b id="mst"></b><div class="ac" id="msd"></div></div>
+<label style="display:flex;align-items:center;gap:6px"><input checked="" id="mal" style="width:auto" type="checkbox"/> هشدار صوتی هنگام خروج از محدوده</label>
+</div>
+<div class="ctlbox"><div class="ctl-t">🥾 مسیر پیمایش <span id="trkState"></span></div><div class="ctlrow"><button id="trkToggle" type="button">▶️ شروع مسیر</button><button class="o" id="resetWalk" type="button">↺ ریست</button><button class="o" id="openEarth" type="button">🌍 KMZ</button></div></div>
+<div class="map-hint">برای مشاهده در Google Earth: فایل KMZ را در Google Earth → Projects → Import کنید.</div>
+<div class="gbox" id="walkBox">
+<div class="gx">
+<div><small>مسافت</small><b id="walkDistance">۰ متر</b></div>
+<div><small>قدم</small><b id="walkSteps">۰</b></div>
+<div><small>نقاط مسیر</small><b id="walkPoints">۰</b></div>
+</div>
+<small>مسیر فقط بین «شروع» و «پایان» ثبت می‌شود.</small>
+</div>
+</details>
+<details class="c" id="cameraDetails">
+<summary>📷 اندازه‌گیری تقریبی با دوربین</summary>
+<div class="sec">
+<p class="m" style="margin:0 0 8px;color:#b78500">⚠️ این روش فقط برآورد تصویری و تقریبی است.</p>
+<div id="cm">
+<label class="m">روش اندازه‌گیری</label>
+<div class="seg">
+<button class="on" id="mref" type="button">📏 با شیء مرجع</button>
+<button id="mdist" type="button">📐 با فاصله</button>
+</div>
+<div id="refBox">
+<label>شیء مرجع</label>
+<select id="refType">
+<option value="a4">کاغذ A4 (۲۹٫۷ سانتی‌متر)</option>
+<option value="card">کارت بانکی (۸٫۵۶ سانتی‌متر)</option>
+<option value="person">قد یک شخص (۱۷۰ سانتی‌متر)</option>
+<option value="custom">اندازه دلخواه</option>
+</select>
+<input class="hid" id="refSize" inputmode="decimal" placeholder="اندازه دلخواه (سانتی‌متر)" style="margin-top:6px" type="text"/>
+</div>
+<div class="hid" id="distBox">
+<label id="distLabel">فاصله دوربین تا تنه (متر)</label>
+<input id="D1" inputmode="decimal" type="text" value="1"/>
+<label>فاصله کانونی معادل ۳۵mm (میلی‌متر)</label>
+<input id="fl" inputmode="decimal" type="text" value="26"/>
+</div>
+<label class="m">هدف اندازه‌گیری</label>
+<div class="seg">
+<button class="on" id="s1" type="button">قطر درخت</button>
+<button id="s2" type="button">ارتفاع درخت</button>
+</div>
+<button id="ph" style="width:100%;padding:14px;font-size:16px;margin-top:10px">📷 عکس‌برداری</button>
+<input accept="image/*" capture="environment" class="hid" id="fi" type="file"/>
+<p class="m" id="gd1"></p>
+<div class="hid" id="photoArea">
+<div id="pw"><img alt="" id="im"/><div id="ov"></div></div>
+<div id="chips"></div>
+<div class="big" id="rd" style="margin-top:8px"></div>
+<div class="m" id="st"></div>
+<div class="r" style="margin-top:8px">
+<button class="o" id="clrMarkers" style="font-size:13px">🔄 تنظیم مجدد</button>
+<button class="o" id="ph2" style="font-size:13px">📷 عکس جدید</button>
+</div>
+</div>
+</div>
+</div>
+</details>
+<div class="c">
+<div class="m" style="margin:4px 2px 8px">برای ورود دستی، فیلدهای زیر را تکمیل کنید.</div>
+<div class="hid" id="volClassRow">
+<label>کلاسه حجم</label>
+<select id="volClass">
+<option value="general">حجم عمومی</option>
+<option disabled="" value="tala">کلاسه درختان حوزه تالار (به‌زودی)</option>
+<option disabled="" value="karsang">کلاسه درختان کارسنگ (به‌زودی)</option>
+<option disabled="" value="babolak">کلاسه درختان بابلک (به‌زودی)</option>
+</select>
+</div>
+<label>گونه</label>
+<div id="recentSp"></div>
+<div class="r" style="align-items:stretch; margin-top:4px;">
+<input autocomplete="off" id="sps" placeholder="جستجو..." style="flex:1.2"/>
+<select id="sp" style="flex:1.5; margin-top:0; padding:4px; min-height:36px; font-size:13px;"></select>
+<button class="o" id="simBtn" style="flex:0.5; padding:0; font-size:11px; white-space:nowrap;" title="پس از ذخیره، گونه تغییر نکند" type="button">🔁 مشابه</button>
+</div>
+<div class="hid" id="spSug"></div>
+<div class="r" style="margin-top:6px;">
+<div><label>قطر سینه (cm)</label><input class="tall-input" id="d" inputmode="decimal" type="text"/></div>
+<div><label>طول / ارتفاع (m)</label><input class="tall-input" id="h" inputmode="decimal" type="text"/></div>
+<div><label>دور تنه (cm)</label><input id="gi" inputmode="decimal" placeholder="اختیاری" type="text"/></div>
+</div>
+<div class="r">
+<div style="flex:0.5"><label>تعداد</label><input id="nn" inputmode="decimal" type="text" value="1"/></div>
+<div style="flex:1"><label>شماره درخت</label><input id="no"/></div>
+<div style="flex:1.5"><label>توضیحات</label><input id="ds" placeholder="مثلاً وضعیت تنه…"/></div>
+</div>
+<div class="r">
+<div><label>نوع</label><select id="ty"><option value="i">صنعتی</option><option value="h">هیزمی</option></select></div>
+<div><label>دسته (تشخیص خودکار)</label><select id="gd"><option value="1">دسته اول</option><option value="2">دسته دوم</option><option value="3">دسته سوم</option></select></div>
+</div>
+<div id="saveBar">
+<div class="sbIn">
+<div id="svHint"></div>
+<div class="m" id="msg"></div>
+<div class="sbRow">
+<div class="r" id="newSaveBtns"><button id="sv">📌 ذخیره با مختصات</button><button class="o" id="svNo">بدون مختصات</button></div>
+<div class="vb">حجم<b id="vBar">—</b></div>
+</div>
+</div>
+</div>
+<div id="totSummary">—</div>
+</div>
+<section class="c" id="tools">
+<b>📥 ورود داده‌ها</b>
+<div class="sec">
+<div class="m" style="margin-bottom: 8px;">فایل اکسل، ورد، PDF یا عکس برگه را وارد کنید، یا دستی تایپ کنید. عکس برگه با هوش مصنوعی خوانده می‌شود (نیاز به ورود به حساب کاربری).</div>
+<input accept=".xlsx,.xls,.csv,.docx,.doc,.pdf,.jpg,.jpeg,.png,.webp,.gif,.bmp,.heic,.heif,.tif,.tiff" class="hid" id="smartImportFile" type="file"/>
+<button id="btnSmartImport" style="width:100%; padding: 12px; font-size: 15px; margin-bottom: 6px;">انتخاب فایل (اکسل، ورد، PDF، عکس)</button>
+<button class="o" id="btnQuickEntry" style="width:100%; padding: 12px; font-size: 15px;">⌨️ ورود سریع دستی (تایپ)</button>
+</div>
+</section>
+</section>
+<!-- Tab Content: Siahhe -->
+<section class="hid" id="sec-l">
+<div class="sheetbar"></div>
+<div class="hid" id="noCoordBanner"></div>
+<div class="hid" id="numCheck"></div>
+<div class="c">
+<div class="tw"><table id="tb"></table></div>
+<p>جمع حجم: <b id="tot">۰</b> متر مکعب</p>
+<b>خلاصه وضعیت درختان</b>
+<div class="tw"><table id="sm"></table></div>
+<div class="taxTotal hid" id="taxTotalBox"></div>
+<div class="plantedNote hid" id="plantedBox"></div>
+</div>
+<div class="c" id="expCard">
+<b>خروجی و اشتراک‌گذاری</b>
+<label>نوع فایل</label>
+<select id="expType">
+<option value="x1">اکسل — این زمین</option>
+<option value="x3">اکسل — همهٔ زمین‌ها</option>
+<option value="kmz">Google Earth (KMZ) — محدوده، مسیر و درختان</option>
+<option value="bk">پشتیبان کامل (JSON)</option>
+</select>
+<div class="r" style="margin-top:8px"><button class="o" id="expSave">💾 ذخیره روی گوشی</button><button id="expShare">📤 اشتراک‌گذاری</button></div>
+<div class="m xs"></div>
+</div>
+<div class="c">
+<b>موارد ذخیره شده</b><br/>
+<button class="o" id="saveSnap" style="width:100%;margin-top:6px">💾 ذخیرهٔ سربرگ فعلی با نام</button>
+<div class="m" id="snapMsg" style="min-height:18px"></div>
+<div id="savedList" style="margin-top:2px"></div>
+</div>
+<div class="c">
+<b>بازیابی از پشتیبان</b><div class="m" id="bks"></div>
+<div style="margin-top:6px"><button class="o" id="rb" style="width:100%">بازیابی از فایل پشتیبان</button></div>
+<label>روش بازیابی</label><select id="rm"><option value="a">افزودن به داده‌های فعلی</option><option value="r">جایگزینی کامل</option></select>
+<input accept=".json,application/json" class="hid" id="rf" type="file"/>
+</div>
+</section>
+<!-- Tab Content: Tajdid -->
+<section class="hid" id="sec-h">
+<div class="sheetbar"></div>
+<div class="c">
+<label>درخت</label><select id="hs2"></select>
+<div class="r"><div><label>قطر جدید (cm)</label><input id="d2" inputmode="decimal" type="text"/></div><div><label>ارتفاع جدید (m)</label><input id="h2" inputmode="decimal" type="text"/></div></div>
+<div class="r"><div><label>حجم استحصال‌شده (m³)</label><input id="hv" inputmode="decimal" type="text"/></div><div><label>تاریخ استحصال</label><input id="hd" type="date"/></div></div>
+<label>یادداشت</label><input id="hn"/><br/><button id="sh" style="width:100%">ذخیره</button>
+</div>
+<div class="c">
+<div class="tw"><table id="tb2"></table></div><br/>
+<div class="r"><button id="e2">خروجی اکسل</button><button class="o" id="e2s">📤 اشتراک‌گذاری</button></div>
+<div class="m xs"></div>
+</div>
+</section>
+<!-- Tab Content: AI -->
+<section class="hid" id="sec-a">
+<div class="c" id="aiBox">
+<div class="aiHead"><b>🤖 دستیار هوشمند</b><button class="o" id="aiNew" type="button">🗑 گفتگوی جدید</button></div>
+<div class="m" style="margin-bottom:6px">برای نوشتن صورتجلسه، خلاصهٔ سیاهه و راهنمایی؛ از اطلاعات سربرگ فعلی استفاده می‌کند. (نیاز به ورود به حساب)</div>
+<div id="aiChips"></div>
+<div id="aiMsgs"></div>
+<div class="aiIn">
+<textarea id="aiIn" placeholder="پیام…" rows="2"></textarea>
+<button id="aiMic" style="padding:10px 12px;font-size:17px" title="میکروفن" type="button">🎤</button>
+<button id="aiVoiceMode" style="padding:10px 12px;font-size:17px;background:#5c6b5f;color:#fff" title="حالت مکالمه زنده" type="button">🗣️</button>
+<button id="aiSend" type="button">ارسال</button>
+</div>
+<div class="hid" id="aiActions" style="display:flex;gap:6px;margin-top:8px">
+<button class="o" id="aiCopyAll" style="flex:1;padding:7px;font-size:12px">📋 کپی متن</button>
+<button class="o" id="aiWord" style="flex:1;padding:7px;font-size:12px">📄 دریافت ورد</button>
+<button class="o" id="aiShareAll" style="flex:1;padding:7px;font-size:12px">📤 اشتراک</button>
+</div>
+<div class="m" style="font-size:11px;margin-top:4px">پاسخ‌ها را قبل از استفادهٔ رسمی بازبینی کنید؛ حجم و عوارض برنامه برآورد است.</div>
+</div>
+</section>
+</div>
 <!-- Floating SOS Button -->
-<button id="sosFab" class="hid" type="button">⚠️<span>اعلام خطر</span></button>
-
+<button class="hid" id="sosFab" type="button">⚠️<span>اعلام خطر</span></button>
 <!-- Minutes Modal -->
-<div id="minutesModal" class="hid">
-  <div class="bx">
-    <h3 style="margin:0 0 10px;color:var(--ac)">📝 دریافت صورتجلسه</h3>
-    <div class="m" style="margin-bottom:8px">فیلدها اختیاری‌اند؛ هرچه خالی بماند در متن «……» می‌شود.</div>
-    <label>نام سربرگ</label><select id="mmSheet"></select>
-    <div class="r">
-      <div><label>تاریخ اقدام</label><input id="mmDate" placeholder="۱۴۰۴/۰۸/۱۵"></div>
-      <div style="flex:0.5"><label>&nbsp;</label><button id="mmToday" class="o" type="button" style="width:100%;padding:6px">امروز</button></div>
-    </div>
-    <label>منطقه / پارسل</label><input id="mmArea" placeholder="مثلاً پارسل ۱۲">
-    <label>سری</label><input id="mmSeries" placeholder="مثلاً سری ۳">
-    <div class="r">
-      <div><label>شمارهٔ حکم نشانه‌گذاری</label><input id="mmDecreeNo" inputmode="numeric"></div>
-      <div><label>تاریخ حکم</label><input id="mmDecreeDate" placeholder="۱۴۰۴/۰۸/۰۱"></div>
-    </div>
-    <label>رنگ چکش</label>
-    <div id="mmHammer" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
-      <button type="button" data-c="قرمز" style="background:#c62828;color:#fff">قرمز</button>
-      <button type="button" data-c="آبی" style="background:#1565c0;color:#fff">آبی</button>
-      <button type="button" data-c="زرد" style="background:#f9a825;color:#000">زرد</button>
-      <button type="button" data-c="سبز" style="background:#2e7d32;color:#fff">سبز</button>
-      <button type="button" data-c="مشکی" style="background:#212121;color:#fff">مشکی</button>
-      <button type="button" data-c="نارنجی" style="background:#ef6c00;color:#fff">نارنجی</button>
-      <input type="color" id="mmHammerCustom" value="#c62828" title="رنگ دلخواه" style="width:44px;height:36px;padding:0;border:none;background:none">
-    </div>
-    <div class="m" style="margin-top:10px;font-size:12px">
+<div class="hid" id="minutesModal">
+<div class="bx">
+<h3 style="margin:0 0 10px;color:var(--ac)">📝 دریافت صورتجلسه</h3>
+<div class="m" style="margin-bottom:8px">فیلدها اختیاری‌اند؛ هرچه خالی بماند در متن «……» می‌شود.</div>
+<label>نام سربرگ</label><select id="mmSheet"></select>
+<div class="r">
+<div><label>تاریخ اقدام</label><input id="mmDate" placeholder="۱۴۰۴/۰۸/۱۵"/></div>
+<div style="flex:0.5"><label> </label><button class="o" id="mmToday" style="width:100%;padding:6px" type="button">امروز</button></div>
+</div>
+<label>منطقه / پارسل</label><input id="mmArea" placeholder="مثلاً پارسل ۱۲"/>
+<label>سری</label><input id="mmSeries" placeholder="مثلاً سری ۳"/>
+<div class="r">
+<div><label>شمارهٔ حکم نشانه‌گذاری</label><input id="mmDecreeNo" inputmode="numeric"/></div>
+<div><label>تاریخ حکم</label><input id="mmDecreeDate" placeholder="۱۴۰۴/۰۸/۰۱"/></div>
+</div>
+<label>رنگ چکش</label>
+<div id="mmHammer" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
+<button data-c="قرمز" style="background:#c62828;color:#fff" type="button">قرمز</button>
+<button data-c="آبی" style="background:#1565c0;color:#fff" type="button">آبی</button>
+<button data-c="زرد" style="background:#f9a825;color:#000" type="button">زرد</button>
+<button data-c="سبز" style="background:#2e7d32;color:#fff" type="button">سبز</button>
+<button data-c="مشکی" style="background:#212121;color:#fff" type="button">مشکی</button>
+<button data-c="نارنجی" style="background:#ef6c00;color:#fff" type="button">نارنجی</button>
+<input id="mmHammerCustom" style="width:44px;height:36px;padding:0;border:none;background:none" title="رنگ دلخواه" type="color" value="#c62828"/>
+</div>
+<div class="m" style="margin-top:10px;font-size:12px">
       اگر توضیحی دارید که می‌خواهید در متن باشد، پس از مشاهدهٔ صورتجلسه در چت به هوش مصنوعی بگویید اعمال کند.
     </div>
-    <div class="r" style="margin-top:12px">
-      <button id="mmCancel" class="o" style="flex:1">انصراف</button>
-      <button id="mmGo" style="flex:2;background:#2e9d4f;font-weight:700">📝 نوشتن صورتجلسه</button>
-    </div>
-  </div>
+<div class="r" style="margin-top:12px">
+<button class="o" id="mmCancel" style="flex:1">انصراف</button>
+<button id="mmGo" style="flex:2;background:#2e9d4f;font-weight:700">📝 نوشتن صورتجلسه</button>
 </div>
-
+</div>
+</div>
 <!-- Save type modal (garden mode) -->
-<div id="saveTypeModal" class="hid">
-  <div class="bx">
-    <h3>نوع درخت را انتخاب کنید</h3>
-    <div class="sub">درخت مورد نظر را در کدام دسته ذخیره کنیم؟</div>
-    <div class="mbtn">
-      <button data-k="natural" style="background:#2f6b3c">
+<div class="hid" id="saveTypeModal">
+<div class="bx">
+<h3>نوع درخت را انتخاب کنید</h3>
+<div class="sub">درخت مورد نظر را در کدام دسته ذخیره کنیم؟</div>
+<div class="mbtn">
+<button data-k="natural" style="background:#2f6b3c">
         🌿 درختان خودرو
         <small>در سیاهه و محاسبهٔ عوارض لحاظ می‌شود</small>
-      </button>
-      <button data-k="planted" style="background:#3a7bd5">
+</button>
+<button data-k="planted" style="background:#3a7bd5">
         🌱 درختان دست‌کاشت
         <small>در لیست می‌آید ولی عوارض آن صفر است</small>
-      </button>
-    </div>
-    <button class="o cancel" id="saveTypeCancel">انصراف</button>
-  </div>
+</button>
 </div>
-
+<button class="o cancel" id="saveTypeCancel">انصراف</button>
+</div>
+</div>
 <!-- New sheet modal -->
-<div id="newSheetModal" class="hid">
-  <div class="bx">
-    <h3>سربرگ جدید</h3>
-    <div class="sub">این زمین از چه نوعی است؟</div>
-    <div class="mbtn">
-      <button data-mode="garden" style="background:#2f6b3c">
+<div class="hid" id="newSheetModal">
+<div class="bx">
+<h3>سربرگ جدید</h3>
+<div class="sub">این زمین از چه نوعی است؟</div>
+<div class="mbtn">
+<button data-mode="garden" style="background:#2f6b3c">
         🌳 باغی / جنگلی
         <small>جهت ثبت عوارض و درختان خودرو/دست‌کاشت</small>
-      </button>
-      <button data-mode="forest" style="background:#5a7d3a">
+</button>
+<button data-mode="forest" style="background:#5a7d3a">
         🌲 جنگل
         <small>جهت محاسبه حجم و موارد جنگلی</small>
-      </button>
-    </div>
-    <button class="o cancel" id="newSheetCancel">انصراف</button>
-  </div>
+</button>
 </div>
-
+<button class="o cancel" id="newSheetCancel">انصراف</button>
+</div>
+</div>
 <!-- Edit Modal (Inline) -->
-<div id="editModal" class="hid">
-  <div class="bx">
-    <h3>ویرایش درخت</h3>
-    
-    <div class="r">
-      <div><label>گونه</label><select id="emSp"></select></div>
-      <div><label>دسته</label><select id="emGd"><option value="1">دسته اول</option><option value="2">دسته دوم</option><option value="3">دسته سوم</option></select></div>
-    </div>
-    
-    <div class="r">
-      <div><label>قطر (cm)</label><input id="emD" class="tall-input" type="text" inputmode="decimal"></div>
-      <div><label>طول (m)</label><input id="emH" class="tall-input" type="text" inputmode="decimal"></div>
-      <div><label>دور تنه</label><input id="emGi" type="text" inputmode="decimal"></div>
-    </div>
-    
-    <div class="r">
-      <div><label>تعداد</label><input id="emNn" type="text" inputmode="decimal"></div>
-      <div><label>شماره</label><input id="emNo"></div>
-      <div><label>نوع</label><select id="emTy"><option value="i">صنعتی</option><option value="h">هیزمی</option></select></div>
-    </div>
-    
-    <div class="r hid" id="emKindRow">
-      <div><label>دسته باغی</label><select id="emK"><option value="natural">🌿 خودرو</option><option value="planted">🌱 دست‌کاشت</option></select></div>
-    </div>
-    
-    <div class="r" dir="ltr" style="margin-top:6px;">
-      <div><label>X (UTM)</label><input id="emX" type="text" inputmode="decimal" style="text-align:center"></div>
-      <div><label>Y (UTM)</label><input id="emY" type="text" inputmode="decimal" style="text-align:center"></div>
-      <div><label>Z (Zone)</label><input id="emZ" type="text" inputmode="numeric" style="text-align:center"></div>
-    </div>
-    
-    <div class="r"><div><label>توضیحات</label><input id="emDs"></div></div>
-    
-    <div class="box-res">
-      <div><small>حجم</small><b id="emV">—</b></div>
-      <div id="emTaxBox"><small>عوارض (ریال)</small><b id="emTax">—</b></div>
-    </div>
-    
-    <div class="r" style="margin-top:12px;">
-      <button id="emCancel" class="o" style="flex:1">انصراف</button>
-      <button id="emSave" style="flex:2;background:#2e9d4f;font-weight:bold;">💾 ذخیره تغییرات</button>
-    </div>
-  </div>
+<div class="hid" id="editModal">
+<div class="bx">
+<h3>ویرایش درخت</h3>
+<div class="r">
+<div><label>گونه</label><select id="emSp"></select></div>
+<div><label>دسته</label><select id="emGd"><option value="1">دسته اول</option><option value="2">دسته دوم</option><option value="3">دسته سوم</option></select></div>
 </div>
-
+<div class="r">
+<div><label>قطر (cm)</label><input class="tall-input" id="emD" inputmode="decimal" type="text"/></div>
+<div><label>طول (m)</label><input class="tall-input" id="emH" inputmode="decimal" type="text"/></div>
+<div><label>دور تنه</label><input id="emGi" inputmode="decimal" type="text"/></div>
+</div>
+<div class="r">
+<div><label>تعداد</label><input id="emNn" inputmode="decimal" type="text"/></div>
+<div><label>شماره</label><input id="emNo"/></div>
+<div><label>نوع</label><select id="emTy"><option value="i">صنعتی</option><option value="h">هیزمی</option></select></div>
+</div>
+<div class="r hid" id="emKindRow">
+<div><label>دسته باغی</label><select id="emK"><option value="natural">🌿 خودرو</option><option value="planted">🌱 دست‌کاشت</option></select></div>
+</div>
+<div class="r" dir="ltr" style="margin-top:6px;">
+<div><label>X (UTM)</label><input id="emX" inputmode="decimal" style="text-align:center" type="text"/></div>
+<div><label>Y (UTM)</label><input id="emY" inputmode="decimal" style="text-align:center" type="text"/></div>
+<div><label>Z (Zone)</label><input id="emZ" inputmode="numeric" style="text-align:center" type="text"/></div>
+</div>
+<div class="r"><div><label>توضیحات</label><input id="emDs"/></div></div>
+<div class="box-res">
+<div><small>حجم</small><b id="emV">—</b></div>
+<div id="emTaxBox"><small>عوارض (ریال)</small><b id="emTax">—</b></div>
+</div>
+<div class="r" style="margin-top:12px;">
+<button class="o" id="emCancel" style="flex:1">انصراف</button>
+<button id="emSave" style="flex:2;background:#2e9d4f;font-weight:bold;">💾 ذخیره تغییرات</button>
+</div>
+</div>
+</div>
 <script>
 const $=s=>document.querySelector(s),fa=(n,m=2)=>(n!==null&&n!==undefined&&n!==''&&isFinite(n))?Number(n).toLocaleString('fa-IR',{maximumFractionDigits:m}):'—';
 const toFa=s=>String(s).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]).replace(/\./g,'٫'),toEn=s=>String(s).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٫،,]/g,'.');
@@ -2519,9 +2482,7 @@ window.addEventListener('beforeunload',()=>{try{saveActive()}catch(e){}});
   document.getElementById('splashDhikr').textContent = 'ذکر روز: ' + dhikrs[dayStr];
 })();
 </script>
-
-<div id="sosCard" class="hid"></div>
-
+<div class="hid" id="sosCard"></div>
 <script>
 (function(){
 const SB_URL='https://hgzdghjkwzufdhmjcfaz.supabase.co'.trim();
@@ -2705,7 +2666,6 @@ document.getElementById('splashLogin').onclick = () => window.splashGo(false);
 document.getElementById('splashSignup').onclick = () => window.splashGo(true);
 document.getElementById('splashGuest').onclick = () => window.splashGuest();
 </script>
-
 <script>
 /* ===== اعلام خطر (جعبه سیاه) ===== */
 (function(){
@@ -2966,7 +2926,6 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(st)loc
 renderCard();
 })();
 </script>
-
 <script>
 /* ===== دستیار هوش مصنوعی (چت، صورتجلسه، صوت زنده) ===== */
 (function(){
@@ -2977,175 +2936,200 @@ let hist=[];try{hist=JSON.parse(localStorage.getItem('aiChat')||'[]')}catch(e){}
 let busy=false;
 const save=()=>{try{localStorage.setItem('aiChat',JSON.stringify(hist.slice(-24)))}catch(e){}};
 
+
 // --- متغیرهای صوتی ---
-let voiceMode = false;
+let voiceMode = false;      // حالت مکالمه زنده (گوش + صحبت)
+let speakReplies = true;    // آیا جواب‌ها با صدا خوانده شوند؟
 let isSpeaking = false;
 let recognizing = false;
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 let rec = null;
 
-if(SR) {
+if (SR) {
   rec = new SR();
   rec.lang = 'fa-IR';
   rec.interimResults = true;
-  rec.continuous = false;
+  rec.continuous = true;    // میکروفن قطع نمی‌شود
 }
 
 const startListening = () => {
-  if(!rec || recognizing) return;
-  if(isSpeaking && window.speechSynthesis) { window.speechSynthesis.cancel(); isSpeaking = false; }
-  try { 
-    rec.start(); 
-    recognizing = true; 
+  if (!rec || recognizing || isSpeaking) return;
+  try {
+    rec.start();
+    recognizing = true;
     const vb = document.getElementById('aiVoiceMode');
-    if(vb && voiceMode) vb.className = 'listening'; 
+    if (vb && voiceMode) vb.className = 'listening';
     const mb = document.getElementById('aiMic');
-    if(mb) mb.classList.add('rec');
-  } catch(e){}
+    if (mb) mb.classList.add('rec');
+  } catch (e) {}
 };
 
 const stopListening = () => {
-  if(!rec || !recognizing) return;
-  try { rec.stop(); } catch(e){}
+  if (!rec || !recognizing) return;
+  try { rec.stop(); } catch (e) {}
   recognizing = false;
   const vb = document.getElementById('aiVoiceMode');
-  if(vb && voiceMode) vb.className = 'active';
+  if (vb && voiceMode) vb.className = 'active';
   const mb = document.getElementById('aiMic');
-  if(mb) mb.classList.remove('rec');
+  if (mb) mb.classList.remove('rec');
 };
 
 const speakText = (text, callback) => {
-  if(!window.speechSynthesis) return callback();
+  if (!window.speechSynthesis || !speakReplies) {
+    if (callback) callback();
+    return;
+  }
   window.speechSynthesis.cancel();
   const utt = new SpeechSynthesisUtterance(text);
   utt.lang = 'fa-IR';
   utt.rate = 1.0;
   utt.onstart = () => { isSpeaking = true; };
-  utt.onend = () => { isSpeaking = false; if(callback) callback(); };
-  utt.onerror = () => { isSpeaking = false; if(callback) callback(); };
+  utt.onend = () => {
+    isSpeaking = false;
+    if (callback) callback();
+  };
+  utt.onerror = () => {
+    isSpeaking = false;
+    if (callback) callback();
+  };
   window.speechSynthesis.speak(utt);
 };
 
-if(rec) {
+if (rec) {
   rec.onresult = (e) => {
     let finalText = '', interimText = '';
-    for(let i = e.resultIndex; i < e.results.length; i++){
+    for (let i = e.resultIndex; i < e.results.length; i++) {
       const t = e.results[i][0].transcript;
-      if(e.results[i].isFinal) finalText += t; else interimText += t;
+      if (e.results[i].isFinal) finalText += t;
+      else interimText += t;
     }
     inp.value = finalText + interimText;
-    if(voiceMode && finalText.trim().length > 0) {
+
+    // در حالت مکالمه، بعد از تمام شدن جمله ارسال کن
+    if (voiceMode && finalText.trim().length > 0) {
       setTimeout(() => {
-        if(inp.value.trim() === finalText.trim() && !isSpeaking) {
+        if (inp.value.trim() === finalText.trim() && !isSpeaking && !busy) {
           sendB.click();
         }
-      }, 400);
+      }, 700);
     }
   };
+
   rec.onerror = (e) => {
-    if(e.error === 'not-allowed') alert('دسترسی به میکروفن رد شد.');
+    if (e.error === 'not-allowed') alert('دسترسی به میکروفن رد شد.');
     recognizing = false;
     const vb = document.getElementById('aiVoiceMode');
-    if(vb && voiceMode) vb.className = 'active';
+    if (vb && voiceMode) vb.className = 'active';
     const mb = document.getElementById('aiMic');
-    if(mb) mb.classList.remove('rec');
+    if (mb) mb.classList.remove('rec');
+
+    if (voiceMode && e.error !== 'not-allowed') {
+      setTimeout(() => { if (voiceMode && !isSpeaking) startListening(); }, 900);
+    }
   };
+
   rec.onend = () => {
     recognizing = false;
     const vb = document.getElementById('aiVoiceMode');
-    if(vb && voiceMode) vb.className = 'active';
+    if (vb && voiceMode) vb.className = 'active';
     const mb = document.getElementById('aiMic');
-    if(mb) mb.classList.remove('rec');
+    if (mb) mb.classList.remove('rec');
+
+    // اگر هنوز در حالت مکالمه هستیم دوباره گوش بده
+    if (voiceMode && !isSpeaking && !busy) {
+      setTimeout(() => { if (voiceMode) startListening(); }, 450);
+    }
   };
 }
 
 document.getElementById('aiMic').onclick = () => {
-  if(recognizing) stopListening(); else startListening();
+  if (recognizing) stopListening();
+  else startListening();
 };
 
 document.getElementById('aiVoiceMode').onclick = () => {
   voiceMode = !voiceMode;
   const btn = document.getElementById('aiVoiceMode');
-  if(voiceMode) {
+  if (voiceMode) {
     btn.classList.add('active');
-    alert('حالت مکالمه فعال شد. صحبت کنید...');
+    speakReplies = true;
+    alert('حالت مکالمه فعال شد.\nصحبت کنید، هوش مصنوعی جواب را با صدا می‌خواند.');
     startListening();
   } else {
     btn.className = '';
     stopListening();
-    if(window.speechSynthesis) window.speechSynthesis.cancel();
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
   }
 };
 
-function ctx(){
-  const R=(x,d=2)=>+(+x).toFixed(d),sh=getActiveSheet()||{},u=window.SB&&SB.user&&SB.user();
-  const ind=T.filter(t=>t.ty!=='h'&&t.k!=='planted'),fw=T.filter(t=>t.ty==='h'&&t.k!=='planted'),pl=T.filter(t=>t.k==='planted');
-  const sp={};
-  T.forEach(t=>{const k=t.sp||'نامشخص',o=sp[k]||(sp[k]={industrial:0,industrial_m3:0,firewood:0,firewood_m3:0,planted:0});
-    if(t.k==='planted')o.planted+=cnt(t);else if(t.ty==='h'){o.firewood+=cnt(t);o.firewood_m3+=tv(t)}else{o.industrial+=cnt(t);o.industrial_m3+=tv(t)}});
-  Object.values(sp).forEach(o=>{o.industrial_m3=R(o.industrial_m3);o.firewood_m3=R(o.firewood_m3)});
-  const mode=sh.mode||'garden',cat={first:0,second:0,third:0};
-  ind.forEach(t=>{const c=catOf(t);cat[c===1?'first':c===2?'second':'third']+=cnt(t)});
-  const hv=T.filter(t=>t.hv>0),o={
-    date:new Date().toLocaleDateString('fa-IR'),user:u&&u.name||'',sheet_name:sh.name||'',
-    land_type:mode==='garden'?'باغی/جنگلی (با محاسبهٔ عوارض)':'جنگل',
-    other_sheets:SHEETS.map(s=>s.name).filter(n=>n!==sh.name).slice(0,8),
-    trees:{total:ct(ind)+ct(fw)+ct(pl),industrial:ct(ind),industrial_m3:R(sv(ind)),firewood:ct(fw),firewood_m3:R(sv(fw)),planted:ct(pl),planted_m3:R(sv(pl)),
-      industrial_by_class:cat,without_coordinates:T.filter(t=>!t.lat).length},
-    by_species:Object.fromEntries(Object.entries(sp).slice(0,20)),
-    map_polygons:MAPP.length,track_points:TRACK.length,walk_meters:Math.round(walkMeters),
-    harvest:{trees_with_harvest:hv.length,harvest_m3:R(hv.reduce((a,t)=>a+(+t.hv||0),0)),renewed_trees:T.filter(t=>t.v2).length,dates:[...new Set(hv.map(t=>t.hd).filter(Boolean))].slice(0,6)}
-  };
-  if(mode==='garden'){o.tax_estimate_rials=T.reduce((a,t)=>a+taxOf(t),0);o.tax_rates={first_class_per_m3:TAX_RATE[1],second_class_per_m3:TAX_RATE[2],third_class_per_m3:TAX_RATE[3],firewood_per_ster:FIREWOOD_RATE,ster_m3:STER_VOLUME}}
-  return o;
-}
-
-const bub=(m,i)=>m.role==='user'?'<div class="aiU">'+esc(m.content)+'</div>'
-  :'<div class="aiB'+(m.err?' err':'')+'"><div class="aiT">'+esc(m.content)+'</div>'+(m.err?'':'<div class="aiAct"><button type="button" class="o" data-c="'+i+'">📋 کپی</button><button type="button" class="o" data-s="'+i+'">📤 اشتراک</button><button type="button" class="o" data-tts="'+i+'">🔊 خواندن</button></div>')+'</div>';
-
-function lastAssistantText(){
-  for(let i = hist.length - 1; i >= 0; i--){
-    if(hist[i].role === 'assistant' && !hist[i].err) return hist[i].content;
-  }
-  return '';
-}
-
-function render(){
-  box.innerHTML=hist.length?hist.map(bub).join('')+(busy?'<div class="aiB"><div class="aiT m">⏳ در حال نوشتن…</div></div>':'') : '<div class="m" style="text-align:center;padding:14px 6px">سلام! یکی از گزینه‌های بالا را بزنید یا سؤالتان را بنویسید.</div>';
-  box.scrollTop=box.scrollHeight;sendB.disabled=busy;sendB.textContent=busy?'…':'ارسال';
-  const act = document.getElementById('aiActions');
-  if(act){
-    const t = lastAssistantText();
-    act.classList.toggle('hid', !t);
-  }
-}
 
 async function send(text, contextOverride){
-  text=String(text==null?inp.value:text).trim();if(!text||busy)return;
-  if(voiceMode) stopListening();
-  
-  if(!(window.hkAiLoggedIn&&window.hkAiLoggedIn())){hist.push({role:'user',content:text});hist.push({role:'assistant',content:'برای استفاده از دستیار ابتدا وارد حساب کاربری شوید (ورود مهمان کافی نیست).',err:true});inp.value='';render();return}
-  hist.push({role:'user',content:text.slice(0,3000)});inp.value='';busy=true;render();
-  try{
-    const msgs=hist.filter(m=>!m.err).slice(-12).map(m=>({role:m.role,content:m.content}));
-    const j=await window.hkAiCall({chat:{messages:msgs,context:contextOverride || ctx()}});
-    const replyText = String(j.reply||'').trim() || 'پاسخی دریافت نشد؛ دوباره امتحان کنید.';
-    hist.push({role:'assistant',content:replyText});
-    busy=false; save(); render();
-    
-    if(voiceMode) {
+  text = String(text == null ? inp.value : text).trim();
+  if (!text || busy) return;
+
+  if (voiceMode) stopListening();
+
+  if (!(window.hkAiLoggedIn && window.hkAiLoggedIn())) {
+    hist.push({ role: 'user', content: text });
+    hist.push({
+      role: 'assistant',
+      content: 'برای استفاده از دستیار ابتدا وارد حساب کاربری شوید (ورود مهمان کافی نیست).',
+      err: true
+    });
+    inp.value = '';
+    render();
+    return;
+  }
+
+  hist.push({ role: 'user', content: text.slice(0, 3000) });
+  inp.value = '';
+  busy = true;
+  render();
+
+  try {
+    const msgs = hist.filter(m => !m.err).slice(-12).map(m => ({
+      role: m.role,
+      content: m.content
+    }));
+
+    const j = await window.hkAiCall({
+      chat: {
+        messages: msgs,
+        context: contextOverride || ctx()
+      }
+    });
+
+    const replyText = String(j.reply || '').trim() || 'پاسخی دریافت نشد؛ دوباره امتحان کنید.';
+    hist.push({ role: 'assistant', content: replyText });
+    busy = false;
+    save();
+    render();
+
+    // اگر حالت مکالمه روشن است، جواب را با صدا بخوان و دوباره گوش بده
+    if (voiceMode) {
       speakText(replyText, () => {
-        if(voiceMode) startListening();
+        if (voiceMode) startListening();
       });
     }
-  }catch(e){
-    hist.push({role:'assistant',content:'⚠️ '+(e&&e.message||'خطا'),err:true});
-    busy=false; save(); render();
-    if(voiceMode) {
-      speakText('خطایی رخ داد.', () => { if(voiceMode) startListening(); });
+  } catch (e) {
+    hist.push({
+      role: 'assistant',
+      content: '⚠️ ' + (e && e.message || 'خطا'),
+      err: true
+    });
+    busy = false;
+    save();
+    render();
+
+    if (voiceMode) {
+      speakText('خطایی رخ داد.', () => {
+        if (voiceMode) startListening();
+      });
     }
   }
 }
+
+
 
 const CHIPS = [
   ['📊 تجزیه و تحلیل', 'analysis'],
@@ -3339,7 +3323,6 @@ document.getElementById('aiWord').onclick = async () => {
 
 })();
 </script>
-
 <script>
 (function(){
   if('serviceWorker' in navigator){
