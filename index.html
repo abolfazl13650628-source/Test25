@@ -279,8 +279,8 @@ body.home-mode #sosCard{background:linear-gradient(rgba(0,0,0,0),rgba(16,26,19,.
 nav button.aibtn{flex:0 0 auto;padding:10px 11px;font-size:12px;min-width:58px}
 .aiHead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
 .aiHead button{padding:4px 10px;font-size:12px}
-#aiChips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
-#aiChips button{padding:6px 10px;font-size:12px;border-radius:16px}
+#aiChips{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0}
+#aiChips button{padding:10px 6px;font-size:12.5px;border-radius:12px}
 #aiMsgs{display:flex;flex-direction:column;gap:8px;max-height:52vh;overflow-y:auto;padding:4px 2px;margin:6px 0}
 .aiU{align-self:flex-start;max-width:88%;background:var(--ac);color:var(--ac2);border-radius:14px 14px 14px 4px;padding:8px 12px;white-space:pre-wrap;word-break:break-word;font-size:14px}
 .aiB{align-self:stretch;background:var(--bg);border:1px solid var(--bd);border-radius:14px 14px 4px 14px;padding:8px 12px}
@@ -292,6 +292,22 @@ nav button.aibtn{flex:0 0 auto;padding:10px 11px;font-size:12px;min-width:58px}
 .aiIn textarea{flex:1;font:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx);resize:vertical;min-height:44px;max-height:30vh}
 .aiIn textarea:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px rgba(47,107,60,.25)}
 .aiIn button{padding:10px 16px}
+#aiMic.rec { background: #c62828; color: #fff; animation: pulse 1s infinite; }
+@keyframes pulse { 50% { opacity: .6; } }
+
+/* SOS FAB */
+#sosFab {
+  position: fixed; left: 14px; bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  width: 58px; height: 58px; border-radius: 50%;
+  background: #c62828; color: #fff; border: 3px solid #fff;
+  box-shadow: 0 4px 16px rgba(198,40,40,.55);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 700; line-height: 1.15; z-index: 60; padding: 0;
+}
+#sosFab.hid { display: none; }
+
+#minutesModal { position:fixed; inset:0; z-index:1005; background:#0009; display:flex; align-items:center; justify-content:center; padding:16px; }
+#minutesModal .bx { background:var(--sf); color:var(--tx); border-radius:16px; padding:16px; width:100%; max-width:400px; box-shadow:var(--sh2); }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
@@ -584,10 +600,58 @@ nav button.aibtn{flex:0 0 auto;padding:10px 11px;font-size:12px;min-width:58px}
       <div class="m" style="margin-bottom:6px">برای نوشتن صورتجلسه، خلاصهٔ سیاهه و راهنمایی؛ از اطلاعات سربرگ فعلی استفاده می‌کند. (نیاز به ورود به حساب)</div>
       <div id="aiChips"></div>
       <div id="aiMsgs"></div>
-      <div class="aiIn"><textarea id="aiIn" rows="2" placeholder="مثلاً: حاضرین آقایان … بودند؛ صورتجلسه را کامل کن"></textarea><button id="aiSend" type="button">ارسال</button></div>
+      <div class="aiIn">
+        <textarea id="aiIn" rows="2" placeholder="پیام…"></textarea>
+        <button id="aiMic" type="button" title="میکروفن" style="padding:10px 12px;font-size:17px">🎤</button>
+        <button id="aiSend" type="button">ارسال</button>
+      </div>
+      <div id="aiActions" class="hid" style="display:flex;gap:6px;margin-top:8px">
+        <button id="aiCopyAll" class="o" style="flex:1;padding:7px;font-size:12px">📋 کپی متن</button>
+        <button id="aiWord" class="o" style="flex:1;padding:7px;font-size:12px">📄 دریافت ورد</button>
+        <button id="aiShareAll" class="o" style="flex:1;padding:7px;font-size:12px">📤 اشتراک</button>
+      </div>
       <div class="m" style="font-size:11px;margin-top:4px">پاسخ‌ها را قبل از استفادهٔ رسمی بازبینی کنید؛ حجم و عوارض برنامه برآورد است.</div>
     </div>
   </section>
+</div>
+
+<!-- Floating SOS Button -->
+<button id="sosFab" class="hid" type="button">⚠️<span>اعلام خطر</span></button>
+
+<!-- Minutes Modal -->
+<div id="minutesModal" class="hid">
+  <div class="bx">
+    <h3 style="margin:0 0 10px;color:var(--ac)">📝 دریافت صورتجلسه</h3>
+    <div class="m" style="margin-bottom:8px">فیلدها اختیاری‌اند؛ هرچه خالی بماند در متن «……» می‌شود.</div>
+    <label>نام سربرگ</label><select id="mmSheet"></select>
+    <div class="r">
+      <div><label>تاریخ اقدام</label><input id="mmDate" placeholder="۱۴۰۴/۰۸/۱۵"></div>
+      <div style="flex:0.5"><label>&nbsp;</label><button id="mmToday" class="o" type="button" style="width:100%;padding:6px">امروز</button></div>
+    </div>
+    <label>منطقه / پارسل</label><input id="mmArea" placeholder="مثلاً پارسل ۱۲">
+    <label>سری</label><input id="mmSeries" placeholder="مثلاً سری ۳">
+    <div class="r">
+      <div><label>شمارهٔ حکم نشانه‌گذاری</label><input id="mmDecreeNo" inputmode="numeric"></div>
+      <div><label>تاریخ حکم</label><input id="mmDecreeDate" placeholder="۱۴۰۴/۰۸/۰۱"></div>
+    </div>
+    <label>رنگ چکش</label>
+    <div id="mmHammer" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
+      <button type="button" data-c="قرمز" style="background:#c62828;color:#fff">قرمز</button>
+      <button type="button" data-c="آبی" style="background:#1565c0;color:#fff">آبی</button>
+      <button type="button" data-c="زرد" style="background:#f9a825;color:#000">زرد</button>
+      <button type="button" data-c="سبز" style="background:#2e7d32;color:#fff">سبز</button>
+      <button type="button" data-c="مشکی" style="background:#212121;color:#fff">مشکی</button>
+      <button type="button" data-c="نارنجی" style="background:#ef6c00;color:#fff">نارنجی</button>
+      <input type="color" id="mmHammerCustom" value="#c62828" title="رنگ دلخواه" style="width:44px;height:36px;padding:0;border:none;background:none">
+    </div>
+    <div class="m" style="margin-top:10px;font-size:12px">
+      اگر توضیحی دارید که می‌خواهید در متن باشد، پس از مشاهدهٔ صورتجلسه در چت به هوش مصنوعی بگویید اعمال کند.
+    </div>
+    <div class="r" style="margin-top:12px">
+      <button id="mmCancel" class="o" style="flex:1">انصراف</button>
+      <button id="mmGo" style="flex:2;background:#2e9d4f;font-weight:700">📝 نوشتن صورتجلسه</button>
+    </div>
+  </div>
 </div>
 
 <!-- Save type modal (garden mode) -->
@@ -997,7 +1061,6 @@ $('#applyManualCoord').onclick = () => {
   if(pts.length < 3){ alert('حداقل ۳ نقطه با X و Y و زون معتبر لازم است.'); return; }
   const keep = MAPP.length > 0, z0 = keep ? MAPZ : pts[0][2];
   const poly = pts.map(([x, y, z]) => { if(z === z0) return [x, y]; const g = ll(x, y, z), u = utm(g[0], g[1], z0); return [u.E, u.N]; });
-  manualCoords = [];
   setMap(keep ? MAPP.concat([{n:'ورود دستی', o:poly, i:[]}]) : [{n:'ورود دستی', o:poly, i:[]}], z0, keep ? (MAPNM+' + ورود دستی') : 'ورود دستی', true);
 };
 
@@ -1132,15 +1195,37 @@ function switchSheet(id,skipSave){
   lastSavedId=null;
   activeId=id; loadActive();norm();
   const oldSIM=SIM;SIM=false;clr();SIM=oldSIM;updSimBtn();
-  cur=null; manualCoords = [];
+  cur=null;
   updateWalkUI();
   renderTabs();updateMapInfo();draw();mapCheck();updateGpsUI();
   updateModeLock();
 }
 
 let BK={n:0,dt:''};try{BK=JSON.parse(localStorage.getItem('bk')||'{"n":0,"dt":""}')}catch(e){}
+let bKAck = 0;
+try { bKAck = +localStorage.getItem('bkAck') || 0; } catch(e) {}
+
 const tot=()=>SHEETS.reduce((a,s)=>a+((s.id===activeId?T:s.trees)||[]).length,0);
-function bnr(){const k=tot()-BK.n,b=$('#bn'),x=$('#bks'); if(b){b.classList.toggle('hid',!(k>=10));b.textContent='⚠ '+toFa(k)+' درخت از آخرین پشتیبان‌گیری ثبت شده؛ پشتیبان بگیرید.'} if(x)x.textContent=BK.dt?'آخرین پشتیبان: '+BK.dt:'هنوز پشتیبان‌گیری نشده است.'}
+
+function bnr(){
+  const k = tot() - Math.max(BK.n, bKAck);
+  const b = document.getElementById('bn');
+  const x = document.getElementById('bks');
+  if(b){
+    const show = k >= 10;
+    b.classList.toggle('hid', !show);
+    if(show){
+      b.innerHTML = '⚠ ' + toFa(k) + ' درخت از آخرین پشتیبان‌گیری ثبت شده؛ پشتیبان بگیرید. '
+        + '<button id="bkAckBtn" type="button" style="float:left;background:transparent;border:1px solid #58151c;color:#58151c;border-radius:8px;padding:2px 10px;font-size:12px;margin-top:-2px">×</button>';
+      document.getElementById('bkAckBtn').onclick = () => {
+        bKAck = tot();
+        try { localStorage.setItem('bkAck', String(bKAck)); } catch(e) {}
+        b.classList.add('hid');
+      };
+    }
+  }
+  if(x) x.textContent = BK.dt ? 'آخرین پشتیبان: ' + BK.dt : 'هنوز پشتیبان‌گیری نشده است.';
+}
 
 function parseKML(t){const d=new DOMParser().parseFromString(t,'text/xml'),out=[];if(d.querySelector('parsererror'))throw new Error('ساختار KML معتبر نیست.');
  const ring=e=>{const c=e&&e.querySelector('coordinates');return c?c.textContent.trim().split(/\s+/).map(v=>v.split(',').map(Number)).filter(a=>a.length>=2&&isFinite(a[0])&&isFinite(a[1])):[]};
@@ -1381,7 +1466,7 @@ $('#cameraDetails').addEventListener('toggle',()=>{if($('#cameraDetails').open){
 
 function clr(){
   tyM=false;noM=false;
-  $('#nn').value='1'; // Reset quantity
+  $('#nn').value='1';
   $('#ds').value='';$('#d').value='';$('#gi').value='';$('#h').value='';
   if(!SIM){$('#sps').value='';fillSp('');$('#sp').value=''}
   IMG={1:null,2:null};MK={1:{},2:{}};
@@ -1393,7 +1478,7 @@ function clr(){
 let edId=null,lastSavedId=null,saveTimer=null;
 window.undoLast=()=>{
   if(lastSavedId === null) return;
-  T = T.filter(t => t.id < lastSavedId); // Remove all trees added in the last batch
+  T = T.filter(t => t.id < lastSavedId);
   lastSavedId = null;
   clearTimeout(saveTimer);
   store(); draw(); updateModeLock();
@@ -1431,7 +1516,7 @@ function doSave(useCoords, forcedK){
    
   const out=coords&&MAPP.length&&!insideLL(coords.lat,coords.lng);
   const startId = T.reduce((a,t)=>Math.max(a,t.id),0)+1;
-  lastSavedId = startId; // For batch undo
+  lastSavedId = startId;
   
   if (hz) {
     const o={no:'',sp,g:+$('#gd').value,ty:'h',n:count,d,h,f:ff(),v:volSp(sp,d,h),ds:$('#ds').value};
@@ -1473,11 +1558,13 @@ $('#svNo').onclick=()=>{
 };
 
 /* Inline Edit Logic */
+let emTyM = false;
+
 window.ed=id=>{
   const t=T.find(x=>x.id==id);if(!t)return;
   edId=id;
+  emTyM = false;
   
-  // Populate species dropdown
   const spOpts = Object.keys(SP).sort((a,b)=>a.localeCompare(b,'fa'));
   $('#emSp').innerHTML = (SP[t.sp]?'':`<option value="${esc(t.sp)}">${esc(t.sp)}</option>`) + spOpts.map(k=>`<option value="${k}">${k}</option>`).join('');
   
@@ -1504,7 +1591,7 @@ window.ed=id=>{
     $('#emTaxBox').style.display='none';
   }
   
-  calcEdit(); // Trigger live calculation
+  calcEdit();
   document.getElementById('editModal').classList.remove('hid');
 };
 
@@ -1531,24 +1618,30 @@ function calcEdit() {
   }
 }
 
-// Attach live recalculation events
-['#emSp','#emD','#emH','#emNn','#emTy','#emGd','#emK'].forEach(sel => {
+['#emSp','#emD','#emH','#emNn','#emGd','#emK'].forEach(sel => {
   $(sel).addEventListener('input', () => {
-    if(sel==='#emTy' || sel==='#emD') {
+    if((sel==='#emD') && !emTyM) {
       const d = +toEn($('#emD').value);
-      if(d > 0 && d < 20) $('#emTy').value = 'h';
-      else if(d >= 20 && $('#emTy').value === 'h') $('#emTy').value = 'i';
+      if(d > 0) $('#emTy').value = d < 20 ? 'h' : 'i';
     }
     calcEdit();
   });
   $(sel).addEventListener('change', () => {
-    if(sel==='#emTy' || sel==='#emD') {
+    if((sel==='#emD') && !emTyM) {
       const d = +toEn($('#emD').value);
-      if(d > 0 && d < 20) $('#emTy').value = 'h';
-      else if(d >= 20 && $('#emTy').value === 'h') $('#emTy').value = 'i';
+      if(d > 0) $('#emTy').value = d < 20 ? 'h' : 'i';
     }
     calcEdit();
   });
+});
+
+$('#emTy').addEventListener('change', () => {
+  emTyM = true;
+  if($('#emTy').value === 'h') {
+    $('#emNo').value = '';
+    $('#emNn').value = '1';
+  }
+  calcEdit();
 });
 
 $('#emSave').onclick = () => {
@@ -1572,7 +1665,6 @@ $('#emSave').onclick = () => {
     t.k = $('#emK').value;
   }
   
-  // Coordinates Update
   const x = parseFloat(toEn($('#emX').value));
   const y = parseFloat(toEn($('#emY').value));
   const z = parseInt(toEn($('#emZ').value));
@@ -1590,7 +1682,7 @@ $('#emSave').onclick = () => {
   if(t.d2) t.v2 = volSp(sp, t.d2, t.h2);
   
   store(); draw();
-  mapCheck(); // Update the map points instantly
+  mapCheck();
   document.getElementById('editModal').classList.add('hid');
   
   $('#msg').textContent='ویرایش ذخیره شد.';
@@ -1654,10 +1746,14 @@ function saveWarnings(d,h,hz,no,exId,cntN){
 
 function updateTotSummary(){
   const el=$('#totSummary');if(!el)return;
-  const I=T.filter(t=>t.ty!='h'),H=T.filter(t=>t.ty==='h');
-  const tc=ct(I)+ct(H),tvAll=sv(I)+sv(H);
+  const ind=T.filter(t=>t.ty!=='h'&&t.k!=='planted');
+  const fw=T.filter(t=>t.ty==='h'&&t.k!=='planted');
+  const pl=T.filter(t=>t.k==='planted');
+  const tc=ct(ind)+ct(fw)+ct(pl);
+  const tvAll=sv(ind)+sv(fw)+sv(pl);
   if(!T.length){el.innerHTML='تعداد کل: <b>۰</b> اصله به حجم <b>۰</b> مترمکعب';return;}
-  el.innerHTML='تعداد کل: <b>'+toFa(tc)+'</b> اصله به حجم <b>'+fa(tvAll,3)+'</b> مترمکعب';
+  el.innerHTML='تعداد کل: <b>'+toFa(tc)+'</b> اصله به حجم <b>'+fa(tvAll,3)+'</b> مترمکعب'
+    +(pl.length?' · 🌱 دست‌کاشت: '+toFa(ct(pl))+' اصله':'');
 }
 
 function updateTaxBox(){
@@ -1668,7 +1764,7 @@ function updateTaxBox(){
   const byCat={1:{n:0,v:0,t:0},2:{n:0,v:0,t:0},3:{n:0,v:0,t:0},fw:{n:0,v:0,t:0}};
   let totalTax=0,totalV=0;
   trees.forEach(t=>{
-    if(t.k === 'planted') return; // Skip planted for tax box
+    if(t.k === 'planted') return;
     const c=cnt(t),v=tv(t),tax=taxOf(t);
     totalTax+=tax;totalV+=v;
     if(t.ty==='h'){byCat.fw.n+=c;byCat.fw.v+=v;byCat.fw.t+=tax;}
@@ -1736,7 +1832,7 @@ function draw(){
   $('#tb2').innerHTML='<tr><th>#</th><th>گونه</th><th>حجم اولیه</th><th>حجم تجدید</th><th>تغییر٪</th><th>استحصال</th><th>تاریخ</th></tr>'+
     T.filter(t=>t.v2||t.hv).map(t=>`<tr><td>${t.ty==='h'?'هیزمی':esc(toFa(t.no||t.id))}</td><td>${esc(t.sp)}</td><td>${fa(t.v,3)}</td><td>${fa(t.v2,3)}</td><td>${t.v2?fa((t.v2-t.v)/t.v*100,1):'—'}</td><td>${fa(t.hv,3)}</td><td>${esc(t.hd||'—')}</td></tr>`).join('');
   
-  updateModeLock(); // Lock if T.length > 0
+  updateModeLock();
   try{mapCheck(true)}catch(e){}
 }
 window.del=id=>{if(!confirm('این درخت حذف شود؟'))return;T=T.filter(t=>t.id!==id);store();draw();updateModeLock();};
@@ -1800,14 +1896,13 @@ $('#volClass').addEventListener('change',()=>{
 
 function calc(){
   autoTy();
-  const v=($('#sp').value?volSp($('#sp').value,N('#d'),N('#h')):0)*(Math.max(1,Math.round(N('#nn'))||1));
+  const v=($('#sp').value?volSp($('#sp').value,N('#d'),N('#h')):0)*(Math.max(1,Math.round(N('#nn'))||1);
   const t=v>0?fa(v,3):'—';const e=$('#vBar');if(e)e.textContent=t;
 }
 ['#d','#h','#nn'].forEach(i=>$(i).addEventListener('input',calc));
 $('#gi').addEventListener('input',()=>{const g=N('#gi');if(g>0)$('#d').value=toFa((g/Math.PI).toFixed(1));calc()});
 $('#d').addEventListener('input',()=>{$('#gi').value=''});
 
-/* Fix 1: Smart Auto-Numbering based on quantity */
 const autoNo=()=>{
   if(noM)return;
   if($('#ty').value=='h'){
@@ -1853,13 +1948,10 @@ async function prepareOcrImage(file){
   img.close&&img.close();return blob||file;
 }
 
-// ===== خواندن هوشمند عکس (از طریق سرور خودمان؛ کاربر کلیدی وارد نمی‌کند) =====
 async function prepareAiImage(file){
   let img;
   if(window.createImageBitmap){img=await createImageBitmap(file)}
   else{img=await new Promise((res,rej)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{URL.revokeObjectURL(u);res(im)};im.onerror=rej;im.src=u})}
-  // برای حفظ خوانایی اعداد ریز، تصویر فقط در صورت بزرگ‌تر بودن از ۲۲۰۰px کوچک می‌شود.
-  // کیفیت JPEG نیز بالاتر نگه داشته می‌شود تا نقطه‌های اعشار و ارقام فارسی از بین نروند.
   const maxSide=2200;
   const sc=Math.min(1,maxSide/Math.max(img.width,img.height));
   const c=document.createElement('canvas');
@@ -1888,7 +1980,6 @@ async function aiReadImage(file){
     const planted=o.planted===true||String(o.planted).toLowerCase()==='true'||o.planted===1;
     return {spRaw:String(o.species||'').trim(),sp:matchSp(o.species),d:parseNum(o.diameter_cm),h:parseNum(o.length_m)||0,n:count,k:planted?'planted':'natural',v:parseNum(o.volume_m3)};
   }).filter(o=>o.d>0&&isFinite(o.d));
-  // ردیف‌های هم‌مشخصات را یکی می‌کنیم و تعداد می‌شمریم
   const map=new Map();
   raw.forEach(o=>{const key=[o.sp,o.d,o.h,o.k].join('|');const e=map.get(key);if(e)e.n+=o.n;else map.set(key,{sp:o.sp,spRaw:o.spRaw,d:o.d,h:o.h,n:o.n,k:o.k})});
   const rows=[...map.values()];
@@ -2025,7 +2116,7 @@ function showImportPreview(data, note) {
       <div style="flex:1;overflow:auto;border:1px solid var(--bd);border-radius:8px;">
         <table style="width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap;">
           <thead style="position:sticky;top:0;background:var(--bg);z-index:2;">
-            <tr><th>شماره</th><th>گونه (Sp)</th><th>قطر (D)</th><th>ارتفاع (H)</th><th>توضیحات</th><th>حذف</th></tr>
+            <tr><th>شماره</th><th>گونه (Sp)</th><th>قطر (D)</th><th>ارتفاع (H)</th><th>تعداد</th><th>توضیحات</th><th>حذف</th></tr>
           </thead>
           <tbody id="impTbBody">
             ${data.map((item, i) => `
@@ -2034,6 +2125,7 @@ function showImportPreview(data, note) {
                 <td style="padding:4px;"><input type="text" class="imp-sp" value="${esc(item.sp || '')}" style="padding:4px;text-align:center;width:70px;"></td>
                 <td style="padding:4px;"><input type="text" inputmode="decimal" class="imp-d" value="${item.d || ''}" style="padding:4px;text-align:center;width:60px;"></td>
                 <td style="padding:4px;"><input type="text" inputmode="decimal" class="imp-h" value="${item.h || ''}" style="padding:4px;text-align:center;width:60px;"></td>
+                <td style="padding:4px;"><input type="text" inputmode="decimal" class="imp-n" value="${item.n || 1}" style="padding:4px;text-align:center;width:45px;"></td>
                 <td style="padding:4px;"><input type="text" class="imp-ds" value="${esc(item.ds || '')}" style="padding:4px;text-align:center;width:100px;"></td>
                 <td style="padding:4px;text-align:center;"><button class="x" onclick="this.closest('tr').remove()">×</button></td>
               </tr>
@@ -2052,16 +2144,28 @@ function showImportPreview(data, note) {
     rows.forEach(tr => {
       const no = tr.querySelector('.imp-no').value.trim(); let sp = tr.querySelector('.imp-sp').value.trim();
       const d = parseNum(tr.querySelector('.imp-d').value); const h = parseNum(tr.querySelector('.imp-h').value) || 0; const ds = tr.querySelector('.imp-ds').value.trim();
+      const n = Math.max(1, parseInt(toEn(tr.querySelector('.imp-n').value)) || 1);
+      
       if (d > 0) {
         if (!sp) sp = 'نامشخص';
         let finalNo = no;
         const isFw = d < 20;
-        if(isFw) { finalNo = ''; }
-        else if(!finalNo) { currentMaxNo++; finalNo = currentMaxNo.toString(); }
-        else { currentMaxNo = Math.max(currentMaxNo, parseInt(finalNo) || 0); }
-        const newId = T.reduce((a, t) => Math.max(a, t.id), 0) + 1;
-        T.push({ id: newId, no: finalNo, sp: sp, g: (SP[sp] || [0,3])[1], ty: isFw ? 'h' : 'i', n: 1, d: d, h: h, f: 0.5, v: volSp(sp, d, h), ds: ds, lat: null, lng: null, ux: null, uy: null, uz: null, ua: null, dt: new Date().toISOString().slice(0,10) });
-        added++;
+        
+        if (isFw) {
+          const newId = T.reduce((a, t) => Math.max(a, t.id), 0) + 1;
+          T.push({ id: newId, no: '', sp: sp, g: (SP[sp] || [0,3])[1], ty: 'h', n: n, d: d, h: h, f: 0.5, v: volSp(sp, d, h), ds: ds, lat: null, lng: null, ux: null, uy: null, uz: null, ua: null, dt: new Date().toISOString().slice(0,10) });
+          added += n;
+        } else {
+          for (let i = 0; i < n; i++) {
+            if(!finalNo) { currentMaxNo++; finalNo = currentMaxNo.toString(); }
+            else { currentMaxNo = Math.max(currentMaxNo, parseInt(finalNo) || 0); }
+            
+            const newId = T.reduce((a, t) => Math.max(a, t.id), 0) + 1;
+            T.push({ id: newId, no: finalNo, sp: sp, g: (SP[sp] || [0,3])[1], ty: 'i', n: 1, d: d, h: h, f: 0.5, v: volSp(sp, d, h), ds: ds, lat: null, lng: null, ux: null, uy: null, uz: null, ua: null, dt: new Date().toISOString().slice(0,10) });
+            added++;
+            finalNo = (parseInt(finalNo) + 1).toString();
+          }
+        }
       }
     });
     if (added > 0) { store(); draw(); alert(`تعداد ${toFa(added)} درخت اضافه شد.`); } else { alert('سطر معتبری پیدا نشد.'); }
@@ -2160,8 +2264,8 @@ renderTabs();updateMapInfo();renderSnaps();updSimBtn();renderRecent();
 $('#refType').value=refType;
 if(refType==='custom')$('#refSize').classList.remove('hid');
 updateModeUI();act=getDef()[0][0];setStep(1);$('#sp').onchange();draw();mapCheck();updateGpsUI();updateTotSummary();
-updateModeLock(); // Lock if there are trees in initial load
-document.body.classList.add('home-mode'); // Start in Home Mode with BG
+updateModeLock();
+document.body.classList.add('home-mode');
 
 $('#ga').textContent='📍 مختصات';$('#ga').classList.add('o');
 
@@ -2233,7 +2337,7 @@ function buildTaxSheet(){
   const byCat={1:{n:0,v:0,t:0,rate:1400000},2:{n:0,v:0,t:0,rate:1172000},3:{n:0,v:0,t:0,rate:700000},fw:{n:0,v:0,t:0,rate:165000}};
   let totalTax=0,totalV=0;
   trees.forEach(t=>{
-    if(t.k === 'planted') return; // Skip planted
+    if(t.k === 'planted') return;
     const c=cnt(t),v=tv(t),tax=taxOf(t);
     totalTax+=tax;totalV+=v;
     if(t.ty==='h'){byCat.fw.n+=c;byCat.fw.v+=v;byCat.fw.t+=tax;}
@@ -2287,14 +2391,14 @@ function allSheets(){
       T=sh.trees||[];
       norm();
       let sn = sh.name || ('زمین '+(idx+1));
-      sn = sn.replace(/[\\\/\?\*\[\]:]/g,'-').substring(0, 25); // Excel limit
+      sn = sn.replace(/[\\\/\?\*\[\]:]/g,'-').substring(0, 25);
       let finalSn = sn;
       let k=2;
       while(usedNames.has(finalSn)){ finalSn = sn + ' (' + (k++) + ')'; }
       usedNames.add(finalSn);
 
       const b = buildInventorySheet(sh.name, T, modeOf(sh));
-      b[0] = finalSn; // override sheet name
+      b[0] = finalSn;
       out.push(b);
       if(modeOf(sh)==='garden')all.push(...T);
     }); 
@@ -2364,7 +2468,12 @@ async function runExport(kind,share){
     }
     if(kind==='bk'){
       const ok=await outBlob('backup-'+today()+'.json',backupBlob(),share);
-      if(ok){BK={n:tot(),dt:today()};try{localStorage.setItem('bk',JSON.stringify(BK))}catch(e){}bnr()}
+      if(ok){
+        BK={n:tot(),dt:today()};
+        bKAck=tot();
+        try{localStorage.setItem('bk',JSON.stringify(BK));localStorage.setItem('bkAck',String(bKAck));}catch(e){}
+        bnr();
+      }
       return ok;
     }
   }catch(e){say('خطا: '+msg(e),1)}
@@ -2376,9 +2485,10 @@ $('#e2s').onclick=safe(()=>exp('harvest-'+fnm(),harvestSheets(),true));
 
 document.querySelectorAll('nav button').forEach(b=>{
   b.onclick=()=>{
-    document.body.classList.remove('home-mode'); // Remove background
+    document.body.classList.remove('home-mode');
     document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
     ['m','l','h','a'].forEach(k=>{const s=document.getElementById('sec-'+k);if(s)s.classList.toggle('hid',k!==b.dataset.t)});
+    document.getElementById('sosFab').classList.toggle('hid', b.dataset.t === 'm');
   };
 });
 
@@ -2386,7 +2496,6 @@ document.getElementById('app-header').onclick=()=>{document.body.classList.add('
 document.addEventListener('visibilitychange',()=>{if(document.hidden){try{saveActive()}catch(e){}}});
 window.addEventListener('beforeunload',()=>{try{saveActive()}catch(e){}});
 
-// Splash Date & Dhikr Logic
 (function(){
   const d = new Date();
   const dateStr = d.toLocaleDateString('fa-IR', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -2409,7 +2518,6 @@ window.addEventListener('beforeunload',()=>{try{saveActive()}catch(e){}});
 
 <div id="sosCard" class="hid"></div>
 
-<!-- همگام‌سازی Supabase و مدیریت اسپلش -->
 <script>
 (function(){
 const SB_URL='https://hgzdghjkwzufdhmjcfaz.supabase.co'.trim();
@@ -2446,6 +2554,7 @@ async function fresh(){
 }
 
 window.hkAiLoggedIn=()=>!!S;
+
 window.hkAiCall=async(body)=>{
   if(!S)throw new Error('ابتدا وارد حساب کاربری شوید');
   await fresh();
@@ -2608,6 +2717,7 @@ const BS='background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,2
 let st=null,tickT=null,rec=null,stream=null,wl=null,seq=0,upBusy=false,fl={rec:null,net:null,err:'',sms:null};
 let dis=new Set(jget('sosDis',[])),seen=new Set();
 const card=Q('#sosCard');
+const fab=Q('#sosFab');
 const mkOv=z=>{const d=document.createElement('div');d.style.cssText='position:fixed;inset:0;z-index:'+z+';background:rgba(0,0,0,.62);display:none;align-items:center;justify-content:center;padding:12px;overflow:auto';document.body.append(d);return d};
 const ov=mkOv(10001),alOv=mkOv(10002);
 const dlg=h=>{ov.innerHTML='<div style="background:var(--sf);color:var(--tx);border-radius:16px;padding:16px;width:100%;max-width:420px;max-height:92vh;overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.4);line-height:1.9;font-size:14px">'+h+'</div>';ov.style.display='flex'};
@@ -2624,10 +2734,12 @@ function renderCard(){
     const last=localStorage.getItem('sosLast');
     card.innerHTML='<div style="display:flex;gap:8px"><button data-a="ask" type="button" style="flex:1;background:#c62828;color:#fff;border:0;border-radius:14px;padding:11px;font-size:16px;font-weight:700;box-shadow:0 4px 14px rgba(198,40,40,.4)">🆘 اعلام خطر</button><button data-a="cfg" type="button" class="o" style="border-radius:14px;padding:11px 14px;background:var(--sf)" title="تنظیمات اعلام خطر">⚙️</button></div>'
       +(last?'<button data-a="save" data-sid="'+last+'" type="button" class="o" style="width:100%;margin-top:6px;font-size:12px;background:var(--sf)">💾 ذخیرهٔ ضبط آخرین اعلام خطر</button>':'');
+    if(fab) fab.classList.remove('hid');
   }else{
     card.innerHTML='<div style="background:#c62828;color:#fff;border-radius:14px;padding:12px;box-shadow:0 4px 14px rgba(198,40,40,.45)"><b>🔴 اعلام خطر فعال است</b><div id="sosStat" style="font-size:12.5px;line-height:2;margin:6px 0"></div><div style="display:flex;gap:6px;flex-wrap:wrap">'
       +'<button data-a="call" type="button" style="'+BS+'">📞 تماس</button><button data-a="sms" type="button" style="'+BS+'">✉️ پیامک</button><button data-a="save" data-sid="'+st.id+'" type="button" style="'+BS+'">💾 ذخیرهٔ ضبط</button><button data-a="end" type="button" style="background:#fff;color:#c62828;font-weight:700;border:0">✅ در امانم</button></div></div>';
     stat();
+    if(fab) fab.classList.add('hid');
   }
 }
 function stat(){
@@ -2647,6 +2759,11 @@ if(card)card.onclick=e=>{
   else if(a==='call'){c.nums[0]?location.href='tel:'+c.nums[0]:openCfg()}
   else if(a==='sms'){c.nums.length?location.href=smsLink():openCfg()}
   else if(a==='end')openEnd();
+};
+if(fab)fab.onclick=()=>{
+  const mTab = document.querySelector('nav button[data-t="m"]');
+  if(mTab) mTab.click();
+  setTimeout(()=>card.scrollIntoView({behavior:'smooth'}),100);
 };
 
 function openCfg(){
@@ -2847,7 +2964,7 @@ renderCard();
 </script>
 
 <script>
-/* ===== دستیار هوش مصنوعی (صورتجلسه و راهنما) ===== */
+/* ===== دستیار هوش مصنوعی (چت، صورتجلسه، صوت) ===== */
 (function(){
 const Q=s=>document.querySelector(s);
 const box=Q('#aiMsgs'),inp=Q('#aiIn'),sendB=Q('#aiSend');
@@ -2855,13 +2972,7 @@ if(!box||!inp)return;
 let hist=[];try{hist=JSON.parse(localStorage.getItem('aiChat')||'[]')}catch(e){}
 let busy=false;
 const save=()=>{try{localStorage.setItem('aiChat',JSON.stringify(hist.slice(-24)))}catch(e){}};
-const CHIPS=[
- ['📝 صورتجلسهٔ نشانه‌گذاری','برای سربرگ فعلی یک صورتجلسهٔ رسمی نشانه‌گذاری درختان بنویس. از آمار و حجم‌های «اطلاعات سربرگ» استفاده کن و مواردی مثل حاضرین، ساعت، شمارهٔ نامه و مکان دقیق را با «……» خالی بگذار.'],
- ['📝 صورتجلسهٔ تجدید و استحصال','برای سربرگ فعلی یک صورتجلسهٔ رسمی تجدید حجم و استحصال بنویس. فقط از اطلاعات استحصال و حجم‌های موجود استفاده کن و مواردی که نامعلوم است را با «……» خالی بگذار.'],
- ['📊 خلاصهٔ سیاهه','یک خلاصهٔ کوتاه و روشن از وضعیت سربرگ فعلی بنویس: تعداد و حجم به تفکیک گونه، سهم صنعتی و هیزمی و نکات قابل‌توجه.'],
- ['🔎 بررسی داده','داده‌های سربرگ فعلی را بازبینی کن و اگر مورد مشکوک یا ناقصی دیده می‌شود (بدون مختصات، شمارهٔ ناهماهنگ، نسبت غیرعادی و مانند آن) فهرست کوتاهی بنویس.'],
- ['❓ راهنمای برنامه','کار با برنامه را کوتاه و مرحله‌به‌مرحله توضیح بده: ثبت درخت، مختصات و نقشه، مسیر پیمایش، سیاهه و خروجی، تجدید و استحصال و اعلام خطر.']
-];
+
 function ctx(){
   const R=(x,d=2)=>+(+x).toFixed(d),sh=getActiveSheet()||{},u=window.SB&&SB.user&&SB.user();
   const ind=T.filter(t=>t.ty!=='h'&&t.k!=='planted'),fw=T.filter(t=>t.ty==='h'&&t.k!=='planted'),pl=T.filter(t=>t.k==='planted');
@@ -2884,35 +2995,279 @@ function ctx(){
   if(mode==='garden'){o.tax_estimate_rials=T.reduce((a,t)=>a+taxOf(t),0);o.tax_rates={first_class_per_m3:TAX_RATE[1],second_class_per_m3:TAX_RATE[2],third_class_per_m3:TAX_RATE[3],firewood_per_ster:FIREWOOD_RATE,ster_m3:STER_VOLUME}}
   return o;
 }
+
 const bub=(m,i)=>m.role==='user'?'<div class="aiU">'+esc(m.content)+'</div>'
-  :'<div class="aiB'+(m.err?' err':'')+'"><div class="aiT">'+esc(m.content)+'</div>'+(m.err?'':'<div class="aiAct"><button type="button" class="o" data-c="'+i+'">📋 کپی</button><button type="button" class="o" data-s="'+i+'">📤 اشتراک</button></div>')+'</div>';
+  :'<div class="aiB'+(m.err?' err':'')+'"><div class="aiT">'+esc(m.content)+'</div>'+(m.err?'':'<div class="aiAct"><button type="button" class="o" data-c="'+i+'">📋 کپی</button><button type="button" class="o" data-s="'+i+'">📤 اشتراک</button><button type="button" class="o" data-tts="'+i+'">🔊 خواندن</button></div>')+'</div>';
+
+function lastAssistantText(){
+  for(let i = hist.length - 1; i >= 0; i--){
+    if(hist[i].role === 'assistant' && !hist[i].err) return hist[i].content;
+  }
+  return '';
+}
+
 function render(){
   box.innerHTML=hist.length?hist.map(bub).join('')+(busy?'<div class="aiB"><div class="aiT m">⏳ در حال نوشتن…</div></div>':''):'<div class="m" style="text-align:center;padding:14px 6px">سلام! یکی از گزینه‌های بالا را بزنید یا سؤالتان را بنویسید.</div>';
   box.scrollTop=box.scrollHeight;sendB.disabled=busy;sendB.textContent=busy?'…':'ارسال';
+  const act = document.getElementById('aiActions');
+  if(act){
+    const t = lastAssistantText();
+    act.classList.toggle('hid', !t);
+  }
 }
-async function send(text){
+
+async function send(text, contextOverride){
   text=String(text==null?inp.value:text).trim();if(!text||busy)return;
   if(!(window.hkAiLoggedIn&&window.hkAiLoggedIn())){hist.push({role:'user',content:text});hist.push({role:'assistant',content:'برای استفاده از دستیار ابتدا وارد حساب کاربری شوید (ورود مهمان کافی نیست).',err:true});inp.value='';render();return}
   hist.push({role:'user',content:text.slice(0,3000)});inp.value='';busy=true;render();
   try{
     const msgs=hist.filter(m=>!m.err).slice(-12).map(m=>({role:m.role,content:m.content}));
-    const j=await window.hkAiCall({chat:{messages:msgs,context:ctx()}});
+    const j=await window.hkAiCall({chat:{messages:msgs,context:contextOverride || ctx()}});
     hist.push({role:'assistant',content:String(j.reply||'').trim()||'پاسخی دریافت نشد؛ دوباره امتحان کنید.'});
   }catch(e){hist.push({role:'assistant',content:'⚠️ '+(e&&e.message||'خطا'),err:true})}
   busy=false;save();render();
 }
-Q('#aiChips').innerHTML=CHIPS.map((c,i)=>'<button type="button" class="o" data-i="'+i+'">'+c[0]+'</button>').join('');
-Q('#aiChips').onclick=e=>{const b=e.target.closest('[data-i]');if(b)send(CHIPS[+b.dataset.i][1])};
-box.onclick=async e=>{
-  const c=e.target.closest('[data-c]'),s=e.target.closest('[data-s]'),i=c?+c.dataset.c:s?+s.dataset.s:-1;if(i<0||!hist[i])return;
-  const t=hist[i].content;
-  if(c){try{await navigator.clipboard.writeText(t);c.textContent='✓ کپی شد'}catch(x){const ta=document.createElement('textarea');ta.value=t;document.body.append(ta);ta.select();try{document.execCommand('copy');c.textContent='✓ کپی شد'}catch(y){}ta.remove()}}
-  else if(navigator.share){try{await navigator.share({text:t})}catch(x){}}else{try{await navigator.clipboard.writeText(t);s.textContent='✓ کپی شد'}catch(x){}}
+
+const CHIPS = [
+  ['📊 تجزیه و تحلیل', 'analysis'],
+  ['📝 دریافت صورتجلسه', 'minutes'],
+  ['🌲 سؤال تخصصی جنگل و قوانین', 'specialist'],
+  ['💬 چت آزاد و عمومی', 'general']
+];
+Q('#aiChips').innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">' + 
+  CHIPS.map(c => '<button type="button" class="o" data-k="' + c[1] + '" style="padding:10px 6px;font-size:12.5px;border-radius:12px">' + c[0] + '</button>').join('') + '</div>';
+
+Q('#aiChips').onclick = e => {
+  const b = e.target.closest('[data-k]');
+  if(!b) return;
+  const k = b.dataset.k;
+  if(k === 'minutes') openMinutesForm();
+  else if(k === 'analysis') startAnalysis();
+  else if(k === 'specialist') { inp.value = 'یک سؤال تخصصی دربارهٔ جنگل‌داری و قوانین منابع طبیعی دارم: '; inp.focus(); }
+  else inp.focus();
 };
+
+function startAnalysis(){
+  if(!(window.hkAiLoggedIn && window.hkAiLoggedIn())){
+    alert('برای تجزیه و تحلیل ابتدا وارد حساب کاربری شوید.');
+    return;
+  }
+  if(SHEETS.length === 1){
+    send('اقدامات صورت‌گرفته در سربرگ «' + SHEETS[0].name + '» را تجزیه و تحلیل کن: نقاط قوت، موارد ناقص، و پیشنهادهای عملی.');
+    return;
+  }
+  hist.push({ role: 'assistant', content: 'کدام سربرگ را تجزیه و تحلیل کنم؟' });
+  render();
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 8px';
+  wrap.innerHTML =
+    SHEETS.map(s => '<button type="button" class="o" data-an="' + s.id + '" style="padding:6px 10px;font-size:12px">' + esc(s.name) + '</button>').join('') +
+    '<button type="button" class="o" data-an="all" style="padding:6px 10px;font-size:12px;background:var(--ac);color:var(--ac2)">همهٔ سربرگ‌ها</button>';
+  box.appendChild(wrap);
+  box.scrollTop = box.scrollHeight;
+  wrap.onclick = e => {
+    const b = e.target.closest('[data-an]');
+    if(!b) return;
+    wrap.remove();
+    const v = b.dataset.an;
+    if(v === 'all'){
+      const parts = SHEETS.map(s => {
+        const oldT = T;
+        T = s.trees || [];
+        const c = ctx();
+        T = oldT;
+        return '### سربرگ «' + s.name + '»\n' + JSON.stringify(c, null, 0);
+      });
+      send('اقدامات صورت‌گرفته در همهٔ سربرگ‌ها را تجزیه و تحلیل کن. داده‌های هر سربرگ:\n\n' + parts.join('\n\n'));
+    } else {
+      const sh = SHEETS.find(s => s.id === +v);
+      if(!sh) return;
+      const oldT = T; T = sh.trees || [];
+      const c = ctx(); T = oldT;
+      send('اقدامات صورت‌گرفته در سربرگ «' + sh.name + '» را تجزیه و تحلیل کن. داده‌ها:\n' + JSON.stringify(c));
+    }
+  };
+}
+
+let mmHammerColor = 'قرمز';
+
+function openMinutesForm(){
+  if(!(window.hkAiLoggedIn && window.hkAiLoggedIn())){
+    alert('برای نوشتن صورتجلسه ابتدا وارد حساب کاربری شوید.');
+    return;
+  }
+  const sel = document.getElementById('mmSheet');
+  sel.innerHTML = SHEETS.map(s => '<option value="' + s.id + '"' + (s.id === activeId ? ' selected' : '') + '>' + esc(s.name) + '</option>').join('');
+  document.getElementById('mmDate').value = new Date().toLocaleDateString('fa-IR');
+  document.getElementById('minutesModal').classList.remove('hid');
+}
+
+document.getElementById('mmToday').onclick = () => {
+  document.getElementById('mmDate').value = new Date().toLocaleDateString('fa-IR');
+};
+document.getElementById('mmCancel').onclick = () => document.getElementById('minutesModal').classList.add('hid');
+
+document.querySelectorAll('#mmHammer [data-c]').forEach(b => {
+  b.onclick = () => {
+    mmHammerColor = b.dataset.c;
+    document.querySelectorAll('#mmHammer [data-c]').forEach(x => x.style.outline = '');
+    b.style.outline = '3px solid #fff';
+  };
+});
+document.getElementById('mmHammerCustom').onchange = e => { mmHammerColor = e.target.value; };
+
+document.getElementById('mmGo').onclick = () => {
+  const shId = +document.getElementById('mmSheet').value;
+  const f = {
+    sheet: (SHEETS.find(s => s.id === shId) || {}).name || '',
+    date: document.getElementById('mmDate').value.trim(),
+    area: document.getElementById('mmArea').value.trim(),
+    series: document.getElementById('mmSeries').value.trim(),
+    decree_no: document.getElementById('mmDecreeNo').value.trim(),
+    decree_date: document.getElementById('mmDecreeDate').value.trim(),
+    hammer_color: mmHammerColor
+  };
+  document.getElementById('minutesModal').classList.add('hid');
+
+  const oldActive = activeId;
+  let ctxOverride = null;
+  if (shId !== activeId) {
+    const sh = SHEETS.find(s => s.id === shId);
+    if (sh) {
+      const oldT = T;
+      T = sh.trees || [];
+      ctxOverride = ctx();
+      T = oldT;
+    }
+  }
+
+  const prompt =
+    'برای سربرگ «' + f.sheet + '» یک صورتجلسهٔ رسمی نشانه‌گذاری درختان بنویس.\n' +
+    '- تاریخ اقدام: ' + (f.date || '……') + '\n' +
+    '- منطقه/پارسل: ' + (f.area || '……') + '\n' +
+    '- سری: ' + (f.series || '……') + '\n' +
+    '- شمارهٔ حکم نشانه‌گذاری: ' + (f.decree_no || '……') + '\n' +
+    '- تاریخ حکم: ' + (f.decree_date || '……') + '\n' +
+    '- رنگ چکش: ' + f.hammer_color + '\n' +
+    'از آمار و حجم‌های «اطلاعات سربرگ» استفاده کن. هر چیز نامعلوم دیگر (حاضرین، ساعت، شمارهٔ نامه) را با «……» خالی بگذار. سبک: اداری و رسمی ایران.';
+
+  send(prompt, ctxOverride);
+};
+
+box.onclick=async e=>{
+  const c=e.target.closest('[data-c]'),s=e.target.closest('[data-s]'),tts=e.target.closest('[data-tts]');
+  const i=c?+c.dataset.c:s?+s.dataset.s:tts?+tts.dataset.tts:-1;
+  if(i<0||!hist[i])return;
+  const t=hist[i].content;
+  
+  if(c){
+    try{await navigator.clipboard.writeText(t);c.textContent='✓ کپی شد'}catch(x){
+      const ta=document.createElement('textarea');ta.value=t;document.body.append(ta);ta.select();
+      try{document.execCommand('copy');c.textContent='✓ کپی شد'}catch(y){}ta.remove();
+    }
+  } else if(s){
+    if(navigator.share){try{await navigator.share({text:t})}catch(x){}}
+    else{try{await navigator.clipboard.writeText(t);s.textContent='✓ کپی شد'}catch(x){}}
+  } else if(tts){
+    if(window.speechSynthesis){
+      if(window.speechSynthesis.speaking){ window.speechSynthesis.cancel(); tts.textContent='🔊 خواندن'; }
+      else {
+        const utt = new SpeechSynthesisUtterance(t);
+        utt.lang = 'fa-IR';
+        utt.onend = () => { tts.textContent = '🔊 خواندن'; };
+        tts.textContent = '⏹ توقف';
+        window.speechSynthesis.speak(utt);
+      }
+    } else alert('پشتیبانی نمی‌شود.');
+  }
+};
+
 sendB.onclick=()=>send();
 inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();send()}});
 Q('#aiNew').onclick=()=>{if(hist.length&&!confirm('گفتگوی فعلی پاک شود؟'))return;hist=[];save();render()};
 render();
+
+document.getElementById('aiCopyAll').onclick = async () => {
+  const t = lastAssistantText(); if(!t) return;
+  try{ await navigator.clipboard.writeText(t); }catch(e){
+    const ta = document.createElement('textarea'); ta.value = t; document.body.append(ta); ta.select(); document.execCommand('copy'); ta.remove();
+  }
+  const b = document.getElementById('aiCopyAll');
+  b.textContent = '✓ کپی شد'; setTimeout(() => b.textContent = '📋 کپی متن', 1500);
+};
+
+document.getElementById('aiShareAll').onclick = async () => {
+  const t = lastAssistantText(); if(!t) return;
+  if(navigator.share){
+    try{ await navigator.share({ text: t, title: 'صورتجلسه' }); }catch(e){}
+  } else {
+    await navigator.clipboard.writeText(t).catch(()=>{});
+    alert('اشتراک مستقیم پشتیبانی نمی‌شود؛ متن کپی شد.');
+  }
+};
+
+document.getElementById('aiWord').onclick = async () => {
+  const t = lastAssistantText(); if(!t) return;
+  const html = '<html dir="rtl"><head><meta charset="utf-8"><style>body{font-family:"B Nazanin","Vazirmatn",Tahoma;font-size:14pt;line-height:1.9;padding:2cm}h1{text-align:center}</style></head><body>' +
+    t.split(/\n+/).map(l => '<p>' + esc(l.trim()) + '</p>').join('') + '</body></html>';
+  const wordBlob = new Blob(['\ufeff' + html], { type: 'application/msword' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(wordBlob);
+  a.download = 'صورتجلسه-' + new Date().toISOString().slice(0, 10) + '.doc';
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+};
+
+/* میکروفن */
+(function(){
+  const mic = document.getElementById('aiMic');
+  const inp2 = document.getElementById('aiIn');
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    mic.title = 'میکروفن در این مرورگر پشتیبانی نمی‌شود (در اپ اندروید از پلاگین بومی استفاده می‌شود)';
+    mic.onclick = () => alert('تبدیل گفتار به نوشتار در این مرورگر پشتیبانی نمی‌شود.');
+    return;
+  }
+  let rec = null;
+  let recording = false;
+  mic.onclick = () => {
+    if(recording){ rec.stop(); return; }
+    try{
+      rec = new SR();
+      rec.lang = 'fa-IR';
+      rec.interimResults = true;
+      rec.continuous = false;
+      let finalText = '';
+      rec.onresult = e => {
+        let interim = '';
+        for(let i = e.resultIndex; i < e.results.length; i++){
+          const t = e.results[i][0].transcript;
+          if(e.results[i].isFinal) finalText += t;
+          else interim += t;
+        }
+        inp2.value = finalText + interim;
+      };
+      rec.onerror = ev => {
+        recording = false;
+        mic.textContent = '🎤';
+        mic.classList.remove('rec');
+        if(ev.error === 'not-allowed') alert('دسترسی به میکروفن رد شد.');
+      };
+      rec.onend = () => {
+        recording = false;
+        mic.textContent = '🎤';
+        mic.classList.remove('rec');
+      };
+      rec.start();
+      recording = true;
+      mic.textContent = '⏹';
+      mic.classList.add('rec');
+    } catch(e){
+      alert('شروع ضبط ممکن نشد: ' + e.message);
+    }
+  };
+})();
+
 })();
 </script>
 
