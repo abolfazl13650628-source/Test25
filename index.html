@@ -1899,7 +1899,7 @@ $('#volClass').addEventListener('change',()=>{
 
 function calc(){
   autoTy();
-  const v=($('#sp').value?volSp($('#sp').value,N('#d'),N('#h')):0)*(Math.max(1,Math.round(N('#nn'))||1);
+  const v=($('#sp').value?volSp($('#sp').value,N('#d'),N('#h')):0)*(Math.max(1,Math.round(N('#nn'))||1));
   const t=v>0?fa(v,3):'—';const e=$('#vBar');if(e)e.textContent=t;
 }
 ['#d','#h','#nn'].forEach(i=>$(i).addEventListener('input',calc));
@@ -3111,7 +3111,7 @@ function lastAssistantText(){
 }
 
 function render(){
-  box.innerHTML=hist.length?hist.map(bub).join('')+(busy?'<div class="aiB"><div class="aiT m">⏳ در حال نوشتن…</div></div>':''):'<div class="m" style="text-align:center;padding:14px 6px">سلام! یکی از گزینه‌های بالا را بزنید یا سؤالتان را بنویسید.</div>';
+  box.innerHTML=hist.length?hist.map(bub).join('')+(busy?'<div class="aiB"><div class="aiT m">⏳ در حال نوشتن…</div></div>':'') : '<div class="m" style="text-align:center;padding:14px 6px">سلام! یکی از گزینه‌های بالا را بزنید یا سؤالتان را بنویسید.</div>';
   box.scrollTop=box.scrollHeight;sendB.disabled=busy;sendB.textContent=busy?'…':'ارسال';
   const act = document.getElementById('aiActions');
   if(act){
