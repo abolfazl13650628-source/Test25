@@ -274,6 +274,24 @@ body.home-mode #gb.g1 .ac{color:#7dffa0}body.home-mode #gb.g2 .ac{color:#ffd54a}
 body.home-mode #gs,body.home-mode #sensors>.m{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.7)}
 #sosCard{max-width:640px;margin:0 auto;padding:6px 12px calc(10px + env(safe-area-inset-bottom));position:sticky;bottom:0;z-index:50;background:linear-gradient(rgba(0,0,0,0),var(--bg) 40%)}
 body.home-mode #sosCard{background:linear-gradient(rgba(0,0,0,0),rgba(16,26,19,.6) 40%)}
+
+/* ===== دستیار هوش مصنوعی ===== */
+nav button.aibtn{flex:0 0 auto;padding:10px 11px;font-size:12px;min-width:58px}
+.aiHead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
+.aiHead button{padding:4px 10px;font-size:12px}
+#aiChips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+#aiChips button{padding:6px 10px;font-size:12px;border-radius:16px}
+#aiMsgs{display:flex;flex-direction:column;gap:8px;max-height:52vh;overflow-y:auto;padding:4px 2px;margin:6px 0}
+.aiU{align-self:flex-start;max-width:88%;background:var(--ac);color:var(--ac2);border-radius:14px 14px 14px 4px;padding:8px 12px;white-space:pre-wrap;word-break:break-word;font-size:14px}
+.aiB{align-self:stretch;background:var(--bg);border:1px solid var(--bd);border-radius:14px 14px 4px 14px;padding:8px 12px}
+.aiB.err{border-color:#d33;background:rgba(211,51,51,.08)}
+.aiT{white-space:pre-wrap;word-break:break-word;font-size:14px;line-height:1.9}
+.aiAct{display:flex;gap:6px;margin-top:6px}
+.aiAct button{padding:3px 10px;font-size:12px}
+.aiIn{display:flex;gap:6px;align-items:flex-end}
+.aiIn textarea{flex:1;font:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx);resize:vertical;min-height:44px;max-height:30vh}
+.aiIn textarea:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px rgba(47,107,60,.25)}
+.aiIn button{padding:10px 16px}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
@@ -325,6 +343,7 @@ body.home-mode #sosCard{background:linear-gradient(rgba(0,0,0,0),rgba(16,26,19,.
     <button data-t="m">📍 نشانه‌گذاری</button>
     <button data-t="l">📋 دریافت سیاهه</button>
     <button data-t="h">🪓 تجدید و استحصال</button>
+    <button data-t="a" class="aibtn" title="دستیار هوشمند">🤖 AI</button>
   </nav>
 
   <div id="gpsStrip">
@@ -556,6 +575,17 @@ body.home-mode #sosCard{background:linear-gradient(rgba(0,0,0,0),rgba(16,26,19,.
       <div class="tw"><table id="tb2"></table></div><br>
       <div class="r"><button id="e2">خروجی اکسل</button><button id="e2s" class="o">📤 اشتراک‌گذاری</button></div>
       <div class="m xs"></div>
+    </div>
+  </section>
+  <!-- Tab Content: AI -->
+  <section id="sec-a" class="hid">
+    <div class="c" id="aiBox">
+      <div class="aiHead"><b>🤖 دستیار هوشمند</b><button id="aiNew" class="o" type="button">🗑 گفتگوی جدید</button></div>
+      <div class="m" style="margin-bottom:6px">برای نوشتن صورتجلسه، خلاصهٔ سیاهه و راهنمایی؛ از اطلاعات سربرگ فعلی استفاده می‌کند. (نیاز به ورود به حساب)</div>
+      <div id="aiChips"></div>
+      <div id="aiMsgs"></div>
+      <div class="aiIn"><textarea id="aiIn" rows="2" placeholder="مثلاً: حاضرین آقایان … بودند؛ صورتجلسه را کامل کن"></textarea><button id="aiSend" type="button">ارسال</button></div>
+      <div class="m" style="font-size:11px;margin-top:4px">پاسخ‌ها را قبل از استفادهٔ رسمی بازبینی کنید؛ حجم و عوارض برنامه برآورد است.</div>
     </div>
   </section>
 </div>
@@ -2348,11 +2378,11 @@ document.querySelectorAll('nav button').forEach(b=>{
   b.onclick=()=>{
     document.body.classList.remove('home-mode'); // Remove background
     document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
-    ['m','l','h'].forEach(k=>{const s=document.getElementById('sec-'+k);if(s)s.classList.toggle('hid',k!==b.dataset.t)});
+    ['m','l','h','a'].forEach(k=>{const s=document.getElementById('sec-'+k);if(s)s.classList.toggle('hid',k!==b.dataset.t)});
   };
 });
 
-document.getElementById('app-header').onclick=()=>{document.body.classList.add('home-mode');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('on'));['m','l','h'].forEach(k=>{const e=document.getElementById('sec-'+k);if(e)e.classList.add('hid')});scrollTo(0,0)};
+document.getElementById('app-header').onclick=()=>{document.body.classList.add('home-mode');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('on'));['m','l','h','a'].forEach(k=>{const e=document.getElementById('sec-'+k);if(e)e.classList.add('hid')});scrollTo(0,0)};
 document.addEventListener('visibilitychange',()=>{if(document.hidden){try{saveActive()}catch(e){}}});
 window.addEventListener('beforeunload',()=>{try{saveActive()}catch(e){}});
 
@@ -2813,6 +2843,76 @@ let n=0;
 setInterval(()=>{const u=user();if(card)card.classList.toggle('hid',!u);if(u&&!st)resume();if(!u){renderAlerts([])}else if(++n%4===0)poll();if(st)stat()},3000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(st)lock();poll()}});
 renderCard();
+})();
+</script>
+
+<script>
+/* ===== دستیار هوش مصنوعی (صورتجلسه و راهنما) ===== */
+(function(){
+const Q=s=>document.querySelector(s);
+const box=Q('#aiMsgs'),inp=Q('#aiIn'),sendB=Q('#aiSend');
+if(!box||!inp)return;
+let hist=[];try{hist=JSON.parse(localStorage.getItem('aiChat')||'[]')}catch(e){}
+let busy=false;
+const save=()=>{try{localStorage.setItem('aiChat',JSON.stringify(hist.slice(-24)))}catch(e){}};
+const CHIPS=[
+ ['📝 صورتجلسهٔ نشانه‌گذاری','برای سربرگ فعلی یک صورتجلسهٔ رسمی نشانه‌گذاری درختان بنویس. از آمار و حجم‌های «اطلاعات سربرگ» استفاده کن و مواردی مثل حاضرین، ساعت، شمارهٔ نامه و مکان دقیق را با «……» خالی بگذار.'],
+ ['📝 صورتجلسهٔ تجدید و استحصال','برای سربرگ فعلی یک صورتجلسهٔ رسمی تجدید حجم و استحصال بنویس. فقط از اطلاعات استحصال و حجم‌های موجود استفاده کن و مواردی که نامعلوم است را با «……» خالی بگذار.'],
+ ['📊 خلاصهٔ سیاهه','یک خلاصهٔ کوتاه و روشن از وضعیت سربرگ فعلی بنویس: تعداد و حجم به تفکیک گونه، سهم صنعتی و هیزمی و نکات قابل‌توجه.'],
+ ['🔎 بررسی داده','داده‌های سربرگ فعلی را بازبینی کن و اگر مورد مشکوک یا ناقصی دیده می‌شود (بدون مختصات، شمارهٔ ناهماهنگ، نسبت غیرعادی و مانند آن) فهرست کوتاهی بنویس.'],
+ ['❓ راهنمای برنامه','کار با برنامه را کوتاه و مرحله‌به‌مرحله توضیح بده: ثبت درخت، مختصات و نقشه، مسیر پیمایش، سیاهه و خروجی، تجدید و استحصال و اعلام خطر.']
+];
+function ctx(){
+  const R=(x,d=2)=>+(+x).toFixed(d),sh=getActiveSheet()||{},u=window.SB&&SB.user&&SB.user();
+  const ind=T.filter(t=>t.ty!=='h'&&t.k!=='planted'),fw=T.filter(t=>t.ty==='h'&&t.k!=='planted'),pl=T.filter(t=>t.k==='planted');
+  const sp={};
+  T.forEach(t=>{const k=t.sp||'نامشخص',o=sp[k]||(sp[k]={industrial:0,industrial_m3:0,firewood:0,firewood_m3:0,planted:0});
+    if(t.k==='planted')o.planted+=cnt(t);else if(t.ty==='h'){o.firewood+=cnt(t);o.firewood_m3+=tv(t)}else{o.industrial+=cnt(t);o.industrial_m3+=tv(t)}});
+  Object.values(sp).forEach(o=>{o.industrial_m3=R(o.industrial_m3);o.firewood_m3=R(o.firewood_m3)});
+  const mode=sh.mode||'garden',cat={first:0,second:0,third:0};
+  ind.forEach(t=>{const c=catOf(t);cat[c===1?'first':c===2?'second':'third']+=cnt(t)});
+  const hv=T.filter(t=>t.hv>0),o={
+    date:new Date().toLocaleDateString('fa-IR'),user:u&&u.name||'',sheet_name:sh.name||'',
+    land_type:mode==='garden'?'باغی/جنگلی (با محاسبهٔ عوارض)':'جنگل',
+    other_sheets:SHEETS.map(s=>s.name).filter(n=>n!==sh.name).slice(0,8),
+    trees:{total:ct(ind)+ct(fw)+ct(pl),industrial:ct(ind),industrial_m3:R(sv(ind)),firewood:ct(fw),firewood_m3:R(sv(fw)),planted:ct(pl),planted_m3:R(sv(pl)),
+      industrial_by_class:cat,without_coordinates:T.filter(t=>!t.lat).length},
+    by_species:Object.fromEntries(Object.entries(sp).slice(0,20)),
+    map_polygons:MAPP.length,track_points:TRACK.length,walk_meters:Math.round(walkMeters),
+    harvest:{trees_with_harvest:hv.length,harvest_m3:R(hv.reduce((a,t)=>a+(+t.hv||0),0)),renewed_trees:T.filter(t=>t.v2).length,dates:[...new Set(hv.map(t=>t.hd).filter(Boolean))].slice(0,6)}
+  };
+  if(mode==='garden'){o.tax_estimate_rials=T.reduce((a,t)=>a+taxOf(t),0);o.tax_rates={first_class_per_m3:TAX_RATE[1],second_class_per_m3:TAX_RATE[2],third_class_per_m3:TAX_RATE[3],firewood_per_ster:FIREWOOD_RATE,ster_m3:STER_VOLUME}}
+  return o;
+}
+const bub=(m,i)=>m.role==='user'?'<div class="aiU">'+esc(m.content)+'</div>'
+  :'<div class="aiB'+(m.err?' err':'')+'"><div class="aiT">'+esc(m.content)+'</div>'+(m.err?'':'<div class="aiAct"><button type="button" class="o" data-c="'+i+'">📋 کپی</button><button type="button" class="o" data-s="'+i+'">📤 اشتراک</button></div>')+'</div>';
+function render(){
+  box.innerHTML=hist.length?hist.map(bub).join('')+(busy?'<div class="aiB"><div class="aiT m">⏳ در حال نوشتن…</div></div>':''):'<div class="m" style="text-align:center;padding:14px 6px">سلام! یکی از گزینه‌های بالا را بزنید یا سؤالتان را بنویسید.</div>';
+  box.scrollTop=box.scrollHeight;sendB.disabled=busy;sendB.textContent=busy?'…':'ارسال';
+}
+async function send(text){
+  text=String(text==null?inp.value:text).trim();if(!text||busy)return;
+  if(!(window.hkAiLoggedIn&&window.hkAiLoggedIn())){hist.push({role:'user',content:text});hist.push({role:'assistant',content:'برای استفاده از دستیار ابتدا وارد حساب کاربری شوید (ورود مهمان کافی نیست).',err:true});inp.value='';render();return}
+  hist.push({role:'user',content:text.slice(0,3000)});inp.value='';busy=true;render();
+  try{
+    const msgs=hist.filter(m=>!m.err).slice(-12).map(m=>({role:m.role,content:m.content}));
+    const j=await window.hkAiCall({chat:{messages:msgs,context:ctx()}});
+    hist.push({role:'assistant',content:String(j.reply||'').trim()||'پاسخی دریافت نشد؛ دوباره امتحان کنید.'});
+  }catch(e){hist.push({role:'assistant',content:'⚠️ '+(e&&e.message||'خطا'),err:true})}
+  busy=false;save();render();
+}
+Q('#aiChips').innerHTML=CHIPS.map((c,i)=>'<button type="button" class="o" data-i="'+i+'">'+c[0]+'</button>').join('');
+Q('#aiChips').onclick=e=>{const b=e.target.closest('[data-i]');if(b)send(CHIPS[+b.dataset.i][1])};
+box.onclick=async e=>{
+  const c=e.target.closest('[data-c]'),s=e.target.closest('[data-s]'),i=c?+c.dataset.c:s?+s.dataset.s:-1;if(i<0||!hist[i])return;
+  const t=hist[i].content;
+  if(c){try{await navigator.clipboard.writeText(t);c.textContent='✓ کپی شد'}catch(x){const ta=document.createElement('textarea');ta.value=t;document.body.append(ta);ta.select();try{document.execCommand('copy');c.textContent='✓ کپی شد'}catch(y){}ta.remove()}}
+  else if(navigator.share){try{await navigator.share({text:t})}catch(x){}}else{try{await navigator.clipboard.writeText(t);s.textContent='✓ کپی شد'}catch(x){}}
+};
+sendB.onclick=()=>send();
+inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();send()}});
+Q('#aiNew').onclick=()=>{if(hist.length&&!confirm('گفتگوی فعلی پاک شود؟'))return;hist=[];save();render()};
+render();
 })();
 </script>
 
