@@ -293,6 +293,8 @@ nav button.aibtn{flex:0 0 auto;padding:10px 11px;font-size:12px;min-width:58px}
 .aiIn textarea:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px rgba(47,107,60,.25)}
 .aiIn button{padding:10px 16px}
 #aiMic.rec { background: #c62828; color: #fff; animation: pulse 1s infinite; }
+#aiVoiceMode.active { background: #c62828; color: #fff; animation: pulse 1.5s infinite; }
+#aiVoiceMode.listening { background: #2e9d4f; color: #fff; }
 @keyframes pulse { 50% { opacity: .6; } }
 
 /* SOS FAB */
@@ -603,6 +605,7 @@ nav button.aibtn{flex:0 0 auto;padding:10px 11px;font-size:12px;min-width:58px}
       <div class="aiIn">
         <textarea id="aiIn" rows="2" placeholder="پیام…"></textarea>
         <button id="aiMic" type="button" title="میکروفن" style="padding:10px 12px;font-size:17px">🎤</button>
+        <button id="aiVoiceMode" type="button" title="حالت مکالمه زنده" style="padding:10px 12px;font-size:17px;background:#5c6b5f;color:#fff">🗣️</button>
         <button id="aiSend" type="button">ارسال</button>
       </div>
       <div id="aiActions" class="hid" style="display:flex;gap:6px;margin-top:8px">
@@ -2488,7 +2491,8 @@ document.querySelectorAll('nav button').forEach(b=>{
     document.body.classList.remove('home-mode');
     document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
     ['m','l','h','a'].forEach(k=>{const s=document.getElementById('sec-'+k);if(s)s.classList.toggle('hid',k!==b.dataset.t)});
-    document.getElementById('sosFab').classList.toggle('hid', b.dataset.t === 'm');
+    const fab = document.getElementById('sosFab');
+    if(fab) fab.classList.toggle('hid', b.dataset.t === 'm');
   };
 });
 
@@ -2964,7 +2968,7 @@ renderCard();
 </script>
 
 <script>
-/* ===== دستیار هوش مصنوعی (چت، صورتجلسه، صوت) ===== */
+/* ===== دستیار هوش مصنوعی (چت، صورتجلسه، صوت زنده) ===== */
 (function(){
 const Q=s=>document.querySelector(s);
 const box=Q('#aiMsgs'),inp=Q('#aiIn'),sendB=Q('#aiSend');
@@ -2972,6 +2976,106 @@ if(!box||!inp)return;
 let hist=[];try{hist=JSON.parse(localStorage.getItem('aiChat')||'[]')}catch(e){}
 let busy=false;
 const save=()=>{try{localStorage.setItem('aiChat',JSON.stringify(hist.slice(-24)))}catch(e){}};
+
+// --- متغیرهای صوتی ---
+let voiceMode = false;
+let isSpeaking = false;
+let recognizing = false;
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null;
+
+if(SR) {
+  rec = new SR();
+  rec.lang = 'fa-IR';
+  rec.interimResults = true;
+  rec.continuous = false;
+}
+
+const startListening = () => {
+  if(!rec || recognizing) return;
+  if(isSpeaking && window.speechSynthesis) { window.speechSynthesis.cancel(); isSpeaking = false; }
+  try { 
+    rec.start(); 
+    recognizing = true; 
+    const vb = document.getElementById('aiVoiceMode');
+    if(vb && voiceMode) vb.className = 'listening'; 
+    const mb = document.getElementById('aiMic');
+    if(mb) mb.classList.add('rec');
+  } catch(e){}
+};
+
+const stopListening = () => {
+  if(!rec || !recognizing) return;
+  try { rec.stop(); } catch(e){}
+  recognizing = false;
+  const vb = document.getElementById('aiVoiceMode');
+  if(vb && voiceMode) vb.className = 'active';
+  const mb = document.getElementById('aiMic');
+  if(mb) mb.classList.remove('rec');
+};
+
+const speakText = (text, callback) => {
+  if(!window.speechSynthesis) return callback();
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'fa-IR';
+  utt.rate = 1.0;
+  utt.onstart = () => { isSpeaking = true; };
+  utt.onend = () => { isSpeaking = false; if(callback) callback(); };
+  utt.onerror = () => { isSpeaking = false; if(callback) callback(); };
+  window.speechSynthesis.speak(utt);
+};
+
+if(rec) {
+  rec.onresult = (e) => {
+    let finalText = '', interimText = '';
+    for(let i = e.resultIndex; i < e.results.length; i++){
+      const t = e.results[i][0].transcript;
+      if(e.results[i].isFinal) finalText += t; else interimText += t;
+    }
+    inp.value = finalText + interimText;
+    if(voiceMode && finalText.trim().length > 0) {
+      setTimeout(() => {
+        if(inp.value.trim() === finalText.trim() && !isSpeaking) {
+          sendB.click();
+        }
+      }, 400);
+    }
+  };
+  rec.onerror = (e) => {
+    if(e.error === 'not-allowed') alert('دسترسی به میکروفن رد شد.');
+    recognizing = false;
+    const vb = document.getElementById('aiVoiceMode');
+    if(vb && voiceMode) vb.className = 'active';
+    const mb = document.getElementById('aiMic');
+    if(mb) mb.classList.remove('rec');
+  };
+  rec.onend = () => {
+    recognizing = false;
+    const vb = document.getElementById('aiVoiceMode');
+    if(vb && voiceMode) vb.className = 'active';
+    const mb = document.getElementById('aiMic');
+    if(mb) mb.classList.remove('rec');
+  };
+}
+
+document.getElementById('aiMic').onclick = () => {
+  if(recognizing) stopListening(); else startListening();
+};
+
+document.getElementById('aiVoiceMode').onclick = () => {
+  voiceMode = !voiceMode;
+  const btn = document.getElementById('aiVoiceMode');
+  if(voiceMode) {
+    btn.classList.add('active');
+    alert('حالت مکالمه فعال شد. صحبت کنید...');
+    startListening();
+  } else {
+    btn.className = '';
+    stopListening();
+    if(window.speechSynthesis) window.speechSynthesis.cancel();
+  }
+};
 
 function ctx(){
   const R=(x,d=2)=>+(+x).toFixed(d),sh=getActiveSheet()||{},u=window.SB&&SB.user&&SB.user();
@@ -3018,14 +3122,29 @@ function render(){
 
 async function send(text, contextOverride){
   text=String(text==null?inp.value:text).trim();if(!text||busy)return;
+  if(voiceMode) stopListening();
+  
   if(!(window.hkAiLoggedIn&&window.hkAiLoggedIn())){hist.push({role:'user',content:text});hist.push({role:'assistant',content:'برای استفاده از دستیار ابتدا وارد حساب کاربری شوید (ورود مهمان کافی نیست).',err:true});inp.value='';render();return}
   hist.push({role:'user',content:text.slice(0,3000)});inp.value='';busy=true;render();
   try{
     const msgs=hist.filter(m=>!m.err).slice(-12).map(m=>({role:m.role,content:m.content}));
     const j=await window.hkAiCall({chat:{messages:msgs,context:contextOverride || ctx()}});
-    hist.push({role:'assistant',content:String(j.reply||'').trim()||'پاسخی دریافت نشد؛ دوباره امتحان کنید.'});
-  }catch(e){hist.push({role:'assistant',content:'⚠️ '+(e&&e.message||'خطا'),err:true})}
-  busy=false;save();render();
+    const replyText = String(j.reply||'').trim() || 'پاسخی دریافت نشد؛ دوباره امتحان کنید.';
+    hist.push({role:'assistant',content:replyText});
+    busy=false; save(); render();
+    
+    if(voiceMode) {
+      speakText(replyText, () => {
+        if(voiceMode) startListening();
+      });
+    }
+  }catch(e){
+    hist.push({role:'assistant',content:'⚠️ '+(e&&e.message||'خطا'),err:true});
+    busy=false; save(); render();
+    if(voiceMode) {
+      speakText('خطایی رخ داد.', () => { if(voiceMode) startListening(); });
+    }
+  }
 }
 
 const CHIPS = [
@@ -3217,56 +3336,6 @@ document.getElementById('aiWord').onclick = async () => {
   document.body.append(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 5000);
 };
-
-/* میکروفن */
-(function(){
-  const mic = document.getElementById('aiMic');
-  const inp2 = document.getElementById('aiIn');
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SR){
-    mic.title = 'میکروفن در این مرورگر پشتیبانی نمی‌شود (در اپ اندروید از پلاگین بومی استفاده می‌شود)';
-    mic.onclick = () => alert('تبدیل گفتار به نوشتار در این مرورگر پشتیبانی نمی‌شود.');
-    return;
-  }
-  let rec = null;
-  let recording = false;
-  mic.onclick = () => {
-    if(recording){ rec.stop(); return; }
-    try{
-      rec = new SR();
-      rec.lang = 'fa-IR';
-      rec.interimResults = true;
-      rec.continuous = false;
-      let finalText = '';
-      rec.onresult = e => {
-        let interim = '';
-        for(let i = e.resultIndex; i < e.results.length; i++){
-          const t = e.results[i][0].transcript;
-          if(e.results[i].isFinal) finalText += t;
-          else interim += t;
-        }
-        inp2.value = finalText + interim;
-      };
-      rec.onerror = ev => {
-        recording = false;
-        mic.textContent = '🎤';
-        mic.classList.remove('rec');
-        if(ev.error === 'not-allowed') alert('دسترسی به میکروفن رد شد.');
-      };
-      rec.onend = () => {
-        recording = false;
-        mic.textContent = '🎤';
-        mic.classList.remove('rec');
-      };
-      rec.start();
-      recording = true;
-      mic.textContent = '⏹';
-      mic.classList.add('rec');
-    } catch(e){
-      alert('شروع ضبط ممکن نشد: ' + e.message);
-    }
-  };
-})();
 
 })();
 </script>
