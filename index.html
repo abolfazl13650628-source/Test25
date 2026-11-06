@@ -932,7 +932,7 @@ function updateGpsUI(){
     else{
       const a=cur.acc,d=a<=5?'#2e9d4f':a<=10?'#d19a00':'#d33';
       let t='<span style="color:'+d+'">● دقت ±'+fa(a,0)+' متر</span>';
-      if(MAPP.length){const r=mtest(MAPP,cur.u.E,cur.u.N);t+=' • <span style="color:'+(r.in?'#2e9d4f':'#d33')+'">'+(r.in?'داخل':'خارج')+'</span>';}
+      if(MAPP.length){const uu=utm(cur.lat,cur.lng,MAPZ),r=mtest(MAPP,uu.E,uu.N);t+=' • <span style="color:'+(r.in?'#2e9d4f':'#d33')+'">'+(r.in?'داخل':'خارج')+'</span>';}
       strip.innerHTML=t;
     }
   }
@@ -1873,6 +1873,7 @@ async function aiReadImage(file){
   }else if(isFinite(sheetTot)&&sheetTot>0){
     note+='جمع کل درج‌شده روی برگه: '+toFa(sheetTot)+' مترمکعب؛ حجم ردیف‌ها از تصویر قابل‌تأیید نبود. ';
   }
+  if(j.provider)note+='['+j.provider+'] ';
   if(unk)note+='⚠️ '+toFa(unk)+' سطر نام گونهٔ معتبر نداشت (قرمز)؛ اصلاح کنید. ';
   return {rows,note};
 }
@@ -2121,7 +2122,7 @@ $('#saveSnap').onclick=()=>{
   const existing=SNAPS.find(s=>s.name===nm);
   if(existing){ if(!confirm('جایگزین شود؟'))return; existing.date=new Date().toLocaleDateString('fa-IR'); existing.trees=JSON.parse(JSON.stringify(T)); existing.map=MAPP.length?JSON.parse(JSON.stringify({p:MAPP,z:MAPZ,nm:MAPNM})):null; saveSnaps(); renderSnaps(); }
   else{ const id=SNAPS.reduce((a,s)=>Math.max(a,s.id),0)+1; SNAPS.push({id,name:nm,date:new Date().toLocaleDateString('fa-IR'),trees:JSON.parse(JSON.stringify(T)),map:MAPP.length?JSON.parse(JSON.stringify({p:MAPP,z:MAPZ,nm:MAPNM})):null}); saveSnaps(); renderSnaps(); }
-  if(nm!==currentName){sh.name=nm;saveActive();renderTabs()}
+  if(nm!==currentName){if(SHEETS.some(x=>x!==sh&&x.name===nm)){alert('سربرگ دیگری با این نام وجود دارد؛ نام سربرگ تغییر نکرد.')}else{sh.name=nm;saveActive();renderTabs()}}
 };
 function loadSnap(id){const s=SNAPS.find(x=>x.id===id);if(!s)return;const existingSheet=SHEETS.find(sh=>sh.name===s.name);if(existingSheet){if(!confirm('جایگزین شود؟'))return;saveActive();existingSheet.trees=JSON.parse(JSON.stringify(s.trees||[]));existingSheet.map=s.map?JSON.parse(JSON.stringify(s.map)):null;switchSheet(existingSheet.id,true);return;}if(!confirm('سربرگ جدید باز شود؟'))return;const nid=SHEETS.reduce((a,x)=>Math.max(a,x.id),0)+1;SHEETS.push({id:nid,name:s.name,trees:JSON.parse(JSON.stringify(s.trees||[])),map:s.map?JSON.parse(JSON.stringify(s.map)):null});switchSheet(nid);}
 
@@ -2136,7 +2137,7 @@ $('#ga').textContent='📍 مختصات';$('#ga').classList.add('o');
 
 const DL={save:async({filename,data})=>{const u=URL.createObjectURL(data),a=document.createElement('a');a.href=u;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000)}};
 $('#rb').onclick=()=>$('#rf').click();
-$('#rf').onchange=async e=>{ const f=e.target.files[0];if(!f)return; try{ const j=JSON.parse(await f.text()); const sheetsArr=Array.isArray(j.sheets)?j.sheets:null; const treesArr=Array.isArray(j)?j:(Array.isArray(j.trees)?j.trees:null); if(sheetsArr){ if($('#rm').value==='r'){if(!confirm('همهٔ داده‌های فعلی حذف و با فایل پشتیبان جایگزین شوند؟'))return;SHEETS=sheetsArr;activeId=SHEETS[0]?.id||1;}else{let m=SHEETS.reduce((a,s)=>Math.max(a,s.id),0);sheetsArr.forEach(s=>{m++;let nm=s.name,k=2;while(SHEETS.some(x=>x.name===nm))nm=s.name+' ('+(k++)+')';SHEETS.push(Object.assign({},s,{id:m,name:nm}))})} loadActive();norm();saveActive(); if(Array.isArray(j.snaps)){if($('#rm').value==='r')SNAPS=j.snaps;else{let m2=SNAPS.reduce((a,x)=>Math.max(a,x.id||0),0);j.snaps.forEach(x=>{m2++;SNAPS.push(Object.assign({},x,{id:m2}))})}saveSnaps();renderSnaps()} }else if(treesArr){ if($('#rm').value==='r'){if(!confirm('همهٔ داده‌های فعلی حذف و با فایل پشتیبان جایگزین شوند؟'))return;T=treesArr}else{let m=T.reduce((x,t)=>Math.max(x,t.id),0);T=T.concat(treesArr.map(t=>Object.assign({},t,{id:++m})))} norm();saveActive(); }else throw 0; renderTabs();updateMapInfo();draw();mapCheck();updateModeLock();alert('بازیابی شد.'); }catch(x){alert('فایل معتبر نیست.')} e.target.value=''; };
+$('#rf').onchange=async e=>{ const f=e.target.files[0];if(!f)return; try{ const j=JSON.parse(await f.text()); const sheetsArr=Array.isArray(j.sheets)?j.sheets.map(s=>{const c=Object.assign({},s);delete c.uid;delete c.h;delete c.ua;return c}):null; if(sheetsArr&&!sheetsArr.length)throw 0; const treesArr=Array.isArray(j)?j:(Array.isArray(j.trees)?j.trees:null); if(sheetsArr){ if($('#rm').value==='r'){if(!confirm('همهٔ داده‌های فعلی حذف و با فایل پشتیبان جایگزین شوند؟'))return;SHEETS=sheetsArr;activeId=SHEETS[0]?.id||1;}else{let m=SHEETS.reduce((a,s)=>Math.max(a,s.id),0);sheetsArr.forEach(s=>{m++;let nm=s.name,k=2;while(SHEETS.some(x=>x.name===nm))nm=s.name+' ('+(k++)+')';SHEETS.push(Object.assign({},s,{id:m,name:nm}))})} loadActive();norm();saveActive(); if(Array.isArray(j.snaps)){if($('#rm').value==='r')SNAPS=j.snaps;else{let m2=SNAPS.reduce((a,x)=>Math.max(a,x.id||0),0);j.snaps.forEach(x=>{m2++;SNAPS.push(Object.assign({},x,{id:m2}))})}saveSnaps();renderSnaps()} }else if(treesArr){ if($('#rm').value==='r'){if(!confirm('همهٔ داده‌های فعلی حذف و با فایل پشتیبان جایگزین شوند؟'))return;T=treesArr}else{let m=T.reduce((x,t)=>Math.max(x,t.id),0);T=T.concat(treesArr.map(t=>Object.assign({},t,{id:++m})))} norm();saveActive(); }else throw 0; renderTabs();updateMapInfo();draw();mapCheck();updateModeLock();alert('بازیابی شد.'); }catch(x){alert('فایل معتبر نیست.')} e.target.value=''; };
 
 const R3=x=>+(+x).toFixed(3),say=(m,bad)=>document.querySelectorAll('.xs').forEach(e=>{e.textContent=m;e.style.color=bad?'#d33':''});
 async function mkX(sheets){ const wb=new ExcelJS.Workbook(),bd={style:'thin'}; sheets.forEach(([n,rows,mg,hr=1,tot])=>{ const ws=wb.addWorksheet(n,{views:[{rightToLeft:true}]}),W=rows[0].length; rows.forEach(r=>ws.addRow(r)); for(let i=1;i<=W;i++)ws.getColumn(i).width=n==='سیاهه'?14:18; for(let r=1;r<=rows.length;r++)for(let c=1;c<=W;c++){const x=ws.getCell(r,c);x.alignment={horizontal:'center',vertical:'middle',wrapText:true};x.border={top:bd,left:bd,bottom:bd,right:bd}; if(r<=hr){x.font={bold:true};x.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFE3EEDF'}}}else if(tot&&r==rows.length)x.font={bold:true}} (mg||[]).forEach(([a,b,c,d])=>ws.mergeCells(a+1,b+1,c+1,d+1))}); return await wb.xlsx.writeBuffer()}
@@ -2423,7 +2424,7 @@ window.hkAiCall=async(body)=>{
   catch(e){throw new Error(e&&(e.name==='TimeoutError'||e.name==='AbortError')?'زمان خواندن تصویر تمام شد؛ عکس واضح‌تر یا کوچک‌تر را امتحان کنید':'اتصال به سرور برقرار نشد')}
   const j=await r.json().catch(()=>({}));
   if(r.status===404)throw new Error('سرویس هوشمند هنوز روی سرور نصب نشده');
-  if(!r.ok)throw new Error(j.error||('خطای سرور '+r.status));
+  if(!r.ok)throw new Error((j.error||('خطای سرور '+r.status))+(j.hint?'\n'+j.hint:''));
   return j;
 };
 
