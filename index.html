@@ -276,7 +276,7 @@ body.home-mode #gs,body.home-mode #sensors>.m{color:#fff;text-shadow:0 1px 3px r
 body.home-mode #sosCard{background:linear-gradient(rgba(0,0,0,0),rgba(16,26,19,.6) 40%)}
 
 /* ===== دستیار هوش مصنوعی ===== */
-nav button.aibtn{flex:0 0 auto;padding:10px 11px;font-size:12px;min-width:58px}
+nav button.aibtn{flex:0 0 auto;padding:10px 14px;font-size:14px;min-width:68px;min-height:44px}
 .aiHead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
 .aiHead button{padding:4px 10px;font-size:12px}
 #aiChips{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0}
@@ -291,7 +291,10 @@ nav button.aibtn{flex:0 0 auto;padding:10px 11px;font-size:12px;min-width:58px}
 .aiIn{display:flex;gap:6px;align-items:flex-end}
 .aiIn textarea{flex:1;font:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx);resize:vertical;min-height:44px;max-height:30vh}
 .aiIn textarea:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px rgba(47,107,60,.25)}
-.aiIn button{padding:10px 16px}
+.aiIn{display:flex;gap:8px;align-items:flex-end}
+.aiIn textarea{flex:1;font:inherit;font-size:14px;padding:10px 12px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx);resize:vertical;min-height:48px;max-height:30vh}
+.aiIn button{padding:12px 18px;min-height:48px;min-width:48px;font-size:15px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+#aiMic,#aiVoiceMode{font-size:20px!important;min-width:48px;min-height:48px}
 #aiMic.rec { background: #c62828; color: #fff; animation: pulse 1s infinite; }
 #aiVoiceMode.active { background: #c62828; color: #fff; animation: pulse 1.5s infinite; }
 #aiVoiceMode.listening { background: #2e9d4f; color: #fff; }
@@ -1955,7 +1958,7 @@ async function prepareAiImage(file){
   let img;
   if(window.createImageBitmap){img=await createImageBitmap(file)}
   else{img=await new Promise((res,rej)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{URL.revokeObjectURL(u);res(im)};im.onerror=rej;im.src=u})}
-  const maxSide=2200;
+  const maxSide=1600;
   const sc=Math.min(1,maxSide/Math.max(img.width,img.height));
   const c=document.createElement('canvas');
   c.width=Math.max(1,Math.round(img.width*sc));
@@ -2981,6 +2984,7 @@ const save=()=>{try{localStorage.setItem('aiChat',JSON.stringify(hist.slice(-24)
 // --- متغیرهای صوتی ---
 let voiceMode = false;
 let speakReplies = true;
+let holdMic = false;        // میکروفن تکی (بدون حالت مکالمه) تا قطع دستی باز بماند
 let isSpeaking = false;
 let recognizing = false;
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -3015,25 +3019,37 @@ const stopListening = () => {
   if (mb) mb.classList.remove('rec');
 };
 
+const canSpeakPersian = () => {
+  try {
+    if (!window.speechSynthesis) return false;
+    const voices = window.speechSynthesis.getVoices() || [];
+    if (!voices.length) return true; // هنوز لود نشده؛ امتحان کن
+    return voices.some(v => /fa|per(sian)?/i.test(v.lang || '') || /fa|per(sian)?/i.test(v.name || ''));
+  } catch (e) { return false; }
+};
+
 const speakText = (text, callback) => {
-  if (!window.speechSynthesis || !speakReplies) {
-    if (callback) callback();
-    return;
-  }
+  const done = () => { if (callback) callback(); };
+  if (!window.speechSynthesis || !speakReplies) { done(); return; }
+  // اگر صدای فارسی در دسترس نیست، بدون پخش ادامه بده (حلقه مکالمه نشکند)
+  if (!canSpeakPersian()) { done(); return; }
   window.speechSynthesis.cancel();
   const utt = new SpeechSynthesisUtterance(text);
   utt.lang = 'fa-IR';
   utt.rate = 1.0;
+  let finished = false;
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    isSpeaking = false;
+    done();
+  };
   utt.onstart = () => { isSpeaking = true; };
-  utt.onend = () => {
-    isSpeaking = false;
-    if (callback) callback();
-  };
-  utt.onerror = () => {
-    isSpeaking = false;
-    if (callback) callback();
-  };
-  window.speechSynthesis.speak(utt);
+  utt.onend = finish;
+  utt.onerror = finish;
+  // اگر TTS گیر کرد، بعد از ۱۵ ثانیه ادامه بده
+  setTimeout(finish, 15000);
+  try { window.speechSynthesis.speak(utt); } catch (e) { finish(); }
 };
 
 if (rec) {
@@ -3049,6 +3065,7 @@ if (rec) {
     if (voiceMode && finalText.trim().length > 0) {
       setTimeout(() => {
         if (inp.value.trim() === finalText.trim() && !isSpeaking && !busy) {
+          holdMic = false;
           sendB.click();
         }
       }, 800);
@@ -3064,11 +3081,14 @@ if (rec) {
     if (e.error === 'not-allowed') {
       alert('دسترسی به میکروفن رد شد.');
       voiceMode = false;
+      holdMic = false;
       return;
     }
-    // فقط در حالت مکالمه و اگر busy نیست دوباره تلاش کن
-    if (voiceMode && !busy && !isSpeaking) {
-      setTimeout(() => { if (voiceMode && !busy) startListening(); }, 1200);
+    // ری‌استارت فقط اگر هنوز باید گوش بدهد
+    if ((voiceMode || holdMic) && !busy && !isSpeaking) {
+      setTimeout(() => {
+        if ((voiceMode || holdMic) && !busy && !recognizing) startListening();
+      }, 1000);
     }
   };
 
@@ -3078,16 +3098,22 @@ if (rec) {
     if (vb && voiceMode) vb.className = 'active';
     const mb = document.getElementById('aiMic');
     if (mb) mb.classList.remove('rec');
-    // جلوگیری از روشن/خاموش شدن سریع
-    if (voiceMode && !isSpeaking && !busy) {
-      setTimeout(() => { if (voiceMode && !busy && !recognizing) startListening(); }, 700);
+    if ((voiceMode || holdMic) && !isSpeaking && !busy) {
+      setTimeout(() => {
+        if ((voiceMode || holdMic) && !busy && !recognizing) startListening();
+      }, 600);
     }
   };
 }
 
 document.getElementById('aiMic').onclick = () => {
-  if (recognizing) stopListening();
-  else startListening();
+  if (recognizing || holdMic) {
+    holdMic = false;
+    stopListening();
+  } else {
+    holdMic = true;
+    startListening();
+  }
 };
 
 document.getElementById('aiVoiceMode').onclick = () => {
@@ -3096,7 +3122,8 @@ document.getElementById('aiVoiceMode').onclick = () => {
   if (voiceMode) {
     btn.classList.add('active');
     speakReplies = true;
-    alert('حالت مکالمه فعال شد.\nصحبت کنید؛ هوش مصنوعی جواب را با صدا می‌خواند.');
+    holdMic = false;
+    alert('حالت مکالمه فعال شد.\nصحبت کنید؛ اگر گوشی صدای فارسی نداشته باشد فقط متن نشان داده می‌شود.');
     startListening();
   } else {
     btn.className = '';
@@ -3105,26 +3132,43 @@ document.getElementById('aiVoiceMode').onclick = () => {
   }
 };
 
+
 function ctx(){
   const R=(x,d=2)=>+(+x).toFixed(d),sh=getActiveSheet()||{},u=window.SB&&SB.user&&SB.user();
   const ind=T.filter(t=>t.ty!=='h'&&t.k!=='planted'),fw=T.filter(t=>t.ty==='h'&&t.k!=='planted'),pl=T.filter(t=>t.k==='planted');
-  const sp={};
-  T.forEach(t=>{const k=t.sp||'نامشخص',o=sp[k]||(sp[k]={industrial:0,industrial_m3:0,firewood:0,firewood_m3:0,planted:0});
-    if(t.k==='planted')o.planted+=cnt(t);else if(t.ty==='h'){o.firewood+=cnt(t);o.firewood_m3+=tv(t)}else{o.industrial+=cnt(t);o.industrial_m3+=tv(t)}});
-  Object.values(sp).forEach(o=>{o.industrial_m3=R(o.industrial_m3);o.firewood_m3=R(o.firewood_m3)});
-  const mode=sh.mode||'garden',cat={first:0,second:0,third:0};
-  ind.forEach(t=>{const c=catOf(t);cat[c===1?'first':c===2?'second':'third']+=cnt(t)});
-  const hv=T.filter(t=>t.hv>0),o={
-    date:new Date().toLocaleDateString('fa-IR'),user:u&&u.name||'',sheet_name:sh.name||'',
+  const mode=sh.mode||'garden';
+  const o={
+    date:new Date().toLocaleDateString('fa-IR'),
+    user:u&&u.name||'',
+    sheet_name:sh.name||'',
     land_type:mode==='garden'?'باغی/جنگلی (با محاسبهٔ عوارض)':'جنگل',
-    other_sheets:SHEETS.map(s=>s.name).filter(n=>n!==sh.name).slice(0,8),
-    trees:{total:ct(ind)+ct(fw)+ct(pl),industrial:ct(ind),industrial_m3:R(sv(ind)),firewood:ct(fw),firewood_m3:R(sv(fw)),planted:ct(pl),planted_m3:R(sv(pl)),
-      industrial_by_class:cat,without_coordinates:T.filter(t=>!t.lat).length},
-    by_species:Object.fromEntries(Object.entries(sp).slice(0,20)),
-    map_polygons:MAPP.length,track_points:TRACK.length,walk_meters:Math.round(walkMeters),
-    harvest:{trees_with_harvest:hv.length,harvest_m3:R(hv.reduce((a,t)=>a+(+t.hv||0),0)),renewed_trees:T.filter(t=>t.v2).length,dates:[...new Set(hv.map(t=>t.hd).filter(Boolean))].slice(0,6)}
+    trees:{
+      total:ct(ind)+ct(fw)+ct(pl),
+      industrial:ct(ind),
+      industrial_m3:R(sv(ind)),
+      firewood:ct(fw),
+      firewood_m3:R(sv(fw)),
+      planted:ct(pl),
+      without_coordinates:T.filter(t=>!t.lat).length
+    },
+    map_polygons:MAPP.length,
+    track_points:TRACK.length,
+    walk_meters:Math.round(walkMeters||0)
   };
-  if(mode==='garden'){o.tax_estimate_rials=T.reduce((a,t)=>a+taxOf(t),0);o.tax_rates={first_class_per_m3:TAX_RATE[1],second_class_per_m3:TAX_RATE[2],third_class_per_m3:TAX_RATE[3],firewood_per_ster:FIREWOOD_RATE,ster_m3:STER_VOLUME}}
+  if(mode==='garden'){
+    o.tax_estimate_rials=T.reduce((a,t)=>a+taxOf(t),0);
+  }
+  // فقط خلاصه گونه‌های اصلی (حداکثر ۸)
+  const sp={};
+  T.forEach(t=>{
+    const k=t.sp||'نامشخص';
+    const e=sp[k]||(sp[k]={n:0,v:0});
+    e.n+=cnt(t); e.v+=tv(t);
+  });
+  o.top_species=Object.entries(sp)
+    .sort((a,b)=>b[1].v-a[1].v)
+    .slice(0,8)
+    .map(([name,x])=>({name,count:x.n,volume_m3:R(x.v)}));
   return o;
 }
 
@@ -3155,7 +3199,7 @@ async function send(text, contextOverride){
   if(!(window.hkAiLoggedIn&&window.hkAiLoggedIn())){hist.push({role:'user',content:text});hist.push({role:'assistant',content:'برای استفاده از دستیار ابتدا وارد حساب کاربری شوید (ورود مهمان کافی نیست).',err:true});inp.value='';render();return}
   hist.push({role:'user',content:text.slice(0,3000)});inp.value='';busy=true;render();
   try{
-    const msgs=hist.filter(m=>!m.err).slice(-12).map(m=>({role:m.role,content:m.content}));
+    const msgs=hist.filter(m=>!m.err).slice(-8).map(m=>({role:m.role,content:m.content.slice(0,2000)}));
     const j=await window.hkAiCall({chat:{messages:msgs,context:contextOverride || ctx()}});
     const replyText = String(j.reply||'').trim() || 'پاسخی دریافت نشد؛ دوباره امتحان کنید.';
     hist.push({role:'assistant',content:replyText});
@@ -3181,8 +3225,8 @@ const CHIPS = [
   ['🌲 سؤال تخصصی جنگل و قوانین', 'specialist'],
   ['💬 چت آزاد و عمومی', 'general']
 ];
-Q('#aiChips').innerHTML = '<div style="display:flex;flex-wrap:nowrap;gap:4px;overflow-x:auto">' + 
-  CHIPS.map(c => '<button type="button" class="o" data-k="' + c[1] + '" style="flex:1;min-width:0;padding:8px 4px;font-size:11px;border-radius:10px;white-space:nowrap">' + c[0] + '</button>').join('') + '</div>';
+Q('#aiChips').innerHTML = '<div style="display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;padding:2px 0">' + 
+  CHIPS.map(c => '<button type="button" class="o" data-k="' + c[1] + '" style="flex:1;min-width:72px;min-height:48px;padding:10px 6px;font-size:13px;border-radius:12px;white-space:normal;line-height:1.3">' + c[0] + '</button>').join('') + '</div>';
 
 Q('#aiChips').onclick = e => {
   const b = e.target.closest('[data-k]');
