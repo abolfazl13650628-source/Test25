@@ -272,8 +272,8 @@ body.home-mode #gb,body.home-mode #walkBox{background:rgba(0,0,0,.45);backdrop-f
 body.home-mode #gb small,body.home-mode #gb b,body.home-mode #walkBox small,body.home-mode #walkBox b{color:#fff}
 body.home-mode #gb.g1 .ac{color:#7dffa0}body.home-mode #gb.g2 .ac{color:#ffd54a}body.home-mode #gb.g3 .ac{color:#ff8a80}
 body.home-mode #gs,body.home-mode #sensors>.m{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.7)}
-#sosCard{display:none;max-width:640px;margin:0 auto;padding:6px 12px calc(10px + env(safe-area-inset-bottom));position:sticky;bottom:0;z-index:50;background:linear-gradient(rgba(0,0,0,0),var(--bg) 40%)}
-body.home-mode #sosCard{display:block;background:linear-gradient(rgba(0,0,0,0),rgba(16,26,19,.6) 40%)} body.home-mode #sosFab{display:none!important}
+#sosCard{max-width:640px;margin:0 auto;padding:6px 12px calc(10px + env(safe-area-inset-bottom));position:sticky;bottom:0;z-index:50;background:linear-gradient(rgba(0,0,0,0),var(--bg) 40%)}
+body.home-mode #sosCard{background:linear-gradient(rgba(0,0,0,0),rgba(16,26,19,.6) 40%)}
 
 /* ===== دستیار هوش مصنوعی ===== */
 nav button.aibtn{flex:0 0 auto;padding:10px 14px;font-size:14px;min-width:68px;min-height:44px}
@@ -310,6 +310,7 @@ nav button.aibtn{flex:0 0 auto;padding:10px 14px;font-size:14px;min-width:68px;m
   font-size: 9px; font-weight: 700; line-height: 1.15; z-index: 60; padding: 0;
 }
 #sosFab.hid { display: none; }
+#sosFab.act { animation: pulse 1.2s infinite; }
 
 #minutesModal { position:fixed; inset:0; z-index:1005; background:#0009; display:flex; align-items:center; justify-content:center; padding:16px; }
 #minutesModal .bx { background:var(--sf); color:var(--tx); border-radius:16px; padding:16px; width:100%; max-width:400px; box-shadow:var(--sh2); }
@@ -640,7 +641,7 @@ nav button.aibtn{flex:0 0 auto;padding:10px 14px;font-size:14px;min-width:68px;m
 </div>
 
 <!-- Floating SOS Button -->
-<button id="sosFab" type="button">⚠️<span>اعلام خطر</span></button>
+<button id="sosFab" class="hid" type="button">⚠️<span>اعلام خطر</span></button>
 
 <!-- Minutes Modal -->
 <div id="minutesModal" class="hid">
@@ -2512,11 +2513,11 @@ document.querySelectorAll('nav button').forEach(b=>{
     document.body.classList.remove('home-mode');
     document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
     ['m','l','h','a'].forEach(k=>{const s=document.getElementById('sec-'+k);if(s)s.classList.toggle('hid',k!==b.dataset.t)});
-    // مدیریت دکمه شناور حالا به طور خودکار توسط CSS انجام می‌شود
+    document.body.dataset.tab=b.dataset.t;document.dispatchEvent(new Event('hktab'));
   };
 });
 
-document.getElementById('app-header').onclick=()=>{document.body.classList.add('home-mode');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('on'));['m','l','h','a'].forEach(k=>{const e=document.getElementById('sec-'+k);if(e)e.classList.add('hid')});scrollTo(0,0)};
+document.getElementById('app-header').onclick=()=>{document.body.classList.add('home-mode');document.body.dataset.tab='home';document.dispatchEvent(new Event('hktab'));document.querySelectorAll('nav button').forEach(x=>x.classList.remove('on'));['m','l','h','a'].forEach(k=>{const e=document.getElementById('sec-'+k);if(e)e.classList.add('hid')});scrollTo(0,0)};
 document.addEventListener('visibilitychange',()=>{if(document.hidden){try{saveActive()}catch(e){}}});
 window.addEventListener('beforeunload',()=>{try{saveActive()}catch(e){}});
 
@@ -2583,8 +2584,8 @@ window.hkAiCall=async(body)=>{
   if(!S)throw new Error('ابتدا وارد حساب کاربری شوید');
   await fresh();
   let r;
-  try{r=await fetch(SB_URL+'/functions/v1/read-table',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+S.access_token},body:JSON.stringify(body),signal:(AbortSignal.timeout?AbortSignal.timeout(110000):undefined)})}
-  catch(e){throw new Error(e&&(e.name==='TimeoutError'||e.name==='AbortError')?'زمان خواندن تصویر تمام شد؛ عکس واضح‌تر یا کوچک‌تر را امتحان کنید':'اتصال به سرور برقرار نشد')}
+  try{r=await fetch(SB_URL+'/functions/v1/read-table',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+S.access_token},body:JSON.stringify(body),signal:(AbortSignal.timeout?AbortSignal.timeout(body&&(body.tts||body.stt)?30000:(body&&body.chat?70000:110000)):undefined)})}
+  catch(e){throw new Error(e&&(e.name==='TimeoutError'||e.name==='AbortError')?(body&&body.image?'زمان خواندن تصویر تمام شد؛ عکس واضح‌تر یا کوچک‌تر را امتحان کنید':'پاسخ‌گویی سرور بیش از حد طول کشید؛ دوباره امتحان کنید'):'اتصال به سرور برقرار نشد')}
   const j=await r.json().catch(()=>({}));
   if(r.status===404)throw new Error('سرویس هوشمند هنوز روی سرور نصب نشده');
   if(!r.ok)throw new Error((j.error||('خطای سرور '+r.status))+(j.hint?'\n'+j.hint:''));
@@ -2758,17 +2759,30 @@ function renderCard(){
     const last=localStorage.getItem('sosLast');
     card.innerHTML='<div style="display:flex;gap:8px"><button data-a="ask" type="button" style="flex:1;background:#c62828;color:#fff;border:0;border-radius:14px;padding:11px;font-size:16px;font-weight:700;box-shadow:0 4px 14px rgba(198,40,40,.4)">🆘 اعلام خطر</button><button data-a="cfg" type="button" class="o" style="border-radius:14px;padding:11px 14px;background:var(--sf)" title="تنظیمات اعلام خطر">⚙️</button></div>'
       +(last?'<button data-a="save" data-sid="'+last+'" type="button" class="o" style="width:100%;margin-top:6px;font-size:12px;background:var(--sf)">💾 ذخیرهٔ ضبط آخرین اعلام خطر</button>':'');
-    if(fab) fab.innerHTML = '⚠️<span>اعلام خطر</span>';
+    syncUi();
   }else{
     card.innerHTML='<div style="background:#c62828;color:#fff;border-radius:14px;padding:12px;box-shadow:0 4px 14px rgba(198,40,40,.45)"><b>🔴 اعلام خطر فعال است</b><div id="sosStat" style="font-size:12.5px;line-height:2;margin:6px 0"></div><div style="display:flex;gap:6px;flex-wrap:wrap">'
       +'<button data-a="call" type="button" style="'+BS+'">📞 تماس</button><button data-a="sms" type="button" style="'+BS+'">✉️ پیامک</button><button data-a="save" data-sid="'+st.id+'" type="button" style="'+BS+'">💾 ذخیرهٔ ضبط</button><button data-a="end" type="button" style="background:#fff;color:#c62828;font-weight:700;border:0">✅ در امانم</button></div></div>';
     stat();
-    if(fab) fab.innerHTML = '🔴<span>در خطر</span>';
+    syncUi();
   }
 }
+const tabNow=()=>document.body.dataset.tab||'home';
+function syncUi(){
+  const u=user(),big=tabNow()==='m'||tabNow()==='home';
+  if(card)card.classList.toggle('hid',!u||!big);
+  if(fab){fab.classList.toggle('hid',!u||big);fab.classList.toggle('act',!!st);fab.innerHTML=st?'🔴<span>خطر فعال</span>':'⚠️<span>اعلام خطر</span>'}
+}
+document.addEventListener('hktab',syncUi);
+function openPanel(){
+  dlg('<div style="background:#c62828;color:#fff;border-radius:14px;padding:12px"><b>🔴 اعلام خطر فعال است</b><div id="sosStat2" style="font-size:12.5px;line-height:2;margin:6px 0"></div><div style="display:flex;gap:6px;flex-wrap:wrap">'
+   +'<button data-a="call" type="button" style="'+BS+'">📞 تماس</button><button data-a="sms" type="button" style="'+BS+'">✉️ پیامک</button><button data-a="save" data-sid="'+st.id+'" type="button" style="'+BS+'">💾 ذخیرهٔ ضبط</button><button data-a="end" type="button" style="background:#fff;color:#c62828;font-weight:700;border:0">✅ در امانم</button></div></div>'
+   +'<button id="sosPanelX" type="button" class="o" style="width:100%;margin-top:8px">بستن</button>');
+  Q('#sosPanelX').onclick=closeDlg;stat();
+}
 function stat(){
-  const e=Q('#sosStat');if(!e||!st)return;
-  const c=CFG(); const homeBtn=document.getElementById('app-header'); if(homeBtn) homeBtn.click();
+  const e=Q('#sosStat2')||Q('#sosStat');if(!e||!st)return;
+  const c=CFG();
   const g=cur?'📍 موقعیت دریافت شد (±'+toFa(Math.round(cur.acc||0))+' متر)':'⚠️ موقعیت دریافت نمی‌شود — GPS (مکان) گوشی را روشن کنید';
   const r=fl.rec===true?'🎙️ ضبط '+(c.video?'صدا و تصویر':'صدا')+' فعال':(fl.rec===false?'⚠️ ضبط فعال نیست'+(fl.err?' ('+esc(fl.err)+')':''):'🎙️ در حال آماده‌سازی ضبط…');
   const n=fl.net===true?'📡 هشدار برای کاربران دیگر ارسال شد':(fl.net===false?'📴 آفلاین — ذخیره می‌شود و با اتصال ارسال می‌شود':'📡 در حال ارسال…');
@@ -2784,18 +2798,11 @@ if(card)card.onclick=e=>{
   else if(a==='sms'){c.nums.length?location.href=smsLink():openCfg()}
   else if(a==='end')openEnd();
 };
-if(fab)fab.onclick=()=>{
-  if(st) {
-    const homeBtn=document.getElementById('app-header');
-    if(homeBtn) homeBtn.click();
-    setTimeout(()=>card.scrollIntoView({behavior:'smooth'}),150);
-  } else {
-    openConfirm();
-  }
-};
+ov.onclick=card.onclick; // همان کنش‌ها داخل پنجرهٔ خطر (وقتی دکمهٔ گرد زده می‌شود)
+if(fab)fab.onclick=()=>{st?openPanel():openConfirm()};
 
 function openCfg(){
-  const c=CFG(); const homeBtn=document.getElementById('app-header'); if(homeBtn) homeBtn.click();
+  const c=CFG();
   const row=(v,i)=>'<div class="sosNr" style="display:flex;gap:6px;margin-top:5px"><input class="sosN" type="tel" dir="ltr" value="'+esc(v)+'" placeholder="'+(i?'شمارهٔ '+toFa(i+1)+' (پیامک)':'شمارهٔ ۱ (تماس + پیامک)')+'" style="flex:1">'+(i?'<button type="button" class="o sosRm" style="padding:4px 12px">×</button>':'')+'</div>';
   dlg('<b>⚙️ تنظیمات اعلام خطر</b><div style="font-size:12px;color:var(--mu)">با شمارهٔ ۱ تماس گرفته می‌شود؛ پیامک برای همهٔ شماره‌ها ارسال می‌شود. فقط روی همین دستگاه ذخیره می‌شود.</div>'
    +'<div id="sosNums">'+(c.nums.length?c.nums:['']).map(row).join('')+'</div>'
@@ -2822,7 +2829,7 @@ async function gpsEnsure(){
 }
 
 function openConfirm(){
-  const c=CFG(); const homeBtn=document.getElementById('app-header'); if(homeBtn) homeBtn.click();
+  const c=CFG();
   prime();SB.fresh().catch(()=>{});
   dlg('<div style="font-size:18px;font-weight:700;color:#c62828">🆘 اعلام خطر</div>'
    +'<div>آیا مطمئن هستید که در خطر هستید؟<br>با تأیید: '+(c.nums.length?'پیامک خودکار برای '+toFa(c.nums.length)+' شماره ارسال و با شمارهٔ ۱ تماس گرفته می‌شود؛ ':'<b>(شماره‌ای تعریف نشده است)</b> ')+'هشدار و موقعیت و مسیر شما برای کاربران ثبت‌نام‌شدهٔ برنامه نمایش داده می‌شود و '+(c.video?'صدا و تصویر':'صدا')+' ضبط می‌شود.</div>'
@@ -2846,7 +2853,7 @@ async function smsAuto(text){
 }
 function startSOS(){
   const u=user();if(!u){closeDlg();return}
-  const c=CFG(); const homeBtn=document.getElementById('app-header'); if(homeBtn) homeBtn.click();
+  const c=CFG();
   st={id:(crypto.randomUUID?crypto.randomUUID():'x'+Date.now()+Math.random().toString(16).slice(2)),t0:Date.now(),track:[],last:null,name:u.name,uid:u.uid,created:false,sentAt:0};
   if(cur)st.last=[+cur.lat.toFixed(6),+cur.lng.toFixed(6),Date.now()];
   seq=0;fl={rec:null,net:null,err:'',sms:c.nums.length?null:'شماره‌ای تعریف نشده'};
@@ -2985,453 +2992,470 @@ async function poll(){
   }catch(e){}
 }
 let n=0;
-setInterval(()=>{const u=user();if(card)card.classList.toggle('hid',!u);if(u&&!st)resume();if(!u){renderAlerts([])}else if(++n%4===0)poll();if(st)stat()},3000);
+setInterval(()=>{const u=user();syncUi();if(u&&!st)resume();if(!u){renderAlerts([])}else if(++n%4===0)poll();if(st)stat()},3000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(st)lock();poll()}});
 renderCard();
 })();
 </script>
 
 <script>
-
-/* ===== دستیار هوش مصنوعی (چت، صورتجلسه، صوت زنده) ===== */
+/* ===== دستیار هوش مصنوعی (چت، صورتجلسه، گفتگوی صوتی) — نسخهٔ ۱۷ ===== */
 (function(){
 const Q=s=>document.querySelector(s);
 const box=Q('#aiMsgs'),inp=Q('#aiIn'),sendB=Q('#aiSend');
 if(!box||!inp)return;
-let hist=[];try{hist=JSON.parse(localStorage.getItem('aiChat')||'[]')}catch(e){}
-let busy=false;
-const save=()=>{try{localStorage.setItem('aiChat',JSON.stringify(hist.slice(-24)))}catch(e){}};
+const loggedIn=()=>!!(window.hkAiLoggedIn&&window.hkAiLoggedIn());
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
-// --- متغیرهای صوتی ---
-let voiceMode = false;
-let speakReplies = true;
-let holdMic = false;        // میکروفن تکی (بدون حالت مکالمه) تا قطع دستی باز بماند
-let isSpeaking = false;
-let recognizing = false;
-const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-let rec = null;
+/* ---------- حالت‌ها و تاریخچه ---------- */
+const MODES={
+  app:{t:'🧰 دستیار برنامه',ph:'پیام… (از اطلاعات سربرگ فعلی استفاده می‌شود)'},
+  specialist:{t:'🌲 سؤال تخصصی',ph:'سؤال تخصصی جنگل‌داری و قوانین…'},
+  general:{t:'💬 چت آزاد',ph:'هر چه می‌خواهید بپرسید… (اطلاعات سربرگ ارسال نمی‌شود)'}
+};
+let mode='app';try{const m=localStorage.getItem('aiMode');if(MODES[m])mode=m}catch(e){}
+const HK=m=>m==='app'?'aiChat':'aiChat_'+m;
+const loadH=m=>{try{return JSON.parse(localStorage.getItem(HK(m))||'[]')}catch(e){return[]}};
+let hist=loadH(mode),busy=false;
+const save=()=>{try{localStorage.setItem(HK(mode),JSON.stringify(hist.slice(-24)))}catch(e){}};
 
-if (SR) {
-  rec = new SR();
-  rec.lang = 'fa-IR';
-  rec.interimResults = true;
-  rec.continuous = true;
+/* ---------- استایل و نوارهای کمکی ---------- */
+const st=document.createElement('style');
+st.textContent='#aiModeBar{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;margin:2px 0 6px}#aiModeBar b{color:var(--ac)}#aiModeBar button{padding:3px 10px;font-size:12px}'
++'#aiVoiceBar{display:flex;align-items:center;gap:8px;background:#1b3a2a;color:#fff;border-radius:12px;padding:8px 12px;margin:6px 0;font-size:13px}#aiVoiceBar[data-s=listen]{background:#2e7d32}#aiVoiceBar[data-s=think]{background:#37474f}#aiVoiceBar[data-s=speak]{background:#1565c0}#aiVoiceBar[data-s=warn]{background:#b36b00}'
++'#aiVoiceBar span{flex:1}#aiVoiceBar i{display:block;width:46px;height:8px;border-radius:4px;background:rgba(255,255,255,.25);overflow:hidden}#aiVoiceBar i b{display:block;height:100%;width:0;background:#fff;transition:width .08s}'
++'#aiVoiceBar button{padding:5px 10px;font-size:12px;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.5)}';
+document.head.appendChild(st);
+const modeBar=document.createElement('div');modeBar.id='aiModeBar';
+Q('#aiChips').parentNode.insertBefore(modeBar,Q('#aiChips'));
+const bar=document.createElement('div');bar.id='aiVoiceBar';bar.className='hid';
+bar.innerHTML='<span id="aiVoiceTxt"></span><i><b id="aiLevel"></b></i><button type="button" id="aiVoiceSkip" class="hid">✋ قطع</button><button type="button" id="aiVoiceEnd">⏹ پایان</button>';
+box.parentNode.insertBefore(bar,box);
+const vTxt=Q('#aiVoiceTxt'),vLvl=Q('#aiLevel'),vSkip=Q('#aiVoiceSkip'),vEnd=Q('#aiVoiceEnd');
+function setBar(s,txt){bar.classList.remove('hid');bar.dataset.s=s;vTxt.textContent=txt;vSkip.classList.toggle('hid',s!=='speak');if(s!=='listen')vLvl.style.width='0'}
+function renderModeBar(){
+  modeBar.innerHTML='<span>حالت گفتگو: <b>'+MODES[mode].t+'</b></span>'+(mode!=='app'?'<button type="button" class="o" id="aiBackApp">↩ دستیار برنامه</button>':'');
+  inp.placeholder=MODES[mode].ph;
+  const b=Q('#aiBackApp');if(b)b.onclick=()=>setMode('app');
+}
+function setMode(m){
+  if(!MODES[m]||m===mode)return;
+  endVoice();save();mode=m;try{localStorage.setItem('aiMode',m)}catch(e){}
+  hist=loadH(mode);renderModeBar();render();
 }
 
-const startListening = () => {
-  if (!rec || recognizing || isSpeaking || busy) return;
-  try {
-    rec.start();
-    recognizing = true;
-    const vb = document.getElementById('aiVoiceMode');
-    if (vb && voiceMode) vb.className = 'listening';
-    const mb = document.getElementById('aiMic');
-    if (mb) mb.classList.add('rec');
-  } catch (e) {}
-};
-
-const stopListening = () => {
-  if (!rec) return;
-  try { if (recognizing) rec.stop(); } catch (e) {}
-  recognizing = false;
-  const vb = document.getElementById('aiVoiceMode');
-  if (vb && voiceMode) vb.className = 'active';
-  const mb = document.getElementById('aiMic');
-  if (mb) mb.classList.remove('rec');
-};
-
-const canSpeakPersian = () => {
-  try {
-    if (!window.speechSynthesis) return false;
-    const voices = window.speechSynthesis.getVoices() || [];
-    if (!voices.length) return true; // هنوز لود نشده؛ امتحان کن
-    return voices.some(v => /fa|per(sian)?/i.test(v.lang || '') || /fa|per(sian)?/i.test(v.name || ''));
-  } catch (e) { return false; }
-};
-
-const speakText = (text, callback) => {
-  const done = () => { if (callback) callback(); };
-  if (!window.speechSynthesis || !speakReplies) { done(); return; }
-  // اگر صدای فارسی در دسترس نیست، بدون پخش ادامه بده (حلقه مکالمه نشکند)
-  if (!canSpeakPersian()) { done(); return; }
-  window.speechSynthesis.cancel();
-  const utt = new SpeechSynthesisUtterance(text);
-  utt.lang = 'fa-IR';
-  utt.rate = 1.0;
-  let finished = false;
-  const finish = () => {
-    if (finished) return;
-    finished = true;
-    isSpeaking = false;
-    done();
-  };
-  utt.onstart = () => { isSpeaking = true; };
-  utt.onend = finish;
-  utt.onerror = finish;
-  // اگر TTS گیر کرد، بعد از ۱۵ ثانیه ادامه بده
-  setTimeout(finish, 15000);
-  try { window.speechSynthesis.speak(utt); } catch (e) { finish(); }
-};
-
-if (rec) {
-  rec.onresult = (e) => {
-    let finalText = '', interimText = '';
-    for (let i = e.resultIndex; i < e.results.length; i++) {
-      const t = e.results[i][0].transcript;
-      if (e.results[i].isFinal) finalText += t;
-      else interimText += t;
-    }
-    inp.value = finalText + interimText;
-
-    if (voiceMode && finalText.trim().length > 0) {
-      setTimeout(() => {
-        if (inp.value.trim() === finalText.trim() && !isSpeaking && !busy) {
-          holdMic = false;
-          sendB.click();
-        }
-      }, 800);
-    }
-  };
-
-  rec.onerror = (e) => {
-    recognizing = false;
-    const vb = document.getElementById('aiVoiceMode');
-    if (vb && voiceMode) vb.className = 'active';
-    const mb = document.getElementById('aiMic');
-    if (mb) mb.classList.remove('rec');
-    if (e.error === 'not-allowed') {
-      alert('دسترسی به میکروفن رد شد.');
-      voiceMode = false;
-      holdMic = false;
-      return;
-    }
-    // ری‌استارت فقط اگر هنوز باید گوش بدهد
-    if ((voiceMode || holdMic) && !busy && !isSpeaking) {
-      setTimeout(() => {
-        if ((voiceMode || holdMic) && !busy && !recognizing) startListening();
-      }, 1000);
-    }
-  };
-
-  rec.onend = () => {
-    recognizing = false;
-    const vb = document.getElementById('aiVoiceMode');
-    if (vb && voiceMode) vb.className = 'active';
-    const mb = document.getElementById('aiMic');
-    if (mb) mb.classList.remove('rec');
-    if ((voiceMode || holdMic) && !isSpeaking && !busy) {
-      setTimeout(() => {
-        if ((voiceMode || holdMic) && !busy && !recognizing) startListening();
-      }, 600);
-    }
-  };
-}
-
-document.getElementById('aiMic').onclick = () => {
-  if (recognizing || holdMic) {
-    holdMic = false;
-    stopListening();
-  } else {
-    holdMic = true;
-    startListening();
-  }
-};
-
-document.getElementById('aiVoiceMode').onclick = () => {
-  voiceMode = !voiceMode;
-  const btn = document.getElementById('aiVoiceMode');
-  if (voiceMode) {
-    btn.classList.add('active');
-    speakReplies = true;
-    holdMic = false;
-    alert('حالت مکالمه فعال شد.\nصحبت کنید؛ اگر گوشی صدای فارسی نداشته باشد فقط متن نشان داده می‌شود.');
-    startListening();
-  } else {
-    btn.className = '';
-    stopListening();
-    if (window.speechSynthesis) window.speechSynthesis.cancel();
-  }
-};
-
-
-function ctx(){
-  const R=(x,d=2)=>+(+x).toFixed(d),sh=getActiveSheet()||{},u=window.SB&&SB.user&&SB.user();
-  const ind=T.filter(t=>t.ty!=='h'&&t.k!=='planted'),fw=T.filter(t=>t.ty==='h'&&t.k!=='planted'),pl=T.filter(t=>t.k==='planted');
-  const mode=sh.mode||'garden';
-  const o={
-    date:new Date().toLocaleDateString('fa-IR'),
-    user:u&&u.name||'',
-    sheet_name:sh.name||'',
-    land_type:mode==='garden'?'باغی/جنگلی (با محاسبهٔ عوارض)':'جنگل',
-    trees:{
-      total:ct(ind)+ct(fw)+ct(pl),
-      industrial:ct(ind),
-      industrial_m3:R(sv(ind)),
-      firewood:ct(fw),
-      firewood_m3:R(sv(fw)),
-      planted:ct(pl),
-      without_coordinates:T.filter(t=>!t.lat).length
-    },
-    map_polygons:MAPP.length,
-    track_points:TRACK.length,
-    walk_meters:Math.round(walkMeters||0)
-  };
-  if(mode==='garden'){
-    o.tax_estimate_rials=T.reduce((a,t)=>a+taxOf(t),0);
-  }
-  // فقط خلاصه گونه‌های اصلی (حداکثر ۸)
-  const sp={};
-  T.forEach(t=>{
-    const k=t.sp||'نامشخص';
-    const e=sp[k]||(sp[k]={n:0,v:0});
-    e.n+=cnt(t); e.v+=tv(t);
-  });
-  o.top_species=Object.entries(sp)
-    .sort((a,b)=>b[1].v-a[1].v)
-    .slice(0,8)
-    .map(([name,x])=>({name,count:x.n,volume_m3:R(x.v)}));
+/* ---------- خلاصهٔ سربرگ برای دستیار (بدون جابه‌جا کردن T سراسری) ---------- */
+function ctx(sh,compact){
+  sh=sh||getActiveSheet()||{};
+  const isA=sh.id===activeId,TT=isA?T:(sh.trees||[]),MP=isA?MAPP:((sh.map&&sh.map.p)||[]),TK=isA?TRACK:(sh.track||[]);
+  const R=(x,d=2)=>+(+x).toFixed(d),u=window.SB&&SB.user&&SB.user();
+  const ind=TT.filter(t=>t.ty!=='h'&&t.k!=='planted'),fw=TT.filter(t=>t.ty==='h'&&t.k!=='planted'),pl=TT.filter(t=>t.k==='planted');
+  const md=sh.mode||'garden';
+  const o={date:new Date().toLocaleDateString('fa-IR'),user:u&&u.name||'',sheet_name:sh.name||'',
+    land_type:md==='garden'?'باغی/جنگلی (با محاسبهٔ عوارض)':'جنگل',
+    trees:{total:ct(ind)+ct(fw)+ct(pl),industrial:ct(ind),industrial_m3:R(sv(ind)),firewood:ct(fw),firewood_m3:R(sv(fw)),planted:ct(pl),without_coordinates:TT.filter(t=>!t.lat).length},
+    map_polygons:MP.length,track_points:TK.length};
+  if(isA)o.walk_meters=Math.round(walkMeters||0);
+  if(md==='garden')o.tax_estimate_rials=TT.reduce((a,t)=>a+taxOf(t),0);
+  const hv=TT.filter(t=>t.hv>0);
+  if(hv.length)o.harvest={trees:hv.length,harvest_m3:R(hv.reduce((a,t)=>a+(+t.hv||0),0)),renewed:TT.filter(t=>t.v2).length};
+  const sp={};TT.forEach(t=>{const k=t.sp||'نامشخص',e=sp[k]||(sp[k]={n:0,v:0});e.n+=cnt(t);e.v+=tv(t)});
+  o.top_species=Object.entries(sp).sort((a,b)=>b[1].v-a[1].v).slice(0,compact?5:8).map(([name,x])=>({name,count:x.n,volume_m3:R(x.v)}));
   return o;
 }
 
+/* ---------- نمایش گفتگو ---------- */
 const bub=(m,i)=>m.role==='user'?'<div class="aiU">'+esc(m.content)+'</div>'
-  :'<div class="aiB'+(m.err?' err':'')+'"><div class="aiT">'+esc(m.content)+'</div>'+(m.err?'':'<div class="aiAct"><button type="button" class="o" data-c="'+i+'">📋 کپی</button><button type="button" class="o" data-s="'+i+'">📤 اشتراک</button><button type="button" class="o" data-tts="'+i+'">🔊 خواندن</button></div>')+'</div>';
-
-function lastAssistantText(){
-  for(let i = hist.length - 1; i >= 0; i--){
-    if(hist[i].role === 'assistant' && !hist[i].err) return hist[i].content;
-  }
-  return '';
-}
-
+ :'<div class="aiB'+(m.err?' err':'')+'"><div class="aiT">'+esc(m.content)+'</div>'+(m.err?'':'<div class="aiAct"><button type="button" class="o" data-tts="'+i+'">🔊 خواندن</button></div>')+'</div>';
+function lastAssistantText(){for(let i=hist.length-1;i>=0;i--)if(hist[i].role==='assistant'&&!hist[i].err)return hist[i].content;return''}
 function render(){
-  box.innerHTML=hist.length?hist.map(bub).join('')+(busy?'<div class="aiB"><div class="aiT m">⏳ در حال نوشتن…</div></div>':'') : '<div class="m" style="text-align:center;padding:14px 6px">سلام! یکی از گزینه‌های بالا را بزنید یا سؤالتان را بنویسید.</div>';
+  box.innerHTML=hist.length?hist.map(bub).join('')+(busy?'<div class="aiB"><div class="aiT m">⏳ در حال نوشتن…</div></div>':''):'<div class="m" style="text-align:center;padding:14px 6px">سلام! یکی از گزینه‌های بالا را بزنید، سؤالتان را بنویسید یا 🗣️ را بزنید و حرف بزنید.</div>';
   box.scrollTop=box.scrollHeight;sendB.disabled=busy;sendB.textContent=busy?'…':'ارسال';
-  const act = document.getElementById('aiActions');
-  if(act){
-    const t = lastAssistantText();
-    act.classList.toggle('hid', !t);
-  }
+  const act=Q('#aiActions');if(act)act.classList.toggle('hid',!lastAssistantText());
 }
-
-async function send(text, contextOverride){
-  text=String(text==null?inp.value:text).trim();if(!text||busy)return;
-  if(voiceMode) stopListening();
-  
-  if(!(window.hkAiLoggedIn&&window.hkAiLoggedIn())){hist.push({role:'user',content:text});hist.push({role:'assistant',content:'برای استفاده از دستیار ابتدا وارد حساب کاربری شوید (ورود مهمان کافی نیست).',err:true});inp.value='';render();return}
+async function send(text,o){
+  o=o||{};text=String(text==null?inp.value:text).trim();if(!text||busy)return null;
+  if(!loggedIn()){hist.push({role:'user',content:text});hist.push({role:'assistant',content:'برای استفاده از دستیار ابتدا وارد حساب کاربری شوید (ورود مهمان کافی نیست).',err:true});inp.value='';render();return null}
+  if(o.mode&&o.mode!==mode)setMode(o.mode);
   hist.push({role:'user',content:text.slice(0,3000)});inp.value='';busy=true;render();
   try{
-    const msgs=hist.filter(m=>!m.err).slice(-8).map(m=>({role:m.role,content:m.content.slice(0,2000)}));
-    const j=await window.hkAiCall({chat:{messages:msgs,context:contextOverride || ctx()}});
-    const replyText = String(j.reply||'').trim() || 'پاسخی دریافت نشد؛ دوباره امتحان کنید.';
-    hist.push({role:'assistant',content:replyText});
-    busy=false; save(); render();
-    
-    if(voiceMode) {
-      speakText(replyText, () => {
-        if(voiceMode) startListening();
-      });
-    }
-  }catch(e){
-    hist.push({role:'assistant',content:'⚠️ '+(e&&e.message||'خطا'),err:true});
-    busy=false; save(); render();
-    if(voiceMode) {
-      speakText('خطایی رخ داد.', () => { if(voiceMode) startListening(); });
-    }
-  }
+    const chat={mode,voice:!!o.voice,messages:hist.filter(m=>!m.err).slice(-8).map(m=>({role:m.role,content:m.content.slice(0,2000)}))};
+    if(mode==='app')chat.context=o.context||ctx();
+    const j=await window.hkAiCall({chat});
+    const reply=String(j.reply||'').trim()||'پاسخی دریافت نشد؛ دوباره امتحان کنید.';
+    hist.push({role:'assistant',content:reply});busy=false;save();render();return reply;
+  }catch(e){hist.push({role:'assistant',content:'⚠️ '+(e&&e.message||'خطا'),err:true});busy=false;save();render();return null}
 }
 
-const CHIPS = [
-  ['📊 تجزیه و تحلیل', 'analysis'],
-  ['📝 دریافت صورتجلسه', 'minutes'],
-  ['🌲 سؤال تخصصی جنگل و قوانین', 'specialist'],
-  ['💬 چت آزاد و عمومی', 'general']
-];
-Q('#aiChips').innerHTML = '<div style="display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;padding:2px 0">' + 
-  CHIPS.map(c => '<button type="button" class="o" data-k="' + c[1] + '" style="flex:1;min-width:72px;min-height:48px;padding:10px 6px;font-size:13px;border-radius:12px;white-space:normal;line-height:1.3">' + c[0] + '</button>').join('') + '</div>';
+/* =====================================================================
+   موتور صوتی
+   گفتگو:  گوش‌دادن (ضبط + تشخیص سکوت) → تبدیل گفتار به متن در سرور (Whisper فارسی)
+           → پاسخ کوتاه هوش مصنوعی → خواندن با صدای فارسی (Gemini TTS) → دوباره گوش‌دادن
+   پشتیبان: تشخیص گفتار مرورگر (SpeechRecognition) و صدای مرورگر (speechSynthesis)
+   قابل‌جایگزینی در اپ اندروید:  window.hkVoiceIO = { record(opts), stt(rec), speak(text,sp) }
+   ===================================================================== */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const V={on:false,tok:0,sp:0,speaking:false,noSpeech:0,errs:0,ttsFail:0,ttsOff:false,sttFail:0,useSR:false,stream:null,ac:null,an:null,cancel:null,player:null,playRes:null,state:'idle'};
+const IO=window.hkVoiceIO=window.hkVoiceIO||{};
+const SILENT='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+const alive=t=>V.on&&t===V.tok;
+const sosBusy=()=>{try{return !!localStorage.getItem('sosActive')}catch(e){return false}};
 
-Q('#aiChips').onclick = e => {
-  const b = e.target.closest('[data-k]');
-  if(!b) return;
-  const k = b.dataset.k;
-  if(k === 'minutes') openMinutesForm();
-  else if(k === 'analysis') startAnalysis();
-  else if(k === 'specialist') { inp.value = 'یک سؤال تخصصی دربارهٔ جنگل‌داری و قوانین منابع طبیعی دارم: '; inp.focus(); }
-  else inp.focus();
-};
+/* --- میکروفون --- */
+async function getMic(){
+  if(V.stream&&V.stream.active&&V.an)return V.stream;
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw Object.assign(new Error('no-mediadevices'),{name:'NotSupportedError'});
+  V.stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+  const AC=window.AudioContext||window.webkitAudioContext;
+  V.ac=new AC();try{await V.ac.resume()}catch(e){}
+  const src=V.ac.createMediaStreamSource(V.stream);V.an=V.ac.createAnalyser();V.an.fftSize=1024;src.connect(V.an);
+  return V.stream;
+}
+function releaseMic(){
+  try{V.stream&&V.stream.getTracks().forEach(t=>t.stop())}catch(e){}
+  try{V.ac&&V.ac.close()}catch(e){}
+  V.stream=null;V.ac=null;V.an=null;
+}
+/* --- ضبط یک جمله با تشخیص خودکار سکوت --- */
+function recordUtterance(o){
+  return new Promise(async(resolve,reject)=>{
+    let stream;try{stream=await getMic()}catch(e){reject(e);return}
+    if(typeof MediaRecorder==='undefined'){reject(Object.assign(new Error('no-recorder'),{name:'NotSupportedError'}));return}
+    const mime=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus'].find(m=>MediaRecorder.isTypeSupported(m))||'';
+    let mr;try{mr=new MediaRecorder(stream,mime?{mimeType:mime}:undefined)}catch(e){reject(e);return}
+    const chunks=[],buf=new Uint8Array(V.an.fftSize),calib=[];
+    let speechAt=-1,lastVoice=0,floor=null,hf=0,done=false,reason='',iv=null;
+    const t0=performance.now();
+    const finish=r=>{if(done)return;done=true;reason=r;clearInterval(iv);V.cancel=null;try{if(mr.state!=='inactive')mr.stop()}catch(e){resolve({blob:null,speechAt:-1,reason:r})}};
+    mr.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
+    mr.onerror=()=>finish('error');
+    mr.onstop=()=>resolve({blob:new Blob(chunks,{type:(mr.mimeType||mime||'audio/webm')}),speechAt,reason,ms:performance.now()-t0});
+    V.cancel=()=>finish('cancel');
+    mr.start(250);
+    iv=setInterval(()=>{
+      V.an.getByteTimeDomainData(buf);let s=0;for(let i=0;i<buf.length;i++){const x=(buf[i]-128)/128;s+=x*x}
+      const rms=Math.sqrt(s/buf.length),now=performance.now()-t0;
+      if(o.onLevel)o.onLevel(rms);
+      if(now<500){calib.push(rms);return}
+      if(floor===null)floor=calib.reduce((a,b)=>a+b,0)/Math.max(1,calib.length);
+      const thr=Math.max(0.03,floor*3);
+      if(rms>thr){hf++;lastVoice=now;if(speechAt<0&&hf>=2)speechAt=Math.max(0,now-450)}else hf=0;
+      if(speechAt>=0&&now-lastVoice>o.silenceMs)finish('silence');
+      else if(speechAt<0&&now>o.noSpeechMs)finish('nospeech');
+      else if(now>o.maxMs)finish('max');
+    },80);
+  });
+}
+/* --- تبدیل ضبط به WAV تک‌کاناله ۱۶kHz (حجم کم و سازگار با همهٔ سرویس‌ها) --- */
+async function blobToWav(blob,fromMs){
+  const ab=await blob.arrayBuffer(),AC=window.AudioContext||window.webkitAudioContext,c=new AC();let buf;
+  try{buf=await new Promise((res,rej)=>{const p=c.decodeAudioData(ab,res,rej);if(p&&p.catch)p.catch(rej)})}finally{try{c.close()}catch(e){}}
+  const sr=buf.sampleRate,ch=buf.getChannelData(0),start=Math.max(0,Math.floor(sr*Math.max(0,fromMs-300)/1000)),ratio=sr/16000,n=Math.floor((ch.length-start)/ratio);
+  if(n<1600)throw new Error('too-short');
+  const pcm=new Int16Array(n);
+  for(let i=0;i<n;i++){const a=start+i*ratio,i0=Math.floor(a),i1=Math.min(ch.length,Math.max(i0+1,Math.floor(a+ratio)));let s=0;for(let j=i0;j<i1;j++)s+=ch[j];const x=Math.max(-1,Math.min(1,s/(i1-i0)));pcm[i]=x<0?x*32768:x*32767}
+  const h=new DataView(new ArrayBuffer(44)),w=(o,s)=>{for(let i=0;i<s.length;i++)h.setUint8(o+i,s.charCodeAt(i))};
+  w(0,'RIFF');h.setUint32(4,36+pcm.length*2,true);w(8,'WAVE');w(12,'fmt ');h.setUint32(16,16,true);h.setUint16(20,1,true);h.setUint16(22,1,true);h.setUint32(24,16000,true);h.setUint32(28,32000,true);h.setUint16(32,2,true);h.setUint16(34,16,true);w(36,'data');h.setUint32(40,pcm.length*2,true);
+  return new Blob([h.buffer,pcm.buffer],{type:'audio/wav'});
+}
+const blobB64=blob=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(',')[1]||'');r.onerror=rej;r.readAsDataURL(blob)});
+const cleanStt=t=>{t=String(t||'').replace(/\s+/g,' ').trim();return t.length<2||/^[.…،\s]+$/.test(t)?'':t};
+async function sttServer(rec){
+  let blob=rec.blob,mime=(rec.blob.type||'audio/webm').split(';')[0];
+  try{blob=await blobToWav(rec.blob,rec.speechAt);mime='audio/wav'}catch(e){}
+  const j=await window.hkAiCall({stt:{audio:await blobB64(blob),mime}});
+  return cleanStt(j.text);
+}
+IO.record=IO.record||recordUtterance;
+IO.stt=IO.stt||sttServer;
 
-function startAnalysis(){
-  if(!(window.hkAiLoggedIn && window.hkAiLoggedIn())){
-    alert('برای تجزیه و تحلیل ابتدا وارد حساب کاربری شوید.');
-    return;
-  }
-  if(SHEETS.length === 1){
-    send('اقدامات صورت‌گرفته در سربرگ «' + SHEETS[0].name + '» را تجزیه و تحلیل کن: نقاط قوت، موارد ناقص، و پیشنهادهای عملی.');
-    return;
-  }
-  hist.push({ role: 'assistant', content: 'کدام سربرگ را تجزیه و تحلیل کنم؟' });
-  render();
-  const wrap = document.createElement('div');
-  wrap.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 8px';
-  wrap.innerHTML =
-    SHEETS.map(s => '<button type="button" class="o" data-an="' + s.id + '" style="padding:6px 10px;font-size:12px">' + esc(s.name) + '</button>').join('') +
-    '<button type="button" class="o" data-an="all" style="padding:6px 10px;font-size:12px;background:var(--ac);color:var(--ac2)">همهٔ سربرگ‌ها</button>';
-  box.appendChild(wrap);
-  box.scrollTop = box.scrollHeight;
-  wrap.onclick = e => {
-    const b = e.target.closest('[data-an]');
-    if(!b) return;
-    wrap.remove();
-    const v = b.dataset.an;
-    if(v === 'all'){
-      const parts = SHEETS.map(s => {
-        const oldT = T;
-        T = s.trees || [];
-        const c = ctx();
-        T = oldT;
-        return '### سربرگ «' + s.name + '»\n' + JSON.stringify(c, null, 0);
-      });
-      send('اقدامات صورت‌گرفته در همهٔ سربرگ‌ها را تجزیه و تحلیل کن. داده‌های هر سربرگ:\n\n' + parts.join('\n\n'));
-    } else {
-      const sh = SHEETS.find(s => s.id === +v);
-      if(!sh) return;
-      const oldT = T; T = sh.trees || [];
-      const c = ctx(); T = oldT;
-      send('اقدامات صورت‌گرفته در سربرگ «' + sh.name + '» را تجزیه و تحلیل کن. داده‌ها:\n' + JSON.stringify(c));
-    }
-  };
+/* --- پشتیبان: تشخیص گفتار مرورگر (هر نوبت یک نمونهٔ تازه؛ هرگز مشترک نمی‌ماند) --- */
+function listenSR(){
+  return new Promise(res=>{
+    if(!SR){res({text:'',err:'no-sr'});return}
+    let r;try{r=new SR()}catch(e){res({text:'',err:'no-sr'});return}
+    r.lang='fa-IR';r.interimResults=true;r.continuous=false;
+    let fin='',tmp='',err='',done=false;
+    const end=()=>{if(done)return;done=true;V.cancel=null;clearTimeout(wd);res({text:cleanStt(fin||tmp),err})};
+    r.onresult=e=>{fin='';tmp='';for(let i=0;i<e.results.length;i++){const x=e.results[i];if(x.isFinal)fin+=x[0].transcript;else tmp+=x[0].transcript}inp.value=(fin+' '+tmp).trim()};
+    r.onerror=e=>{err=e.error||'error'};
+    r.onend=end;
+    const wd=setTimeout(()=>{try{r.abort()}catch(e){}end()},30000);
+    V.cancel=()=>{try{r.abort()}catch(e){}end()};
+    try{r.start()}catch(e){err='start';end()}
+  });
 }
 
-let mmHammerColor = 'قرمز';
-
-function openMinutesForm(){
-  if(!(window.hkAiLoggedIn && window.hkAiLoggedIn())){
-    alert('برای نوشتن صورتجلسه ابتدا وارد حساب کاربری شوید.');
-    return;
+/* --- پخش صدا: سرور (فارسی) ← مرورگر ← فقط متن --- */
+const speechClean=t=>String(t||'').replace(/https?:\/\/\S+/g,' ').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu,'').replace(/[*#_`>~|]/g,' ').replace(/[….]{2,}/g,'، ').replace(/\s*\n+\s*/g,'. ').replace(/\s{2,}/g,' ').trim();
+function ttsChunks(t){
+  const s=t.match(/[^.!؟?؛]+[.!؟?؛]*/g)||[t],out=[];let first='';
+  while(s.length&&first.length<40)first+=(first?' ':'')+s.shift().trim(); // تکهٔ اول کوتاه تا پخش زودتر شروع شود
+  if(first)out.push(first);
+  const rest=s.join(' ').trim();if(rest)out.push(rest.slice(0,650));
+  return out;
+}
+function unlockAudio(){try{if(!V.player)V.player=new Audio();V.player.src=SILENT;const p=V.player.play();if(p&&p.catch)p.catch(()=>{})}catch(e){}}
+async function ttsFetch(text){
+  const j=await window.hkAiCall({tts:{text}});
+  if(!j||!j.audio)throw new Error('no-audio');
+  const bin=atob(j.audio),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+  return URL.createObjectURL(new Blob([u],{type:j.mime||'audio/wav'}));
+}
+function playUrl(url){
+  return new Promise(res=>{
+    const a=V.player||(V.player=new Audio());
+    let fin=false;const done=ok=>{if(fin)return;fin=true;V.playRes=null;a.onended=a.onerror=null;res(ok)};
+    V.playRes=done;a.onended=()=>done(true);a.onerror=()=>done(false);a.src=url;
+    const p=a.play();if(p&&p.catch)p.catch(()=>done(false));
+  });
+}
+async function speakServer(text,sp){
+  const parts=ttsChunks(text),jobs=parts.map(p=>ttsFetch(p).then(u=>({u}),e=>({e})));
+  for(let i=0;i<jobs.length;i++){
+    const r=await jobs[i];
+    if(r.e){if(i===0)throw r.e;break}
+    if(sp!==V.sp){URL.revokeObjectURL(r.u);break}
+    const ok=await playUrl(r.u);URL.revokeObjectURL(r.u);
+    if(!ok){if(sp===V.sp&&i===0)throw new Error('play-failed');break}
   }
-  const sel = document.getElementById('mmSheet');
-  sel.innerHTML = SHEETS.map(s => '<option value="' + s.id + '"' + (s.id === activeId ? ' selected' : '') + '>' + esc(s.name) + '</option>').join('');
-  document.getElementById('mmDate').value = new Date().toLocaleDateString('fa-IR');
-  document.getElementById('minutesModal').classList.remove('hid');
+  jobs.forEach(j=>j.then(r=>{if(r.u)URL.revokeObjectURL(r.u)}));
+}
+async function persianVoice(){
+  const sy=window.speechSynthesis;if(!sy)return null;
+  let v=sy.getVoices();
+  if(!v.length){await new Promise(r=>{const t=setTimeout(r,700);sy.onvoiceschanged=()=>{clearTimeout(t);r()}});v=sy.getVoices()}
+  return v.find(x=>/^fa/i.test(x.lang||''))||v.find(x=>/persian|farsi|فارسی/i.test(x.name||''))||null;
+}
+async function speakBrowser(text,sp){
+  const sy=window.speechSynthesis,voice=await persianVoice();
+  if(!sy||!voice||sp!==V.sp)return false;
+  const parts=ttsChunks(text);sy.cancel();
+  for(const p of parts){
+    if(sp!==V.sp)break;
+    await new Promise(res=>{
+      const u=new SpeechSynthesisUtterance(p);u.lang='fa-IR';u.voice=voice;
+      const t=setTimeout(res,Math.max(5000,p.length*180));
+      u.onend=u.onerror=()=>{clearTimeout(t);res()};
+      try{sy.speak(u)}catch(e){clearTimeout(t);res()}
+    });
+  }
+  return true;
+}
+async function speak(text,sp0){
+  const sp=sp0||++V.sp,clean=speechClean(text);
+  if(!clean)return;
+  V.speaking=true;
+  let ok=false;
+  if(IO.speak){try{ok=!!(await IO.speak(clean,sp))}catch(e){}}
+  if(!ok&&!V.ttsOff){
+    try{await speakServer(clean,sp);ok=true;V.ttsFail=0}catch(e){V.ttsFail++;if(V.ttsFail>=2)V.ttsOff=true}
+  }
+  if(!ok&&sp===V.sp){try{ok=await speakBrowser(clean,sp)}catch(e){}}
+  if(!ok&&sp===V.sp&&V.on)setBar('warn','🔇 خواندن با صدا ممکن نشد (اینترنت یا تنظیمات سرور)؛ فقط متن نمایش داده شد');
+  if(sp===V.sp)V.speaking=false;
+}
+function stopSpeak(){
+  V.sp++;V.speaking=false;
+  try{V.player&&V.player.pause()}catch(e){}
+  if(V.playRes)V.playRes(false);
+  try{window.speechSynthesis&&window.speechSynthesis.cancel()}catch(e){}
 }
 
-document.getElementById('mmToday').onclick = () => {
-  document.getElementById('mmDate').value = new Date().toLocaleDateString('fa-IR');
-};
-document.getElementById('mmCancel').onclick = () => document.getElementById('minutesModal').classList.add('hid');
-
-document.querySelectorAll('#mmHammer [data-c]').forEach(b => {
-  b.onclick = () => {
-    mmHammerColor = b.dataset.c;
-    document.querySelectorAll('#mmHammer [data-c]').forEach(x => x.style.outline = '');
-    b.style.outline = '3px solid #fff';
-  };
-});
-document.getElementById('mmHammerCustom').onchange = e => { mmHammerColor = e.target.value; };
-
-document.getElementById('mmGo').onclick = () => {
-  const shId = +document.getElementById('mmSheet').value;
-  const f = {
-    sheet: (SHEETS.find(s => s.id === shId) || {}).name || '',
-    date: document.getElementById('mmDate').value.trim(),
-    area: document.getElementById('mmArea').value.trim(),
-    series: document.getElementById('mmSeries').value.trim(),
-    decree_no: document.getElementById('mmDecreeNo').value.trim(),
-    decree_date: document.getElementById('mmDecreeDate').value.trim(),
-    hammer_color: mmHammerColor
-  };
-  document.getElementById('minutesModal').classList.add('hid');
-
-  const oldActive = activeId;
-  let ctxOverride = null;
-  if (shId !== activeId) {
-    const sh = SHEETS.find(s => s.id === shId);
-    if (sh) {
-      const oldT = T;
-      T = sh.trees || [];
-      ctxOverride = ctx();
-      T = oldT;
-    }
-  }
-
-  const prompt =
-    'برای سربرگ «' + f.sheet + '» یک صورتجلسهٔ رسمی نشانه‌گذاری درختان بنویس.\n' +
-    '- تاریخ اقدام: ' + (f.date || '……') + '\n' +
-    '- منطقه/پارسل: ' + (f.area || '……') + '\n' +
-    '- سری: ' + (f.series || '……') + '\n' +
-    '- شمارهٔ حکم نشانه‌گذاری: ' + (f.decree_no || '……') + '\n' +
-    '- تاریخ حکم: ' + (f.decree_date || '……') + '\n' +
-    '- رنگ چکش: ' + f.hammer_color + '\n' +
-    'از آمار و حجم‌های «اطلاعات سربرگ» استفاده کن. هر چیز نامعلوم دیگر (حاضرین، ساعت، شمارهٔ نامه) را با «……» خالی بگذار. سبک: اداری و رسمی ایران.';
-
-  send(prompt, ctxOverride);
-};
-
-box.onclick=async e=>{
-  const c=e.target.closest('[data-c]'),s=e.target.closest('[data-s]'),tts=e.target.closest('[data-tts]');
-  const i=c?+c.dataset.c:s?+s.dataset.s:tts?+tts.dataset.tts:-1;
-  if(i<0||!hist[i])return;
-  const t=hist[i].content;
-  
-  if(c){
-    try{await navigator.clipboard.writeText(t);c.textContent='✓ کپی شد'}catch(x){
-      const ta=document.createElement('textarea');ta.value=t;document.body.append(ta);ta.select();
-      try{document.execCommand('copy');c.textContent='✓ کپی شد'}catch(y){}ta.remove();
-    }
-  } else if(s){
-    if(navigator.share){try{await navigator.share({text:t})}catch(x){}}
-    else{try{await navigator.clipboard.writeText(t);s.textContent='✓ کپی شد'}catch(x){}}
-  } else if(tts){
-    if(window.speechSynthesis){
-      if(window.speechSynthesis.speaking){ window.speechSynthesis.cancel(); tts.textContent='🔊 خواندن'; }
-      else {
-        const utt = new SpeechSynthesisUtterance(t);
-        utt.lang = 'fa-IR';
-        utt.onend = () => { tts.textContent = '🔊 خواندن'; };
-        tts.textContent = '⏹ توقف';
-        window.speechSynthesis.speak(utt);
+/* --- حلقهٔ گفتگوی صوتی --- */
+function endVoice(msg){
+  const was=V.on;V.on=false;V.tok++;
+  stopSpeak();if(V.cancel){try{V.cancel()}catch(e){}}
+  releaseMic();
+  const b=Q('#aiVoiceMode');if(b)b.className='';
+  const m=Q('#aiMic');if(m)m.classList.remove('rec');
+  if(msg){setBar('warn',msg);setTimeout(()=>{if(!V.on)bar.classList.add('hid')},4500)}
+  else bar.classList.add('hid');
+  return was;
+}
+function micMsg(e){
+  const n=e&&e.name;
+  if(n==='NotAllowedError'||n==='SecurityError')return 'دسترسی میکروفن داده نشد؛ در تنظیمات مرورگر یا برنامه آن را مجاز کنید.';
+  if(n==='NotFoundError')return 'میکروفنی پیدا نشد.';
+  return 'میکروفن در این محیط در دسترس نیست.';
+}
+async function turn(tok){
+  if(!alive(tok))return;
+  if(sosBusy()){endVoice('در حالت اعلام خطر، گفتگوی صوتی غیرفعال است.');return}
+  let text='';
+  try{
+    if(!V.useSR){
+      setBar('listen','🎙️ گوش می‌دهم… صحبت کنید');
+      const rec=await IO.record({silenceMs:1400,noSpeechMs:9000,maxMs:25000,onLevel:l=>{vLvl.style.width=Math.min(100,Math.round(l*900))+'%'}});
+      if(!alive(tok))return;
+      if(rec.reason==='cancel'||rec.reason==='error'&&!rec.blob)return;
+      if(rec.text!==undefined)text=cleanStt(rec.text); // اپ بومی می‌تواند مستقیماً متن بدهد
+      else if(rec.speechAt<0||!rec.blob){
+        if(++V.noSpeech>=3){endVoice('چیزی نشنیدم؛ گفتگو پایان یافت. دوباره 🗣️ را بزنید.');return}
+        setTimeout(()=>turn(tok),150);return;
+      }else{
+        setBar('think','⏳ در حال تشخیص گفتار…');
+        try{text=await IO.stt(rec);V.sttFail=0}
+        catch(e){
+          if(!alive(tok))return;
+          if(++V.sttFail>=2&&SR){V.useSR=true;setBar('warn','تشخیص گفتار سرور در دسترس نیست؛ از تشخیص مرورگر استفاده می‌شود.')}
+          else if(V.sttFail>=3){endVoice('تبدیل گفتار به متن انجام نشد: '+(e&&e.message||'خطا'));return}
+          await sleep(250);setTimeout(()=>turn(tok),100);return;
+        }
       }
-    } else alert('پشتیبانی نمی‌شود.');
+    }else{
+      setBar('listen','🎙️ گوش می‌دهم… (تشخیص مرورگر)');
+      const r=await listenSR();if(!alive(tok))return;
+      if(r.err==='not-allowed'||r.err==='service-not-allowed'){endVoice(micMsg({name:'NotAllowedError'}));return}
+      if(r.err==='network'){endVoice('برای تشخیص گفتار مرورگر اینترنت لازم است.');return}
+      text=r.text;
+    }
+  }catch(e){if(alive(tok))endVoice(micMsg(e));return}
+  if(!alive(tok))return;
+  if(!text){
+    if(++V.noSpeech>=3){endVoice('چیزی نشنیدم؛ گفتگو پایان یافت. دوباره 🗣️ را بزنید.');return}
+    setTimeout(()=>turn(tok),150);return;
   }
+  V.noSpeech=0;inp.value=text;
+  setBar('think','⏳ در حال فکر کردن…');
+  const reply=await send(text,{voice:true});
+  if(!alive(tok))return;
+  if(!reply){
+    if(++V.errs>=2){endVoice('خطا در دریافت پاسخ؛ گفتگو متوقف شد.');return}
+    setTimeout(()=>turn(tok),700);return;
+  }
+  V.errs=0;
+  setBar('speak','🔊 در حال پاسخ دادن…');
+  await speak(reply);
+  if(alive(tok))setTimeout(()=>turn(tok),350); // نوبت کاربر
+}
+function startVoice(){
+  if(!loggedIn()){hist.push({role:'assistant',content:'برای گفتگوی صوتی ابتدا وارد حساب کاربری شوید.',err:true});render();return}
+  if(sosBusy()){setBar('warn','در حالت اعلام خطر، گفتگوی صوتی غیرفعال است.');return}
+  if(busy)return;
+  unlockAudio();
+  V.on=true;V.tok++;V.noSpeech=0;V.errs=0;V.sttFail=0;V.ttsFail=0;V.ttsOff=false;
+  V.useSR=!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&typeof MediaRecorder!=='undefined')&&!!SR;
+  if(V.useSR===false&&!(navigator.mediaDevices&&typeof MediaRecorder!=='undefined')&&!SR){endVoice('این محیط از میکروفن پشتیبانی نمی‌کند.');return}
+  Q('#aiVoiceMode').className='active';
+  turn(V.tok);
+}
+Q('#aiVoiceMode').onclick=()=>{V.on?endVoice():startVoice()};
+vEnd.onclick=()=>endVoice();
+vSkip.onclick=()=>{stopSpeak()}; // پاسخ را قطع کن؛ حلقه بلافاصله به گوش‌دادن می‌رود
+
+/* --- میکروفن تکی: فقط متن را در کادر می‌نویسد (بدون ارسال خودکار) --- */
+let dict=false;
+Q('#aiMic').onclick=async()=>{
+  const mb=Q('#aiMic');
+  if(dict){dict=false;if(V.cancel)V.cancel();return}
+  if(V.on){return}
+  dict=true;mb.classList.add('rec');unlockAudio();
+  try{
+    let text='';
+    if(SR){const r=await listenSR();text=r.text;if(!text&&r.err==='not-allowed')alert(micMsg({name:'NotAllowedError'}))}
+    else{
+      const rec=await IO.record({silenceMs:1300,noSpeechMs:8000,maxMs:25000});
+      if(rec.reason!=='cancel'&&rec.blob&&rec.speechAt>=0)text=await IO.stt(rec);
+      releaseMic();
+    }
+    if(text)inp.value=(inp.value?inp.value+' ':'')+text;
+  }catch(e){releaseMic();alert(e&&e.name&&/NotAllowed|NotFound|NotSupported/.test(e.name)?micMsg(e):'تشخیص گفتار انجام نشد: '+(e&&e.message||'خطا'))}
+  dict=false;mb.classList.remove('rec');
+};
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.t!=='a')endVoice()}));
+const hd=document.getElementById('app-header');if(hd)hd.addEventListener('click',()=>endVoice());
+document.addEventListener('visibilitychange',()=>{if(document.hidden)endVoice()});
+
+/* ---------- گزینه‌های چهارگانه ---------- */
+const CHIPS=[['📊 تجزیه و تحلیل','analysis'],['📝 دریافت صورتجلسه','minutes'],['🌲 سؤال تخصصی جنگل و قوانین','specialist'],['💬 چت آزاد و عمومی','general']];
+Q('#aiChips').innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">'+CHIPS.map(c=>'<button type="button" class="o" data-k="'+c[1]+'" style="min-height:48px;padding:10px 6px;font-size:13px;border-radius:12px;white-space:normal;line-height:1.3">'+c[0]+'</button>').join('')+'</div>';
+Q('#aiChips').onclick=e=>{
+  const b=e.target.closest('[data-k]');if(!b)return;const k=b.dataset.k;
+  if(k==='minutes')openMinutesForm();
+  else if(k==='analysis')startAnalysis();
+  else{setMode(k);inp.focus()}
+};
+function startAnalysis(){
+  if(!loggedIn()){alert('برای تجزیه و تحلیل ابتدا وارد حساب کاربری شوید.');return}
+  if(SHEETS.length===1){send('اقدامات صورت‌گرفته در سربرگ «'+SHEETS[0].name+'» را تجزیه و تحلیل کن: نقاط قوت، موارد ناقص و پیشنهادهای عملی.',{mode:'app',context:ctx(SHEETS[0])});return}
+  if(mode!=='app')setMode('app');
+  hist.push({role:'assistant',content:'کدام سربرگ را تجزیه و تحلیل کنم؟'});render();
+  const wrap=document.createElement('div');wrap.style.cssText='display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 8px';
+  wrap.innerHTML=SHEETS.map(s=>'<button type="button" class="o" data-an="'+s.id+'" style="padding:6px 10px;font-size:12px">'+esc(s.name)+'</button>').join('')+'<button type="button" class="o" data-an="all" style="padding:6px 10px;font-size:12px;background:var(--ac);color:var(--ac2)">همهٔ سربرگ‌ها</button>';
+  box.appendChild(wrap);box.scrollTop=box.scrollHeight;
+  wrap.onclick=e=>{
+    const b=e.target.closest('[data-an]');if(!b)return;wrap.remove();const v=b.dataset.an;
+    if(v==='all')send('اقدامات صورت‌گرفته در همهٔ سربرگ‌ها را تجزیه و تحلیل و با هم مقایسه کن.',{mode:'app',context:{sheets:SHEETS.map(s=>ctx(s,true))}});
+    else{const sh=SHEETS.find(s=>s.id===+v);if(sh)send('اقدامات صورت‌گرفته در سربرگ «'+sh.name+'» را تجزیه و تحلیل کن: نقاط قوت، موارد ناقص و پیشنهادهای عملی.',{mode:'app',context:ctx(sh)})}
+  };
+}
+
+/* ---------- فرم صورتجلسه ---------- */
+let mmHammerColor='قرمز';
+function openMinutesForm(){
+  if(!loggedIn()){alert('برای نوشتن صورتجلسه ابتدا وارد حساب کاربری شوید.');return}
+  Q('#mmSheet').innerHTML=SHEETS.map(s=>'<option value="'+s.id+'"'+(s.id===activeId?' selected':'')+'>'+esc(s.name)+'</option>').join('');
+  Q('#mmDate').value=new Date().toLocaleDateString('fa-IR');
+  Q('#minutesModal').classList.remove('hid');
+}
+Q('#mmToday').onclick=()=>{Q('#mmDate').value=new Date().toLocaleDateString('fa-IR')};
+Q('#mmCancel').onclick=()=>Q('#minutesModal').classList.add('hid');
+document.querySelectorAll('#mmHammer [data-c]').forEach(b=>{b.onclick=()=>{mmHammerColor=b.dataset.c;document.querySelectorAll('#mmHammer [data-c]').forEach(x=>x.style.outline='');b.style.outline='3px solid #fff'}});
+Q('#mmHammerCustom').onchange=e=>{mmHammerColor=e.target.value};
+Q('#mmGo').onclick=()=>{
+  const sh=SHEETS.find(s=>s.id===+Q('#mmSheet').value)||getActiveSheet();
+  const f={sheet:(sh&&sh.name)||'',date:Q('#mmDate').value.trim(),area:Q('#mmArea').value.trim(),series:Q('#mmSeries').value.trim(),decree_no:Q('#mmDecreeNo').value.trim(),decree_date:Q('#mmDecreeDate').value.trim()};
+  Q('#minutesModal').classList.add('hid');
+  send('برای سربرگ «'+f.sheet+'» یک صورتجلسهٔ رسمی نشانه‌گذاری درختان بنویس.\n- تاریخ اقدام: '+(f.date||'……')+'\n- منطقه/پارسل: '+(f.area||'……')+'\n- سری: '+(f.series||'……')+'\n- شمارهٔ حکم نشانه‌گذاری: '+(f.decree_no||'……')+'\n- تاریخ حکم: '+(f.decree_date||'……')+'\n- رنگ چکش: '+mmHammerColor+'\nاز آمار و حجم‌های «اطلاعات سربرگ» استفاده کن. هر چیز نامعلوم دیگر (حاضرین، ساعت، شمارهٔ نامه) را با «……» خالی بگذار. سبک: اداری و رسمی ایران.',{mode:'app',context:ctx(sh)});
 };
 
+/* ---------- کارهای زیر هر پاسخ ---------- */
+box.onclick=async e=>{
+  const t=e.target.closest('[data-tts]');if(!t)return;
+  const i=+t.dataset.tts;if(!hist[i])return;
+  if(V.speaking){stopSpeak();t.textContent='🔊 خواندن';return}
+  unlockAudio();t.textContent='⏹ توقف';
+  try{await speak(hist[i].content)}finally{t.textContent='🔊 خواندن'}
+};
 sendB.onclick=()=>send();
 inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();send()}});
-Q('#aiNew').onclick=()=>{if(hist.length&&!confirm('گفتگوی فعلی پاک شود؟'))return;hist=[];save();render()};
-render();
+Q('#aiNew').onclick=()=>{if(hist.length&&!confirm('گفتگوی فعلی پاک شود؟'))return;endVoice();hist=[];save();render()};
 
-document.getElementById('aiCopyAll').onclick = async () => {
-  const t = lastAssistantText(); if(!t) return;
-  try{ await navigator.clipboard.writeText(t); }catch(e){
-    const ta = document.createElement('textarea'); ta.value = t; document.body.append(ta); ta.select(); document.execCommand('copy'); ta.remove();
+Q('#aiCopyAll').onclick=async()=>{
+  const t=lastAssistantText();if(!t)return;
+  try{await navigator.clipboard.writeText(t)}catch(e){const ta=document.createElement('textarea');ta.value=t;document.body.append(ta);ta.select();try{document.execCommand('copy')}catch(x){}ta.remove()}
+  const b=Q('#aiCopyAll');b.textContent='✓ کپی شد';setTimeout(()=>b.textContent='📋 کپی متن',1500);
+};
+Q('#aiShareAll').onclick=async()=>{
+  const t=lastAssistantText();if(!t)return;
+  if(navigator.share){try{await navigator.share({text:t,title:'صورتجلسه'})}catch(e){}}
+  else{await navigator.clipboard.writeText(t).catch(()=>{});alert('اشتراک مستقیم پشتیبانی نمی‌شود؛ متن کپی شد.')}
+};
+/* فایل Word واقعی (.docx) با JSZip؛ اگر JSZip نبود، قالب HTML قدیمی (.doc) */
+const xesc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+async function makeDocx(text){
+  if(!window.JSZip)return null;
+  const para=l=>'<w:p><w:pPr><w:bidi/><w:spacing w:after="120" w:line="360" w:lineRule="auto"/></w:pPr>'+(l.trim()?'<w:r><w:rPr><w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma"/><w:sz w:val="26"/><w:szCs w:val="26"/><w:rtl/></w:rPr><w:t xml:space="preserve">'+xesc(l.trim())+'</w:t></w:r>':'')+'</w:p>';
+  const doc='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>'+String(text).split(/\n/).map(para).join('')+'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="708" w:footer="708" w:gutter="0"/><w:bidi/></w:sectPr></w:body></w:document>';
+  const z=new JSZip();
+  z.file('[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>');
+  z.file('_rels/.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>');
+  z.file('word/document.xml',doc);
+  return await z.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',compression:'DEFLATE'});
+}
+Q('#aiWord').onclick=async()=>{
+  const t=lastAssistantText();if(!t)return;
+  const day=new Date().toISOString().slice(0,10);let blob=null,name='صورتجلسه-'+day+'.docx';
+  try{blob=await makeDocx(t)}catch(e){}
+  if(!blob){
+    const html='<html dir="rtl"><head><meta charset="utf-8"><style>body{font-family:"B Nazanin","Vazirmatn",Tahoma;font-size:14pt;line-height:1.9;padding:2cm}</style></head><body>'+t.split(/\n+/).map(l=>'<p>'+esc(l.trim())+'</p>').join('')+'</body></html>';
+    blob=new Blob(['\ufeff'+html],{type:'application/msword'});name='صورتجلسه-'+day+'.doc';
   }
-  const b = document.getElementById('aiCopyAll');
-  b.textContent = '✓ کپی شد'; setTimeout(() => b.textContent = '📋 کپی متن', 1500);
+  try{await DL.save({filename:name,data:blob})}catch(e){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.append(a);a.click();a.remove()}
 };
-
-document.getElementById('aiShareAll').onclick = async () => {
-  const t = lastAssistantText(); if(!t) return;
-  if(navigator.share){
-    try{ await navigator.share({ text: t, title: 'صورتجلسه' }); }catch(e){}
-  } else {
-    await navigator.clipboard.writeText(t).catch(()=>{});
-    alert('اشتراک مستقیم پشتیبانی نمی‌شود؛ متن کپی شد.');
-  }
-};
-
-document.getElementById('aiWord').onclick = async () => {
-  const t = lastAssistantText(); if(!t) return;
-  const html = '<html dir="rtl"><head><meta charset="utf-8"><style>body{font-family:"B Nazanin","Vazirmatn",Tahoma;font-size:14pt;line-height:1.9;padding:2cm}h1{text-align:center}</style></head><body>' +
-    t.split(/\n+/).map(l => '<p>' + esc(l.trim()) + '</p>').join('') + '</body></html>';
-  const wordBlob = new Blob(['\ufeff' + html], { type: 'application/msword' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(wordBlob);
-  a.download = 'صورتجلسه-' + new Date().toISOString().slice(0, 10) + '.doc';
-  document.body.append(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-};
-
+renderModeBar();render();
 })();
-
 </script>
 
 <script>
