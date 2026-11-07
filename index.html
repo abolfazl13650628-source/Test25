@@ -313,6 +313,24 @@ nav button.aibtn{flex:0 0 auto;padding:10px 14px;font-size:14px;min-width:68px;m
 
 #minutesModal { position:fixed; inset:0; z-index:1005; background:#0009; display:flex; align-items:center; justify-content:center; padding:16px; }
 #minutesModal .bx { background:var(--sf); color:var(--tx); border-radius:16px; padding:16px; width:100%; max-width:400px; box-shadow:var(--sh2); }
+/* ===== تنظیمات صفحه‌های بزرگ ===== */
+@media (min-width: 768px) {
+  #app {
+    max-width: 900px !important;
+  }
+  #acct, #sosCard, #saveBar .sbIn {
+    max-width: 900px !important;
+  }
+  #app-header h1 { font-size: 32px; }
+  nav button { font-size: 15px; padding: 12px 6px; }
+  .c { padding: 16px; }
+}
+
+@media (min-width: 1200px) {
+  #app, #acct, #sosCard, #saveBar .sbIn {
+    max-width: 1150px !important;
+  }
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
