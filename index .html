@@ -335,14 +335,25 @@ body.ai-fullscreen #sosCard,
 body.ai-fullscreen #sosFab,
 body.ai-fullscreen #gpsStrip { display: none !important; }
 body.ai-fullscreen #sec-a { 
-    display: flex !important; flex-direction: column; 
-    position: fixed; inset: 0; z-index: 3000; 
+    display: flex !important; 
+    flex-direction: column; 
+    position: fixed !important; 
+    top: 0 !important; 
+    right: 0 !important; 
+    bottom: 0 !important; 
+    left: 0 !important; 
+    width: 100vw !important; 
+    height: 100vh !important; 
+    z-index: 3000; 
     background: var(--bg); 
     padding: calc(10px + env(safe-area-inset-top)) 12px calc(10px + env(safe-area-inset-bottom)); 
     margin: 0 !important; 
+    animation: none !important; 
+    transform: none !important; 
+    opacity: 1 !important; 
 }
-body.ai-fullscreen #aiBox { flex: 1; display: flex; flex-direction: column; margin: 0; border-radius: 0; border: none; background: transparent; box-shadow: none; }
-body.ai-fullscreen #aiMsgs { flex: 1; max-height: none; overflow-y: auto; }
+body.ai-fullscreen #aiBox { flex: 1; display: flex; flex-direction: column; margin: 0; border-radius: 0; border: none; background: transparent; box-shadow: none; min-height: 0; }
+body.ai-fullscreen #aiMsgs { flex: 1; max-height: none; overflow-y: auto; min-height: 0; }
 body.ai-fullscreen #aiClose { display: block !important; background:#c62828; color:#fff; border:none; }
 body.ai-fullscreen #aiMax { display: none !important; }
 
@@ -3455,7 +3466,7 @@ Q('#aiMic').onclick=async()=>{
   }catch(e){releaseMic();alert(e&&e.name&&/NotAllowed|NotFound|NotSupported/.test(e.name)?micMsg(e):'تشخیص گفتار انجام نشد: '+(e&&e.message||'خطا'))}
   dict=false;mb.classList.remove('rec');
 };
-document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.t!=='a')endVoice()}));
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('on') || b.dataset.t!=='a')endVoice()}));
 const hd=document.getElementById('app-header');if(hd)hd.addEventListener('click',()=>endVoice());
 document.addEventListener('visibilitychange',()=>{if(document.hidden)endVoice()});
 
