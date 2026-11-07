@@ -272,8 +272,8 @@ body.home-mode #gb,body.home-mode #walkBox{background:rgba(0,0,0,.45);backdrop-f
 body.home-mode #gb small,body.home-mode #gb b,body.home-mode #walkBox small,body.home-mode #walkBox b{color:#fff}
 body.home-mode #gb.g1 .ac{color:#7dffa0}body.home-mode #gb.g2 .ac{color:#ffd54a}body.home-mode #gb.g3 .ac{color:#ff8a80}
 body.home-mode #gs,body.home-mode #sensors>.m{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.7)}
-#sosCard{max-width:640px;margin:0 auto;padding:6px 12px calc(10px + env(safe-area-inset-bottom));position:sticky;bottom:0;z-index:50;background:linear-gradient(rgba(0,0,0,0),var(--bg) 40%)}
-body.home-mode #sosCard{background:linear-gradient(rgba(0,0,0,0),rgba(16,26,19,.6) 40%)}
+#sosCard{display:none;max-width:640px;margin:0 auto;padding:6px 12px calc(10px + env(safe-area-inset-bottom));position:sticky;bottom:0;z-index:50;background:linear-gradient(rgba(0,0,0,0),var(--bg) 40%)}
+body.home-mode #sosCard{display:block;background:linear-gradient(rgba(0,0,0,0),rgba(16,26,19,.6) 40%)} body.home-mode #sosFab{display:none!important}
 
 /* ===== دستیار هوش مصنوعی ===== */
 nav button.aibtn{flex:0 0 auto;padding:10px 14px;font-size:14px;min-width:68px;min-height:44px}
@@ -640,7 +640,7 @@ nav button.aibtn{flex:0 0 auto;padding:10px 14px;font-size:14px;min-width:68px;m
 </div>
 
 <!-- Floating SOS Button -->
-<button id="sosFab" class="hid" type="button">⚠️<span>اعلام خطر</span></button>
+<button id="sosFab" type="button">⚠️<span>اعلام خطر</span></button>
 
 <!-- Minutes Modal -->
 <div id="minutesModal" class="hid">
@@ -2512,8 +2512,7 @@ document.querySelectorAll('nav button').forEach(b=>{
     document.body.classList.remove('home-mode');
     document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
     ['m','l','h','a'].forEach(k=>{const s=document.getElementById('sec-'+k);if(s)s.classList.toggle('hid',k!==b.dataset.t)});
-    const fab = document.getElementById('sosFab');
-    if(fab) fab.classList.toggle('hid', b.dataset.t === 'm');
+    // مدیریت دکمه شناور حالا به طور خودکار توسط CSS انجام می‌شود
   };
 });
 
@@ -2759,17 +2758,17 @@ function renderCard(){
     const last=localStorage.getItem('sosLast');
     card.innerHTML='<div style="display:flex;gap:8px"><button data-a="ask" type="button" style="flex:1;background:#c62828;color:#fff;border:0;border-radius:14px;padding:11px;font-size:16px;font-weight:700;box-shadow:0 4px 14px rgba(198,40,40,.4)">🆘 اعلام خطر</button><button data-a="cfg" type="button" class="o" style="border-radius:14px;padding:11px 14px;background:var(--sf)" title="تنظیمات اعلام خطر">⚙️</button></div>'
       +(last?'<button data-a="save" data-sid="'+last+'" type="button" class="o" style="width:100%;margin-top:6px;font-size:12px;background:var(--sf)">💾 ذخیرهٔ ضبط آخرین اعلام خطر</button>':'');
-    if(fab) fab.classList.remove('hid');
+    if(fab) fab.innerHTML = '⚠️<span>اعلام خطر</span>';
   }else{
     card.innerHTML='<div style="background:#c62828;color:#fff;border-radius:14px;padding:12px;box-shadow:0 4px 14px rgba(198,40,40,.45)"><b>🔴 اعلام خطر فعال است</b><div id="sosStat" style="font-size:12.5px;line-height:2;margin:6px 0"></div><div style="display:flex;gap:6px;flex-wrap:wrap">'
       +'<button data-a="call" type="button" style="'+BS+'">📞 تماس</button><button data-a="sms" type="button" style="'+BS+'">✉️ پیامک</button><button data-a="save" data-sid="'+st.id+'" type="button" style="'+BS+'">💾 ذخیرهٔ ضبط</button><button data-a="end" type="button" style="background:#fff;color:#c62828;font-weight:700;border:0">✅ در امانم</button></div></div>';
     stat();
-    if(fab) fab.classList.add('hid');
+    if(fab) fab.innerHTML = '🔴<span>در خطر</span>';
   }
 }
 function stat(){
   const e=Q('#sosStat');if(!e||!st)return;
-  const c=CFG();
+  const c=CFG(); const homeBtn=document.getElementById('app-header'); if(homeBtn) homeBtn.click();
   const g=cur?'📍 موقعیت دریافت شد (±'+toFa(Math.round(cur.acc||0))+' متر)':'⚠️ موقعیت دریافت نمی‌شود — GPS (مکان) گوشی را روشن کنید';
   const r=fl.rec===true?'🎙️ ضبط '+(c.video?'صدا و تصویر':'صدا')+' فعال':(fl.rec===false?'⚠️ ضبط فعال نیست'+(fl.err?' ('+esc(fl.err)+')':''):'🎙️ در حال آماده‌سازی ضبط…');
   const n=fl.net===true?'📡 هشدار برای کاربران دیگر ارسال شد':(fl.net===false?'📴 آفلاین — ذخیره می‌شود و با اتصال ارسال می‌شود':'📡 در حال ارسال…');
@@ -2786,13 +2785,17 @@ if(card)card.onclick=e=>{
   else if(a==='end')openEnd();
 };
 if(fab)fab.onclick=()=>{
-  const mTab = document.querySelector('nav button[data-t="m"]');
-  if(mTab) mTab.click();
-  setTimeout(()=>card.scrollIntoView({behavior:'smooth'}),100);
+  if(st) {
+    const homeBtn=document.getElementById('app-header');
+    if(homeBtn) homeBtn.click();
+    setTimeout(()=>card.scrollIntoView({behavior:'smooth'}),150);
+  } else {
+    openConfirm();
+  }
 };
 
 function openCfg(){
-  const c=CFG();
+  const c=CFG(); const homeBtn=document.getElementById('app-header'); if(homeBtn) homeBtn.click();
   const row=(v,i)=>'<div class="sosNr" style="display:flex;gap:6px;margin-top:5px"><input class="sosN" type="tel" dir="ltr" value="'+esc(v)+'" placeholder="'+(i?'شمارهٔ '+toFa(i+1)+' (پیامک)':'شمارهٔ ۱ (تماس + پیامک)')+'" style="flex:1">'+(i?'<button type="button" class="o sosRm" style="padding:4px 12px">×</button>':'')+'</div>';
   dlg('<b>⚙️ تنظیمات اعلام خطر</b><div style="font-size:12px;color:var(--mu)">با شمارهٔ ۱ تماس گرفته می‌شود؛ پیامک برای همهٔ شماره‌ها ارسال می‌شود. فقط روی همین دستگاه ذخیره می‌شود.</div>'
    +'<div id="sosNums">'+(c.nums.length?c.nums:['']).map(row).join('')+'</div>'
@@ -2819,7 +2822,7 @@ async function gpsEnsure(){
 }
 
 function openConfirm(){
-  const c=CFG();
+  const c=CFG(); const homeBtn=document.getElementById('app-header'); if(homeBtn) homeBtn.click();
   prime();SB.fresh().catch(()=>{});
   dlg('<div style="font-size:18px;font-weight:700;color:#c62828">🆘 اعلام خطر</div>'
    +'<div>آیا مطمئن هستید که در خطر هستید؟<br>با تأیید: '+(c.nums.length?'پیامک خودکار برای '+toFa(c.nums.length)+' شماره ارسال و با شمارهٔ ۱ تماس گرفته می‌شود؛ ':'<b>(شماره‌ای تعریف نشده است)</b> ')+'هشدار و موقعیت و مسیر شما برای کاربران ثبت‌نام‌شدهٔ برنامه نمایش داده می‌شود و '+(c.video?'صدا و تصویر':'صدا')+' ضبط می‌شود.</div>'
@@ -2843,7 +2846,7 @@ async function smsAuto(text){
 }
 function startSOS(){
   const u=user();if(!u){closeDlg();return}
-  const c=CFG();
+  const c=CFG(); const homeBtn=document.getElementById('app-header'); if(homeBtn) homeBtn.click();
   st={id:(crypto.randomUUID?crypto.randomUUID():'x'+Date.now()+Math.random().toString(16).slice(2)),t0:Date.now(),track:[],last:null,name:u.name,uid:u.uid,created:false,sentAt:0};
   if(cur)st.last=[+cur.lat.toFixed(6),+cur.lng.toFixed(6),Date.now()];
   seq=0;fl={rec:null,net:null,err:'',sms:c.nums.length?null:'شماره‌ای تعریف نشده'};
